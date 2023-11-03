@@ -1,25 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
+import AppRouter from './AppRouter'; // Import your routing component
+import Layout from './Layout'; // Import your layout component
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {/* Your header content can go here */}
       </header>
+      <main>
+        <Layout>
+          <AppRouter /> {/* Render your routing component within the layout */}
+        </Layout>
+      </main>
+      <footer>
+        {/* Your footer content can go here */}
+      </footer>
     </div>
   );
 }
 
 export default App;
+
