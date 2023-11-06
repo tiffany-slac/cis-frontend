@@ -1,5 +1,102 @@
-.App {
-  text-align: center;
+/* app.css */
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.Layout {
+  display: flex;
+  height: 100vh; /* Set the height of the container to 100% viewport height */
+}
+
+/* Sidebar styles */
+.Sidebar {
+  width: 200px; /* Adjust the width to your preference */
+  background: rgba(144, 21, 21, 1); /* Set the background color */
+  padding: 10px;
+  transition: all 0.3s; /* Add a transition for smoother animation */
+  z-index: 1;
+  height: 100%;
+  align-items: center;
+}
+
+/* Adjust the sidebar width for a collapsed sidebar */
+.Sidebar.collapsed {
+  width: 35px; /* Adjust the width to your preference */
+}
+
+/* Hide labels when the sidebar is collapsed */
+.Sidebar.collapsed .label {
+  display: none;
+}
+
+ul {
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+/* Main content styles */
+.Main {
+  flex: 1;
+  padding: 20px;
+  background: #f4f4f4; /* Set the background color */
+  transition: margin-left 0.3s; /* Remove this line */
+  height: 100%;
+}
+
+/* Add your CSS styles for the profile section */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-picture img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-name {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.icon-button {
+  font-size: 24px; /* Adjust the font size for the button */
+  text-align: left; /* Align the text to the left within the button */
+  background-color: transparent; /* Make the button background transparent */
+  border: none; /* Remove button border if needed */
+  margin-bottom: 15px;
+}
+
+.icon {
+  font-size: 24px; /* Adjust the icon size */
+  margin-right: 20px; /* Add margin between the icon and label */
+  color: whitesmoke;
+}
+
+
+.label {
+  font-size: 18px; /* Adjust the label font size */
+  vertical-align: middle; /* Align the label vertically with the icon */
+  color: whitesmoke;
+}
+
+/* Main content styles */
+.w-64 {
+  width: 250px;
+  padding: 10px;
+  color: white;
 }
 
 .App-logo {
@@ -11,6 +108,17 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+.Header {
+  background-image: url('./components/Logo.svg');
+  background-size: cover;
+}
+
+.header-picture img {
+  width: 100px;
+  height: 80px;
+  object-fit: cover;
 }
 
 .App-header {
@@ -34,5 +142,27 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Styles for medium-sized screens */
+@media (max-width: 768px) {
+  .App {
+    flex-direction: column; /* Change to a column layout for smaller screens */
+  }
+
+  .Sidebar {
+    width: 50%; /* Take the full width for smaller screens */
+  }
+}
+
+/* Styles for smaller screens */
+@media (max-width: 480px) {
+  .Sidebar {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .Main {
+    padding: 10px; /* Adjust padding for smaller screens */
   }
 }

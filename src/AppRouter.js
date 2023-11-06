@@ -1,60 +1,27 @@
-// AppRouter.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Layout from './layout/Layout'; // Import your Layout component
-import Home from './pages/Home'; // Import your Home component
-import Dashboard from './pages/Dashboard';
-import Reports from './pages/Reports';
+import Home from './pages/Home'; 
+import Search from './pages/Search';
+import Profile from './pages/Profile';
 import Jobs from './pages/Jobs';
+import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 
 function AppRouter() {
   return (
     <Router>
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <Layout>
-              <Home />
-            </Layout>
-          )}
-        />
-        <Route
-          path="/dashboard"
-          render={() => (
-            <Layout>
-              <Dashboard />
-            </Layout>
-          )}
-        />
-        <Route
-          path="/reports"
-          render={() => (
-            <Layout>
-              <Reports />
-            </Layout>
-          )}
-        />
-        <Route
-          path="/jobs"
-          render={() => (
-            <Layout>
-              <Jobs />
-            </Layout>
-          )}
-        />
-        <Route
-          path="/settings"
-          render={() => (
-            <Layout>
-              <Settings />
-            </Layout>
-          )}
-        />
-        {/* Add more routes for other pages */}
-      </Switch>
+      <Layout>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/search" component={Search} />
+          <Route path="/home" component={Home} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/jobs" component={Jobs} />
+          <Route path="/profile" component={Reports} />
+          <Route path="/settings" component={Settings} />
+        </Switch>
+      </Layout>
     </Router>
   );
 }

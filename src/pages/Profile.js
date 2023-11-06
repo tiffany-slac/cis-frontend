@@ -1,8 +1,14 @@
-// Dashboard.js (Sample component file)
 import React from 'react';
 
-function Profile() {
-  // Your component code here
-}
+const Profile = () => {
+  return (
+    <div className="profile">
+      <div className="profile-picture">
+        <img src="src\components\profile.jpg" alt="Profile" />
+      </div>
+      <div className="profile-name">John Doe</div>
+    </div>
+  );
+};
 
-export default Profile; // Export the Dashboard component as the default export
+export default Profile;

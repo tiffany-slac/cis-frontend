@@ -1,15 +1,14 @@
-// Layout.js
 import React from 'react';
-import Sidebar from '../components/Sidebar'; // Import your Sidebar component from the components directory
+import Sidebar from '../components/Sidebar';
+import '../App.css';
 
-
-const Layout = ({ children }) => {
+function Layout({ children }) {
   return (
-    <div className="flex">
+    <div className="Layout">
       <Sidebar />
-      <main className="flex-1">{children}</main>
+      <main className="Main">{children}</main>
     </div>
   );
-};
+}
 
 export default Layout;

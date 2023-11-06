@@ -1,12 +1,12 @@
 import React from 'react';
 
-function Dashboard() {
+function Search() {
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1>Search</h1>
       {/* Dashboard content */}
     </div>
   );
 }
 
-export default Dashboard;
+export default Search;

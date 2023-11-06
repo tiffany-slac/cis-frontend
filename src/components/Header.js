@@ -1,19 +1,13 @@
-// Header.js
 import React from 'react';
+// import './App.css'; // Make sure to import your CSS
 
 function Header() {
   return (
-    <header>
-      <nav>
-        {/* Navigation links */}
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/profile">Profile</a></li>
-          {/* Add more links as needed */}
-        </ul>
-      </nav>
-    </header>
+    <div className="Header">
+      <div className='header-picture'>
+        <img src="src\components\Logo.svg" alt="SLAC Logo" />
+      </div>
+    </div>
   );
 }
 
