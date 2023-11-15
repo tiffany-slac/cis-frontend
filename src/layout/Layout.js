@@ -6,7 +6,11 @@ function Layout({ children }) {
   return (
     <div className="Layout">
       <Sidebar />
-      <main className="Main">{children}</main>
+      <main className="Main">
+        <main className="header">
+        </main>
+        {children}
+      </main>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 import React from 'react';
+import CardWidget from '../components/CardWidget';
 
 function Home() {
   return (
     <div>
-      <h1>Welcome to Your Problem Tracking System</h1>
-      <p>This is the home page of your problem tracking management system.</p>
-      <p>Start tracking and managing issues with ease!</p>
+      <h1>Core Inventory System</h1>
+      <CardWidget />
     </div>
   );
 }

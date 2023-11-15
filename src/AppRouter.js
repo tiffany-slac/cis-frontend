@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Layout from './layout/Layout'; // Import your Layout component
 import Home from './pages/Home'; 
 import Search from './pages/Search';
-import Profile from './pages/Profile';
+import Profile from './pages/Profile/Profile';
 import Jobs from './pages/Jobs';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';

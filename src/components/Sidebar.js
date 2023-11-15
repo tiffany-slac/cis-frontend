@@ -1,23 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Profile from '../pages/Profile';
 import Header from './Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUser, faCog, faSearch, faBriefcase, faFile, faArrowRight} from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUser, faCog, faSearch, faBriefcase, faFile, faBars} from '@fortawesome/free-solid-svg-icons';
 
 
 function Sidebar() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
     };
 
+    useEffect(() => {
+        const handleResize = () => {
+            const sidebar = document.querySelector('.Sidebar');
+            if (window.innerWidth < 768) {
+                setIsCollapsed(true);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        // Remove the event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []); // Empty dependency array ensures it only runs once on mount
+
+
     return (
         <div className={`Sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-
-            {/* Add the Profile component at the top of the sidebar */}
-            <Profile />
+            
+            <button onClick={toggleSidebar} className="icon-button">
+                <FontAwesomeIcon icon={faBars} className="icon" />
+            </button>
 
             <ul>
                 
@@ -64,10 +80,6 @@ function Sidebar() {
                 </Link></div>
 
             </ul>
-
-            <button onClick={toggleSidebar} className="icon-button">
-                <FontAwesomeIcon icon={faArrowRight} className="icon" />
-            </button>
         </div>
     );
 }

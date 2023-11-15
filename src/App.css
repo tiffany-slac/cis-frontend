@@ -15,6 +15,7 @@ body {
 .Layout {
   display: flex;
   height: 100vh; /* Set the height of the container to 100% viewport height */
+  width: 100%;
 }
 
 /* Sidebar styles */
@@ -46,10 +47,13 @@ ul {
 /* Main content styles */
 .Main {
   flex: 1;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
   padding: 20px;
+  flex-direction: column;
   background: #f4f4f4; /* Set the background color */
   transition: margin-left 0.3s; /* Remove this line */
-  height: 100%;
 }
 
 /* Add your CSS styles for the profile section */
@@ -60,8 +64,8 @@ ul {
 }
 
 .profile-picture img {
-  width: 100px;
-  height: 100px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -80,7 +84,7 @@ ul {
 }
 
 .icon {
-  font-size: 24px; /* Adjust the icon size */
+  font-size: 15px; /* Adjust the icon size */
   margin-right: 20px; /* Add margin between the icon and label */
   color: whitesmoke;
 }
@@ -110,26 +114,15 @@ ul {
   }
 }
 
-.Header {
+
+.header {
   background-image: url('./components/Logo.svg');
   background-size: cover;
-}
-
-.header-picture img {
-  width: 100px;
-  height: 80px;
-  object-fit: cover;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-position: center;
+  width: 235px;
+  height: 35px;
+  text-align: center;
+  padding: 2px;
 }
 
 .App-link {
@@ -152,14 +145,22 @@ ul {
   }
 
   .Sidebar {
-    width: 50%; /* Take the full width for smaller screens */
+    width: 35px; 
+  } 
+
+  .Sidebar.collapsed .label {
+    display: none;
   }
 }
 
 /* Styles for smaller screens */
 @media (max-width: 480px) {
   .Sidebar {
-    padding: 10px; /* Adjust padding for smaller screens */
+    width: 35px; 
+  } 
+
+  .Sidebar.collapsed .label {
+    display: none;
   }
 
   .Main {
