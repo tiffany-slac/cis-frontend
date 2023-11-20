@@ -2,9 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Layout from './layout/Layout'; // Import your Layout component
 import Home from './pages/Home'; 
-import Search from './pages/Search';
+import Search from './pages/Search/Search';
 import Profile from './pages/Profile/Profile';
 import Jobs from './pages/Jobs';
+import ItemDetails from './pages/ItemDetails/ItemDetails';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 
@@ -15,6 +16,7 @@ function AppRouter() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/search" component={Search} />
+          <Route path="/details/:id" component={ItemDetails} />
           <Route path="/home" component={Home} />
           <Route path="/profile" component={Profile} />
           <Route path="/jobs" component={Jobs} />

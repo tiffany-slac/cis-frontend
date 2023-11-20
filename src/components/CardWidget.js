@@ -1,17 +1,83 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import '../styles/CardWidget.css'; // Import your CSS file
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import '../styles/CardWidget.css';
 
 function CardWidget() {
-  const history = useHistory();
+  const [assets, setAssets] = useState([]);
 
-  const handleRowClick = () => {
-    // Navigate to the Cater details page when a table row is clicked
-    history.push('/cater-details'); // Replace with the appropriate route
-  };
+useEffect(() => {
+  axios.get('http://localhost:3000/api/assets')
+    .then(response => {
+      // Assuming response.data is an array
+      if (response.data.length > 0) {
+        // Accessing the assets array inside the first object of the response array
+        setAssets(response.data[0].assets);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+}, []);
+
 
   return (
     <div className="card">
+      <h3>Asset Information</h3>
+      <div className="card-table">
+        <div className="table-header">
+          <div>ID</div>
+          <div>Name</div>
+          <div>Type</div>
+          <div>Metadata</div>
+        </div>
+        {assets && assets.length > 0 ? (
+          assets.map(asset => (
+            <div className="table-row" key={asset.id}>
+              <div>{asset.id}</div>
+              <div>{asset.name}</div>
+              <div>{asset.type}</div>
+              <div>
+                {Object.entries(asset.metadata).map(([key, value]) => (
+                  <p key={key}>
+                    <span className="metadata-key">{key}: </span>
+                    <span>{value}</span>
+                  </p>
+                ))}
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default CardWidget;
+
+
+/*import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import '../styles/CardWidget.css';
+
+function CardWidget() {
+  const [caterData, setCaterData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the backend API endpoint
+    axios.get('http://localhost:3000/api/caters')
+      .then(response => {
+        setCaterData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  return (
+    <div className="card">
+      <h3>Recent Activity</h3>
       <div className="card-table">
         <div className="table-header">
           <div>CATER ID</div>
@@ -19,33 +85,18 @@ function CardWidget() {
           <div>Date Modified</div>
           <div>Status</div>
         </div>
-        <div className="table-row" onClick={handleRowClick}>
-          <div>123</div>
-          <div>Some Details</div>
-          <div>2023-11-14</div>
-          <div>Active</div>
-        </div>
-        <div className="table-row" onClick={handleRowClick}>
-          <div>123</div>
-          <div>Some Details</div>
-          <div>2023-11-14</div>
-          <div>Active</div>
-        </div>
-        <div className="table-row" onClick={handleRowClick}>
-          <div>123</div>
-          <div>Some Details</div>
-          <div>2023-11-14</div>
-          <div>Active</div>
-        </div>
-        <div className="table-row" onClick={handleRowClick}>
-          <div>123</div>
-          <div>Some Details</div>
-          <div>2023-11-14</div>
-          <div>Active</div>
-        </div>
+        {caterData.map(item => (
+          <div className="table-row" key={item._id}>
+            <div>{item.caterId}</div>
+            <div>{item.details}</div>
+            <div>{item.dateModified}</div>
+            <div>{item.status}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
 export default CardWidget;
+*/

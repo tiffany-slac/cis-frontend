@@ -1,0 +1,117 @@
+.content-container {
+    display: flex;
+    justify-content: space-between; /* Items placed at the start and end of the container */
+    margin: 0 auto;
+    /* Add other styles as needed */
+  }
+
+  .centered-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    /* Add other styles as needed */
+  }
+
+.item-details-container {
+    /* width: calc(100% - 270px); */
+    width: 70%;
+    margin: 0 auto; /* This centers the container horizontally */
+    /* Add other styles as needed */
+  }
+
+  .statusmenu {
+    width: 150px; /* Adjust the width as needed */
+    border: 1px solid #ccc;
+    height: auto;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Adding shadow */
+    border-radius: 5px; /* Rounded border */
+  }
+  
+  .statusmenu ul {
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+  }
+
+  .statusmenu button {
+    border: none; /* Remove button borders */
+    background: none; /* Transparent background */
+    text-align: left; /* Align text to the left */
+    padding: 10px 15px;
+    width: 100%; /* Make buttons fill the menu */
+    cursor: pointer;
+  }
+
+.description-section {
+    margin-top: 20px;
+  }
+  
+  .description-textarea {
+    padding: 10px;
+    margin-top: 10px;
+    resize: vertical;
+    width: 96%;
+  }
+  
+.attachments-section {
+    margin-top: 20px;
+  }
+  
+  .file-upload-container {
+    border: 2px dashed rgba(144, 21, 21, 1);
+    background-color: rgba(144, 21, 21, 0.1);
+    padding: 20px;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  #file-input {
+    display: none;
+  }
+  
+  label {
+    cursor: pointer;
+  }
+  
+  .uploaded-files {
+    margin-top: 10px;
+  }
+  
+  /* Style the uploaded files container */
+  .uploaded-files ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Style the uploaded file items */
+  .uploaded-files li {
+    margin-bottom: 5px;
+  }
+  
+  /* Style the uploaded file links */
+  .uploaded-files li a {
+    text-decoration: none;
+    color: #007bff;
+  }
+
+  .activity-tabs {
+    display: flex;
+    border-bottom: 2px solid #ccc; /* Shared bottom line */
+  }
+  
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none; /* Remove borders */
+    border-radius: 10px;
+  }
+  
+  .tab:hover {
+    background-color: #f0f0f0; /* Greyed hover effect */
+  }
+
+  .tab.active {
+    background-color: rgba(144, 21, 21, 0.1); /* Adjust the shade/color as needed */
+    /* Additional styles to indicate the active tab */
+  }
