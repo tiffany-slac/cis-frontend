@@ -1,0 +1,17 @@
+{
+    "_id": "powerSupplyConnector001",
+    "name": "Power Supply Connector",
+    "type": "Connector",
+    "classType": "powerSupplyConnectorClass",
+    "attributes": {
+      "VoltageRating": 240
+    },
+    "history": [
+      {
+        "date": "2023-04-13",
+        "action": "Installed",
+        "description": "Power Supply Connector installed."
+      }
+    ]
+  }
+  

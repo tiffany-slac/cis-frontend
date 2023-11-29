@@ -6,39 +6,35 @@ import './ItemDetails.css';
 
 const ItemDetails = () => {
   const { id } = useParams(); // Get the asset ID from the URL params
-  const [assetDetails, setAssetDetails] = useState(null); // State to hold the asset details
+  const [inventoryDetails, setInventoryDetails] = useState(null); // State to hold the asset details
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('Jobs');
 
   const breadcrumbItems = [
     { label: 'Home', link: '/' },
-    { label: 'Inventory', link: '/search' },
-    { label: 'Item Details', link: '/search/asset-details' },
+    { label: 'Inventory', link: '/inventory' },
+    { label: 'Item Details', link: '/inventory/asset-details' },
   ];
 
   const menuItems = ['Details', 'Description', 'Attachments', 'Activity'];
 
-  // Make an API request to fetch asset details by ID
+  // Make an API request to fetch asset details by ID  
   useEffect(() => {
-    const fetchAssetDetails = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3000/api/assets/${id}`);
-          
-          const { name, type, metadata } = response.data;
-          console.log('Asset details:', name, type, metadata);
-
-          if (response.data) {
-            // Assuming the data is received as expected
-            setAssetDetails(response.data);
-          }
-        } catch (error) {
-          console.error('Error fetching asset details:', error);
-          // Handle error scenarios here
+    const fetchInventoryDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/inventory/${id}`);
+        if (response.data) {
+          setInventoryDetails(response.data);
         }
-      };
-  
-      fetchAssetDetails(); // Fetch asset details when the component mounts
-    }, [id]); // Include 'id' in the dependency array to fetch data when the ID changes
-  
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching inventory details:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchInventoryDetails();
+  }, [id]);
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -74,10 +70,10 @@ const ItemDetails = () => {
     <div>
       <Breadcrumb items={breadcrumbItems} />
 
-      <h1 id="details">Item Details</h1>
+      <h1 id="details">ID: { id }</h1>
       {/* Other content */}
 
-<div className='content-container'>
+      <div className='content-container'>
       {/* Menu/Table of Contents */}
       <div className="statusmenu">
           <ul>
@@ -94,32 +90,41 @@ const ItemDetails = () => {
           </ul>
         </div>
 
-<div className='centered-container'>
+    <div className='centered-container'>
       <div className="item-details-container">
-        {/* Asset Details */}
-        {assetDetails ? (
+        <div className='card'>
+          {/* Asset Details */}
+          {inventoryDetails ? (
           <div>
-            <h2>Asset Details</h2>
-            <p>ID: {assetDetails.id}</p>
-            <p>Name: {assetDetails.name}</p>
-            <p>Type: {assetDetails.type}</p>
+            <h2>Details</h2>
+            <p>ID: {inventoryDetails._id}</p>
+            <p>Name: {inventoryDetails.name}</p>
+            <p>Type: {inventoryDetails.type}</p>
             <div>
               <h3>Metadata:</h3>
               <ul>
-                {Object.entries(assetDetails.metadata).map(([key, value]) => (
-                  <li key={key}>
-                    <strong>{key}:</strong> {value}
-                  </li>
-                ))}
+                {inventoryDetails.metadata && typeof inventoryDetails.metadata === 'object' ? (
+                  // Check if metadata exists and is an object before using Object.entries()
+                  Object.entries(inventoryDetails.metadata).map(([key, value]) => (
+                    <li key={key}>
+                      <strong>{key}:</strong> {value}
+                    </li>
+                  ))
+                ) : (
+                  <li>No metadata available</li>
+                )}
               </ul>
             </div>
           </div>
         ) : (
           <p>Loading...</p>
         )}
+        </div>
 
         {/* Description section */}
+        <div className='card'>
         <div className="description-section">
+        
           <h2 id="description">Description</h2>
           <textarea
             className="description-textarea"
@@ -128,9 +133,10 @@ const ItemDetails = () => {
             cols="50"
           ></textarea>
         </div>
-
+        </div>
 
         {/* Attachments section */}
+        <div className='card'>
         <div className="attachments-section">
           <h2 id="attachments">Attachments</h2>
           <div className="file-upload-container">
@@ -141,29 +147,30 @@ const ItemDetails = () => {
             </div>
           </div>
         </div>
+        </div>
 
-        <div>
+        {/* Activity section */}
+        <div className='card'>
           <h2 id="activity">Activity</h2>
           <div className="activity-tabs">
-          <div className={`tab ${activeTab === 'Jobs' ? 'active' : ''}`} onClick={() => handleTabClick('Jobs')}>
-            Jobs
+            <div className={`tab ${activeTab === 'Jobs' ? 'active' : ''}`} onClick={() => handleTabClick('Jobs')}>
+              Jobs
+            </div>
+            <div className={`tab ${activeTab === 'Approvals' ? 'active' : ''}`} onClick={() => handleTabClick('Approvals')}>
+              Approvals
+            </div>
+            <div className={`tab ${activeTab === 'Solutions' ? 'active' : ''}`} onClick={() => handleTabClick('Solutions')}>
+              Solutions
+            </div>
+            <div className={`tab ${activeTab === 'Comments' ? 'active' : ''}`} onClick={() => handleTabClick('Comments')}>
+              Comments
+            </div>
+            <div className={`tab ${activeTab === 'Emails' ? 'active' : ''}`} onClick={() => handleTabClick('Emails Sent')}>
+              Emails
+            </div>
           </div>
-          <div className={`tab ${activeTab === 'Approvals' ? 'active' : ''}`} onClick={() => handleTabClick('Approvals')}>
-            Approvals
-          </div>
-          <div className={`tab ${activeTab === 'Solutions' ? 'active' : ''}`} onClick={() => handleTabClick('Solutions')}>
-            Solutions
-          </div>
-          <div className={`tab ${activeTab === 'Comments' ? 'active' : ''}`} onClick={() => handleTabClick('Comments')}>
-            Comments
-          </div>
-          <div className={`tab ${activeTab === 'Emails' ? 'active' : ''}`} onClick={() => handleTabClick('Emails Sent')}>
-            Emails
-          </div>
+          <div className="tab-content">{renderTabContent()}</div>
         </div>
-        <div className="tab-content">{renderTabContent()}</div>
-      </div>
-
       </div>
     </div>
     </div>

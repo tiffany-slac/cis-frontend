@@ -1,29 +1,26 @@
-// Search.js
+// Inventory.js
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import './Search.css';
+import './Inventory.css';
 
-const Search = () => {
-  const [assets, setAssets] = useState([]);
+const Inventory = () => {
+  const [inventory, setInventory] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('');
   
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/assets')
+    axios.get('http://localhost:3000/api/inventory')
       .then(response => {
-        // Assuming response.data is an array
-        if (response.data.length > 0) {
-          // Accessing the assets array inside the first object of the response array
-          setAssets(response.data[0].assets);
-        }
+        setInventory(response.data); // Assuming response.data is an array of inventory items
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   }, []);
+  
 
-  console.log('Assets state:', assets);
+  console.log('Inventory state:', inventory);
 
   // Function to handle change in primary filter selection
   const handleFilterChange = (event) => {
@@ -47,12 +44,9 @@ const Search = () => {
   const history = useHistory();
   // ... other state and useEffect code
   
-  const handleRowClick = (asset) => {
-    history.push(`/details/${asset.id}`); // Navigate to detail page with the item _id
+  const handleRowClick = (item) => {
+    history.push(`/inventory/${item}`); // Navigate to detail page with the item _id
   };
-  
-
-  console.log('Assets state:', assets);
 
   return (
     <div className="search-page">
@@ -100,93 +94,34 @@ const Search = () => {
       </div>
       <div className="assets-table">
         <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Metadata</th>
-              </tr>
-            </thead>
-            <tbody>
-            {assets && assets.length > 0 ? (
-              assets.map((asset) => (
-                <tr key={asset.id} onClick={() => handleRowClick(asset)}>
-                  <td>{asset.id}</td>
-                  <td>{asset.name}</td>
-                  <td>{asset.type}</td>
-                  <td>
-                    {/* Render metadata properties */}
-                    {Object.entries(asset.metadata).map(([key, value]) => (
-                      <p key={key}>
-                        <span>{key}: </span>
-                        <span>{value}</span>
-                      </p>
-                    ))}
-                  </td>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Type</th>
+              {/* Add other table headers based on schema */}
+            </tr>
+          </thead>
+          <tbody>
+            {inventory && inventory.length > 0 ? (
+              inventory.map(item => (
+                <tr key={item._id} onClick={() => handleRowClick(item._id)}>
+                  <td>{item._id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.type}</td>
+                  {/* Add other table data based on schema */}
                 </tr>
               ))
-              ) : (
-                <tr>
-                  <td colSpan="4">No assets available</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+            ) : (
+              <tr>
+                <td colSpan="3">No inventory items available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 };
 
-export default Search;
-
-
-/*import React, { useState } from 'react';
-import axios from 'axios';
-
-function Search() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-
-  const handleSearch = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/search?term=${searchTerm}`);
-
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    }
-  };
-
-  return (
-    <div>
-      <br></br><br></br>
-      <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-      <button onClick={handleSearch}>Search</button>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Email</th>
-            <th>Address</th>
-          </tr>
-        </thead>
-        <tbody>
-          {searchResults.map((result) => (
-            <tr key={result.id}>
-              <td>{result.name}</td>
-              <td>{result.age}</td>
-              <td>{result.email}</td>
-              <td>{result.address}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-export default Search;
-*/
+export default Inventory;

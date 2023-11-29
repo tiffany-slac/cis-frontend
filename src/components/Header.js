@@ -1,10 +1,11 @@
 import React from 'react';
+import logo from './Logo.png';
 
 function Header() {
   return (
-    <div className="Header">
-      <div className='header-picture'>
-        <img src="src\components\Logo.svg" alt="SLAC Logo" />
+    <div className="main-header">
+      <div className="logo-container">
+        <img src={logo} alt="SLAC Logo" className="logo" />
       </div>
     </div>
   );

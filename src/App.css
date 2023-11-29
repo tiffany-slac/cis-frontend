@@ -14,19 +14,28 @@ body {
 
 .Layout {
   display: flex;
-  height: 100vh; /* Set the height of the container to 100% viewport height */
+  /* height: 100vh;  */
   width: 100%;
 }
 
 /* Sidebar styles */
 .Sidebar {
+  top: 0;
+  left: 0;
   width: 200px; /* Adjust the width to your preference */
   background: rgba(144, 21, 21, 1); /* Set the background color */
-  padding: 10px;
-  transition: all 0.3s; /* Add a transition for smoother animation */
+  padding: 10px 10px 0px 10px;
+  transition: width 0.3s ease; /* Add a transition for smoother animation */
+  position: fixed;
   z-index: 1;
   height: 100vh;
   align-items: center;
+}
+
+.Content {
+  flex: 1; /* This will make the Content div take up the remaining horizontal space */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Adjust the sidebar width for a collapsed sidebar */
@@ -46,14 +55,19 @@ ul {
 
 /* Main content styles */
 .Main {
+  margin-top: 60px; /* Height of the header */
+  margin-left: 55px; /* Width of the sidebar */
   flex: 1;
-  min-height: 100vh;
-  height: 100%;
+ /* min-height: 100vh;
+  height: 100%; */
+  width: calc(100% - 250px);
+  /* Take remaining height after considering the header */
+  height: calc(100vh - 80px);
   display: flex;
   width: 100%;
-  padding: 20px;
+  padding: 0px 20px 0px 20px;
   flex-direction: column;
-  background: #f8f8f8; /* Set the background color #f4f4f4*/
+  background: white; /* Set the background color #f8f8f8*/
   transition: margin-left 0.3s; /* Remove this line */
 }
 
@@ -96,6 +110,8 @@ ul {
   font-size: 18px; /* Adjust the label font size */
   vertical-align: middle; /* Align the label vertically with the icon */
   color: whitesmoke;
+  /* opacity: 0; Initially hide labels */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transition for opacity and position */
 }
 
 .breadcrumb a {
@@ -110,7 +126,7 @@ ul {
 /* Main content styles */
 .w-64 {
   width: 250px;
-  padding: 10px;
+  /* padding: 10px; */
   color: white;
 }
 
@@ -125,16 +141,28 @@ ul {
   }
 }
 
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 55px; /* Adjust this based on your sidebar width */
+  width: calc(100% - 55px); /* Adjust to fit the remaining width */
+  height: 60px; /* Adjust height as needed */
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow */
 
-.header {
-  background-image: url('./components/Logo.svg');
-  background-size: cover;
-  background-position: center;
-  width: 235px;
-  height: 35px !important;
-  text-align: center;
-  padding: 2px;
-  flex-shrink: 0;
+  /* Flexbox for centering the logo */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.logo-container {
+  margin-left: 20px; /* Adjust margin as needed */
+}
+
+.logo {
+  height: 40px; /* Adjust the height of the logo */
+  width: auto; /* Adjust the width to maintain aspect ratio */
 }
 
 .App-link {
@@ -162,7 +190,7 @@ ul {
 
   .Sidebar.collapsed .label {
     display: none;
-  }  
+  }   
 }
 
 /* Styles for smaller screens */
@@ -177,6 +205,6 @@ ul {
   }  
 
   .Main {
-    padding: 10px; /* Adjust padding for smaller screens */
+    padding: 10px 10px 0px 10px; /* Adjust padding for smaller screens */
   }
 }

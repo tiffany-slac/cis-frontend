@@ -1,53 +1,73 @@
 /* CardWidget.css */
-.card {
-    border-radius: 10px;
-    padding: 30px;
-    margin: 10px;
-    justify-content: center;
-    background-color: white;
-  }
-  
-  .card h3 {
-    margin-bottom: 10px;
-    font-size: 18px;
-  }
-  
-  .card-table {
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    padding-left: 20px;
-    padding-right: 20px;
-    height: 300px;
-    overflow-y: auto;
-  }
-  
-  .table-header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #ccc;
-    background-color: white;
-    font-weight: bold;
-    padding-bottom: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  
-  .table-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    cursor: pointer;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
+.home-page {
+  display: flex;
+  justify-content: center;
+}
 
-  .table-row:hover {
-    background-color: #f0f0f0; /* Change the color as desired */
-    border-radius: 10px;
+.card {
+  border-radius: 10px;
+  padding: 30px;
+  margin: 10px;
+  justify-content: center;
+  background-color: white;
+  width: 100%;
+}
+  
+.card h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+  
+.card-table {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 300px;
+  overflow-y: auto;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  background-color: white;
+  font-weight: bold;
+  padding-bottom: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  cursor: pointer;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.table-row:hover {
+  background-color: #f0f0f0; /* Change the color as desired */
+  border-radius: 10px;
+}
+
+/* Styles for medium-sized screens */
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
   }
+}
+
+/* Styles for smaller screens */
+@media (max-width: 480px) {
+  .card {
+    width: 100%;
+  }
+}
