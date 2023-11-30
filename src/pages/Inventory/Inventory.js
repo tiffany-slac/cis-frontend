@@ -1,23 +1,25 @@
 // Inventory.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+// import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import './Inventory.css';
 
 const Inventory = () => {
-  const [inventory, setInventory] = useState([]);
+  // const [inventory, setInventory] = useState([]);
+  const [inventory] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('');
   
 
-  useEffect(() => {
-    axios.get('http://localhost:3000/api/inventory')
-      .then(response => {
-        setInventory(response.data); // Assuming response.data is an array of inventory items
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('http://localhost:3000/api/inventory')
+  //     .then(response => {
+  //       setInventory(response.data); // Assuming response.data is an array of inventory items
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // }, []);
   
 
   console.log('Inventory state:', inventory);
@@ -31,15 +33,14 @@ const Inventory = () => {
   };
 
   // Function to handle change in advanced filter selection
-  const handleAdvancedFilterChange = (event) => {
-    const selectedAdvancedValue = event.target.value;
-    // Perform actions based on the selected advanced filter value
-  };
+  // const handleAdvancedFilterChange = (event) => {
+  //   const selectedAdvancedValue = event.target.value;
+  // };
 
-  const handleRowChange = (event) => {
-    const selectedValue = event.target.value;
-    // Perform actions based on the selected value (e.g., update table rows)
-  };
+  // Perform actions based on the selected value (e.g., update table rows)
+  // const handleRowChange = (event) => {
+  //   const selectedValue = event.target.value;
+  // };
 
   const history = useHistory();
   // ... other state and useEffect code
@@ -68,7 +69,8 @@ const Inventory = () => {
       </div>
       <div className="row-pull-down">
         <label htmlFor="row-selection">Rows per page: </label>
-        <select id="row-selection" onChange={handleRowChange}>
+        {/* <select id="row-selection" onChange={handleRowChange}> */}
+        <select id="row-selection">
           <option value="15">15</option>
           <option value="30">30</option>
           <option value="45">45</option>
