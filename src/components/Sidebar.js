@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUser, faCog, faBox, faBriefcase, faFile, faBars} from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUser, faCog, faBox, faBriefcase, faLock, faBars} from '@fortawesome/free-solid-svg-icons';
 
 
 function Sidebar() {
@@ -64,10 +64,10 @@ function Sidebar() {
                     </button>
                 </Link></div>
 
-                <div><Link to="/reports">
+                <div><Link to="/admin">
                     <button className='icon-button'>
-                        <FontAwesomeIcon icon={faFile} className="icon" title="Reports" />
-                        <span className="label">File</span>
+                        <FontAwesomeIcon icon={faLock} className="icon" title="Admin" />
+                        <span className="label">Admin</span>
                     </button>
                 </Link></div>
 

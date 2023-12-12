@@ -20,17 +20,17 @@ body {
 
 /* Sidebar styles */
 .Sidebar {
-  top: 0;
+  top: 60px;
   left: 0;
-  width: 200px; /* Adjust the width to your preference */
-  background: rgba(144, 21, 21, 1); /* Set the background color */
+  width: 200px; 
+  background: rgba(144, 21, 21, 1); 
   padding: 10px 10px 0px 10px;
   transition: width 0.3s ease; /* Add a transition for smoother animation */
   position: fixed;
-  z-index: 1;
+  z-index: 0;
   height: 100vh;
   align-items: center;
-}
+} 
 
 .Content {
   flex: 1; /* This will make the Content div take up the remaining horizontal space */
@@ -144,8 +144,9 @@ ul {
 .main-header {
   position: fixed;
   top: 0;
-  left: 55px; /* Adjust this based on your sidebar width */
-  width: calc(100% - 55px); /* Adjust to fit the remaining width */
+  width: 100%;
+  /*left: 55px;  Adjust this based on your sidebar width */
+  /*width: calc(100% - 55px);  Adjust to fit the remaining width */
   height: 60px; /* Adjust height as needed */
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow */

@@ -5,19 +5,19 @@ import '../styles/CardWidget.css';
 function CardWidget() {
   const [assets, setAssets] = useState([]);
 
-useEffect(() => {
-  axios.get('http://localhost:3000/api/assets')
-    .then(response => {
-      // Assuming response.data is an array
-      if (response.data.length > 0) {
-        // Accessing the assets array inside the first object of the response array
-        setAssets(response.data[0].assets);
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
-}, []);
+// useEffect(() => {
+//   axios.get('http://localhost:3000/api/assets')
+//     .then(response => {
+//       // Assuming response.data is an array
+//       if (response.data.length > 0) {
+//         // Accessing the assets array inside the first object of the response array
+//         setAssets(response.data[0].assets);
+//       }
+//     })
+//     .catch(error => {
+//       console.error('Error fetching data:', error);
+//     });
+// }, []);
 
 
   return (

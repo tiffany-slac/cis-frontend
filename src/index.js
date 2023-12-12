@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-// import ReactDom from 'react-dom/client';
-// import { createRoot } from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './index.css';
 import AppRouter from './AppRouter';
 import reportWebVitals from './reportWebVitals';
+import "./services/api.js";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

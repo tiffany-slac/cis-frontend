@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Layout from './layout/Layout'; // Import your Layout component
+import Layout from './layout/Layout';
 import Home from './pages/Home'; 
 import Profile from './pages/Profile/Profile';
 import Jobs from './pages/Jobs';
 import ItemDetails from './pages/ItemDetails/ItemDetails';
 import Reports from './pages/Reports';
-import Settings from './pages/Settings';
+import Settings from './pages/Settings/Settings';
 import Inventory from './pages/Inventory/Inventory';
+import Admin from './pages/admin/admin';
 
 function AppRouter() {
   return (
@@ -20,6 +21,7 @@ function AppRouter() {
           <Route path="/home" component={Home} />
           <Route path="/profile" component={Profile} />
           <Route path="/jobs" component={Jobs} />
+          <Route path="/admin" component={Admin} />
           <Route path="/profile" component={Reports} />
           <Route path="/settings" component={Settings} />
         </Switch>

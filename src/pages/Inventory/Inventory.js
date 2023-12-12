@@ -1,46 +1,33 @@
 // Inventory.js
-import React, { useState } from 'react';
-// import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
 import './Inventory.css';
 
 const Inventory = () => {
-  // const [inventory, setInventory] = useState([]);
-  const [inventory] = useState([]);
+  const [inventory, setInventory] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('');
   
-
-  // useEffect(() => {
-  //   axios.get('http://localhost:3000/api/inventory')
-  //     .then(response => {
-  //       setInventory(response.data); // Assuming response.data is an array of inventory items
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data:', error);
-  //     });
-  // }, []);
-  
-
-  console.log('Inventory state:', inventory);
+  useEffect(() => {
+    // Make GET request to API endpoint
+    axios.get('http://localhost:3000/api/v1/inventory/class', {
+      params: {
+        classTypes: ['Building', 'Floor', 'Room', 'Item', 'Software', 'Connector', 'Cable']
+      }
+    })
+      .then(response => {
+        setInventory(response.data.payload); // Update inventory state with API response data
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   // Function to handle change in primary filter selection
   const handleFilterChange = (event) => {
     const selectedValue = event.target.value;
     setSelectedFilter(selectedValue);
-    // Reset the advanced filter options based on the selected primary filter
-    // Perform actions to fetch specific advanced filter options based on the selected primary filter
   };
-
-  // Function to handle change in advanced filter selection
-  // const handleAdvancedFilterChange = (event) => {
-  //   const selectedAdvancedValue = event.target.value;
-  // };
-
-  // Perform actions based on the selected value (e.g., update table rows)
-  // const handleRowChange = (event) => {
-  //   const selectedValue = event.target.value;
-  // };
 
   const history = useHistory();
   // ... other state and useEffect code
@@ -107,8 +94,8 @@ const Inventory = () => {
           <tbody>
             {inventory && inventory.length > 0 ? (
               inventory.map(item => (
-                <tr key={item._id} onClick={() => handleRowClick(item._id)}>
-                  <td>{item._id}</td>
+                <tr key={item.id} onClick={() => handleRowClick(item.id)}>
+                  <td>{item.id}</td>
                   <td>{item.name}</td>
                   <td>{item.type}</td>
                   {/* Add other table data based on schema */}
