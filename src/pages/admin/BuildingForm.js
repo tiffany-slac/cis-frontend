@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createInventoryClass } from "../../services/api";
 
-function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
+function BuildingForm({ showClassForm, setShowClassForm, classTypes }) {
   const [className, setClassName] = useState("");
   const [classDescription, setClassDescription] = useState("");
   const [attributes, setAttributes] = useState([]);
@@ -187,4 +187,4 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   );
 }
 
-export default ClassForm;
+export default BuildingForm;

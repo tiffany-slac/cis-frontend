@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { createInventoryClass } from "../../services/api";
+import { updateElement } from "../../services/api"; // Replace with your API function
 
-function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
-  const [className, setClassName] = useState("");
-  const [classDescription, setClassDescription] = useState("");
+function UpdateElementForm({
+  showElementForm,
+  setShowUpdateElementForm,
+}) {
+  const [domainId, setDomainId] = useState("");
+  const [elementId, setElementId] = useState("");
+  const [description, setDescription] = useState("");
+  const [tags, setTags] = useState("");
   const [attributes, setAttributes] = useState([]);
-  const [extendsClass, setExtendsClass] = useState([]);
-  const [permittedChildClass, setPermittedChildClass] = useState([]);
 
   const addAttribute = () => {
     setAttributes([
@@ -27,77 +30,77 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
     setAttributes(updatedAttributes);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleUpdateElement = async (e) => {
+    e.preventDefault(); 
 
-    const classData = {
-      name: className,
-      description: classDescription,
-      extendsClass: extendsClass,
-      permittedChildClass: permittedChildClass,
-      attributes: attributes.map((attribute) => ({
-        name: attribute.name,
-        description: attribute.description,
-        mandatory: attribute.mandatory,
-        type: attribute.type,
-        unit: attribute.unit,
-      })),
-    };
+    try {
+      const updatedElementData = {
+        description,
+        // tags: tags.split(",").map((tag) => tag.trim()),
+        // attributes: attributes.map((attribute) => ({
+        //   name: attribute.name,
+        //   description: attribute.description,
+        //   mandatory: attribute.mandatory,
+        //   type: attribute.type,
+        //   unit: attribute.unit,
+        // })),
+      };
 
-    console.log(classData);
-    const response = await createInventoryClass(classData);
-
-    // Close the form after submission
-    setShowClassForm(false);
+      await updateElement(domainId, elementId, updatedElementData);
+      setShowUpdateElementForm(false);
+      // Optionally, add logic to handle successful update
+    } catch (error) {
+      console.error("Error updating element:", error.message);
+      // Handle error
+    }
   };
 
   return (
     <div className="admin-container">
-      <div className={`modal ${showClassForm ? "show" : "hide"}`}>
+      <div className={`modal ${showElementForm ? "show" : "hide"}`}>
         <div className="modal-content">
-          <span className="close" onClick={() => setShowClassForm(false)}>
+          <span
+            className="close"
+            onClick={() => setShowUpdateElementForm(false)}
+          >
             &times;
           </span>
-          
-          <form className="class-form" onSubmit={handleSubmit}>
-            <label htmlFor="className">Name:</label>
+          <form className="class-form" onSubmit={handleUpdateElement}>
+            <h2>Update Element</h2>
+
+            <label htmlFor="domainId">Domain ID:</label>
             <input
               type="text"
-              id="className"
-              name="className"
-              value={className}
-              onChange={(event) => setClassName(event.target.value)}
+              id="domainId"
+              value={domainId}
+              onChange={(e) => setDomainId(e.target.value)}
             />
 
-            <label htmlFor="classDescription">Description:</label>
+            <label htmlFor="elementId">Element ID:</label>
             <input
               type="text"
-              id="classDescription"
-              name="classDescription"
-              value={classDescription}
-              onChange={(event) => setClassDescription(event.target.value)}
+              id="elementId"
+              value={elementId}
+              onChange={(e) => setElementId(e.target.value)}
             />
 
-            <label htmlFor="extendsClass">Extends Class:</label>
+            <label htmlFor="description">Description:</label>
             <input
               type="text"
-              id="extendsClass"
-              name="extendsClass"
-              value={extendsClass}
-              onChange={(event) => setExtendsClass(event.target.value)}
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
 
-            <label htmlFor="permittedChildClass">Child Class:</label>
+            {/* <label htmlFor="tags">Tags:</label>
             <input
               type="text"
-              id="permittedChildClass"
-              name="permittedChildClass"
-              value={permittedChildClass}
-              onChange={(event) => setPermittedChildClass(event.target.value)}
-            />
-            <br />
+              id="tags"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+            /> */}
 
-            <label>Attributes:</label>
+            {/* <h3>Attributes:</h3>
             {attributes.map((attribute, index) => (
               <div key={index}>
                 <label htmlFor={`attrName${index}`}>Attribute Name:</label>
@@ -171,15 +174,11 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
                 <br />
                 <br />
               </div>
-            ))}
-
+            ))} */}
             <button type="button" onClick={addAttribute}>
               Add Attribute
             </button>
-
-            <br /><br />
-            
-            <input type="submit" value="Create Class" />
+            <input type="submit" value="Update Item" />
           </form>
         </div>
       </div>
@@ -187,4 +186,4 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   );
 }
 
-export default ClassForm;
+export default UpdateElementForm;

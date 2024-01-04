@@ -10,30 +10,28 @@ function ElementForm({ showElementForm, setShowElementForm }) {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const elementData = {
       name: slacId,
-      classId: '657255739020e27c45093336',
-      parentId: '657255739020e27c4509333a',
+      classId: '65776b431f936c48a322725e',
+      parentId: null,
       description: 'description',
       tags: [],
       attributes: [],
     };
-    console.log(elementData);
-
+  
     try {
       const response = await createInventoryElement(elementData);
       if (response.status === 201) {
-        alert('Inventory Element created successfully!');
+        alert('FORM: Inventory Element created successfully!');
         // Additional actions after successful creation
-      } else {
-        alert('Error creating Inventory Element. Please try again.');
       }
     } catch (error) {
-      console.error('Error creating Inventory Element:', error);
-      alert('Network error. Please check your connection.');
+      console.error('FORM: Error creating Inventory Element:', error);
+      alert('FORM: Network error. Please check your connection.');
     }
   };
+  
 
   return (
     <div className='admin-container'>

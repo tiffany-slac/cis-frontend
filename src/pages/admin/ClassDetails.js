@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumb';
-import './CaterDetails.css';
 
-const CaterDetails = () => {
+const ClassDetails = () => {
   const { id } = useParams(); // Get the asset ID from the URL params
   const [inventoryDetails, setInventoryDetails] = useState(null); // State to hold the asset details
   const [loading, setLoading] = useState(true);
@@ -12,28 +10,29 @@ const CaterDetails = () => {
 
   const breadcrumbItems = [
     { label: 'Home', link: '/' },
-    { label: 'Inventory', link: '/inventory' },
-    { label: 'Item Details', link: '/inventory/asset-details' },
+    { label: 'Admin', link: '/admin' },
+    { label: 'Class Details', link: '/admin/class-details' },
   ];
 
   const menuItems = ['Details', 'Description', 'Attachments', 'Activity'];
 
   // Make an API request to fetch asset details by ID  
   useEffect(() => {
-    const fetchInventoryDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/api/inventory/${id}`);
-        if (response.data) {
-          setInventoryDetails(response.data);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching inventory details:', error);
-        setLoading(false);
-      }
+    const fetchClassDetails = async (id) => {
+        try {
+            const classData = await fetchClass(id);
+            console.log('Fetched class data:', classData);
+            if (response.data) {
+                setInventoryDetails(response.data);
+              }
+              setLoading(false);
+          } catch (error) {
+            console.error('Error fetching class:', error.message);
+          }
+          console.log(`Clicked row with ID: ${classId}`);
     };
 
-    fetchInventoryDetails();
+    fetchClassDetails();
   }, [id]);
 
   const handleTabClick = (tabName) => {
@@ -178,5 +177,4 @@ const CaterDetails = () => {
   );
 };
 
-export default CaterDetails;
-
+export default ClassDetails;

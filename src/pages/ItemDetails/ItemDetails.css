@@ -12,16 +12,46 @@
     /* Add other styles as needed */
 }
 
+.item-details-content {
+  padding-left: 50px;
+  padding-right: 50px;
+  width: 100%;
+}
+
 /* Add card styles for the sections */
-.card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-  }
+.item-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 50px;
+  padding: 30px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  position: relative; /* Required for positioning */
+}
+
+.card-header {
+  color: rgba(144, 21, 21, 1);
+  font-weight: bold;
+  position: absolute; /* Positioned inside the card */
+  top: -15px; /* Adjust to position the title */
+  left: 10px; /* Move to the center */
+  background-color: white;
+  padding: 0 10px;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.card::before {
+  content: ""; /* To create a pseudo-element for the border */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  border-top: 1px solid #ccc; /* Border between header and body */
+  z-index: -1;
+}
+
   
 
 .item-details-container {

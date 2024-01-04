@@ -1,87 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faBarcode } from '@fortawesome/free-solid-svg-icons';
-import { fetchInventoryData } from '../../services/api'; 
+import { fetchInventoryData, fetchAllElements } from '../../services/api';
 import './Settings.css';
 
 function Settings() {
-  // State to hold inventory data fetched from the API
   const [inventoryData, setInventoryData] = useState([]);
 
-  // Fetch inventory data from the API on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch inventory data from the API
         const data = await fetchInventoryData();
         console.log(data);
         setInventoryData(data); // Update the state with fetched data
       } catch (error) {
-        // Handle errors if any
         console.error('Error fetching inventory data:', error);
       }
     };
 
-    fetchData(); 
+    fetchData();
   }, []);
-
-  // Hardcoded inventory data for testing
-  // const hardcodedData = [
-  //   {
-  //     "_id": "server001",
-  //     "name": "Main Server",
-  //     "type": "Server",
-  //     "classType": "serverClass",
-  //     "parent_id": "dataCenter1",
-  //     "attributes": {
-  //       "CPU": "Intel Xeon E5",
-  //       "RAM": "64GB",
-  //       "Storage": "4TB",
-  //       "NetworkPorts": 4
-  //     },
-  //     "connector_class": [
-  //       {
-  //         "count": 1,
-  //         "type": "powerSupplyConnectorClass"
-  //       },
-  //       {
-  //         "count": 4,
-  //         "type": "rj45FemaleConnectorClass"
-  //       }
-  //     ],
-  //     "history": [
-  //       {
-  //         "date": "2023-04-10",
-  //         "action": "Installed",
-  //         "description": "Server installed in Data Center 1."
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     "_id": "powerSupply001",
-  //     "name": "Server Power Supply",
-  //     "type": "PowerSupply",
-  //     "classType": "powerSupplyClass",
-  //     "parent_id": "server001",
-  //     "attributes": {
-  //       "Wattage": 800,
-  //       "EfficiencyRating": "Gold"
-  //     },
-  //     "connectors": [
-  //       {
-  //         "count": 1,
-  //         "type": "powerSupplyMaleConnectorClass"
-  //       }
-  //     ],
-  //     "history": [
-  //       {
-  //         "date": "2023-04-12",
-  //         "action": "Added",
-  //         "description": "Power supply added to Main Server."
-  //       }
-  //     ]
-  //   }
-  // ];
 
   // State for search query, sorting, filtering, etc.
   const [searchQuery, setSearchQuery] = useState('');
@@ -118,6 +56,19 @@ function Settings() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchAllElements();
+        setInventoryData(data.payload); // Update inventoryData with API response data
+      } catch (error) {
+        console.error('Error fetching inventory elements:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="inventory-page">
@@ -156,6 +107,21 @@ function Settings() {
           </span>
         </div>
       </div>
+
+      <div className="inventory-cards">
+      {inventoryData.map((item, index) => (
+        <div className="inventory-card" key={index}>
+          <div className="card-details">
+            <img src={item.imageUrl} alt={item.name} className="card-image" />
+            <div>
+              <span className="card-id">{item.id}</span>
+              <h3 className="card-name">{item.name}</h3>
+              <span className="card-classid">{item.classId}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
     </div>
   );
 }

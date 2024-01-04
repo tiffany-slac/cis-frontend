@@ -1,0 +1,233 @@
++--------------------+
+|     Building       |
++--------------------+
+| - ID               |
+| - Name             |
+| - Description      |
+| - Type: Building   |
+| - Attributes:      |
+|    building_num:str|
++--------------------+
+       |
+       | (Has)
+       |
++--------------------+
+|       Floor        |
++--------------------+
+| - ID               |
+| - Name             |
+| - Description      |
+| - Type: Floor      |
+| - Attributes:      |
+|    floor_num: str  |
+|    buildingId: str |
++--------------------+
+       |
+       | (Has)
+       |
++--------------------+
+|       Room         |
++--------------------+
+| - ID               |
+| - Name             |
+| - Description      |
+| - Type: Room       |
+| - Attributes:      |
+|    room_num: str   |
+|    floorId: str    |
++--------------------+
+       |
+       | (Contains)
+       |
++------------------+
+|       Item       |
++------------------+
+| - ID             |
+| - Name           |
+| - Description    |
+| - Type: Item     |
+| - Attributes:    |
+|    slac_id: str  |
+|    model_id: str |
+|    serial: str   |
+|    roomId: str   |
+| - History:       |
+| - Maintenace:    |
++------------------+
+       |
+       | (References)
+       |
++------------------+
+|  Specification   |
++------------------+
+| - ID             |
+| - MakerName      |
+| - Model          |
+| - Revision       |
+| - CUE Category   |
++------------------+
+
+
+Building:
+
+1. Building Class Template:
+    {
+        "id":"6577481d1f936c48a3227250",
+        "name":"building",
+        "description":"building",
+        "type":"Building",
+        "attributes":[
+            {"name":"building-number",
+            "description":"The number that identify the building",
+            "type":"String"},
+            {"name":"security-level",
+            "description":"Determinate the security level choosing from [Green, Yellow, Red]",
+            "type":"String"}
+        ]
+    }
+
+2. Building Element Example:
+    {
+        "id":"6577481d1f936c48a322725b",
+        "name":"building-34",
+        "domainId":"6577481d1f936c48a322725a",
+        "classId":"6577481d1f936c48a3227250",
+        "attributes":[],
+        "tags":[],
+        "createdDate":"2023-12-11T17:34:21.698",
+        "lastModifiedDate":"2023-12-11T17:34:21.698"
+    }
+
+Nickname:
+
+1. Nickname Class Template:
+    {
+        "id": "6577481d1f936c48a3227250",
+        "name": "nickname",
+        "description":"nickname",
+        "classType": "Nickname",
+        "attributes": {
+            "Maker Name": {"mandatory": true, "type": "string"},
+            "Model": {"mandatory": true, "type": "string"},
+            "Revision": {"mandatory": false, "type": "string"},
+            "CUE Category": {"mandatory": false, "type": "string"}
+        }
+    }
+    
+2. Nickname Element Example:
+    {
+        "id": "12345689",
+        "name": "ADVANTECH 1U SERVER - SKY-8100",
+        "classType": "Nickname",
+        "attributes": [
+            {"Maker Name": "ADVANTECH"},
+            {"Model": "SKY-8100"},
+        ]
+    }
+
+
+
+DEPOT:
+
+1. DEPOT Class Template
+    {
+        "id": "6577481d1f936c48a3227250",
+        "name": "slacID",
+        "description":"Item",
+        "classType": "Item",
+        "attributes": {
+            "NicknameId": {"mandatory": true, "type": "string"},
+            "Serial": {"mandatory": true, "type": "string"}
+        }
+    }
+
+
+2. DEPOT Element Example
+    {
+        "id": "6577481d1f936c48a322725b",
+        "name": "PC94260",
+        "classType": "Item",
+        "attributes": [
+            {"NicknameId": "12345689"},
+            {"Serial": "TPD0283256"},
+        ]
+        "history": [
+            {
+            "date": "2023-04-12",
+            "action": "Added",
+            "description": "Power supply added to Main Server."
+            }
+        ]
+    }
+
+
+
+Class Types (Templates):
+- Item
+- Cable
+- Connector
+
+Class Entities:
+{
+  "_id": "itemClass",
+  "name": "ItemDetails",
+  "classType": "Item",
+  "attributes": {
+    "Maker Name": {"mandatory": true, "type": "string"},
+    "Model": {"mandatory": true, "type": "string"},
+    "Revision": {"mandatory": true, "type": "string"},
+    "CUE Category": {"mandatory": true, "type": "string"}
+  }
+}
+
+{
+  "_id": "rj45FemaleConnectorClass",
+  "name": "RJ45Connector",
+  "classType": "Connector",
+  "attributes": {
+    "Type": {"mandatory": true, "type": "string"},
+    "Compatibility": {"mandatory": true, "type": "string"}
+  }
+}
+
+{
+  "_id": "powerCordCableClass",
+  "name": "PowerCordCable",
+  "classType": "Cable",
+  "attributes": {
+    "Length": {"mandatory": true, "type": "number", "unit": "meters"},
+    "PlugType": {"mandatory": true, "type": "string"}
+  }
+}
+
+Element:
+{
+  "_id": "server001",
+  "name": "Main Server",
+  "type": "Server",
+  "classType": "serverClass",
+  "parent_id": "dataCenter1",
+  "attributes": {
+    "CPU": "Intel Xeon E5",
+    "RAM": "64GB",
+    "Storage": "4TB",
+    "NetworkPorts": 4
+  },
+  "connector_class": [
+        {
+          "count": 1,
+          "type": "powerSupplyConnectorClass"
+        },
+        {
+        "count": 4,
+        "type": "rj45FemaleConnectorClass"
+        }
+  ],
+  "history": [
+    {
+      "date": "2023-04-10",
+      "action": "Installed",
+      "description": "Server installed in Data Center 1."
+    }
+  ]
+}

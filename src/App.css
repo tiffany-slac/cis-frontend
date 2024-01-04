@@ -19,18 +19,18 @@ body {
 }
 
 /* Sidebar styles */
-.Sidebar {
+/* .Sidebar {
   top: 60px;
   left: 0;
   width: 200px; 
   background: rgba(144, 21, 21, 1); 
   padding: 10px 10px 0px 10px;
-  transition: width 0.3s ease; /* Add a transition for smoother animation */
+  transition: width 0.3s ease; 
   position: fixed;
   z-index: 0;
   height: 100vh;
   align-items: center;
-} 
+}  */
 
 .Content {
   flex: 1; /* This will make the Content div take up the remaining horizontal space */
@@ -39,14 +39,14 @@ body {
 }
 
 /* Adjust the sidebar width for a collapsed sidebar */
-.Sidebar.collapsed {
-  width: 35px; /* Adjust the width to your preference */
-}
+/* .Sidebar.collapsed {
+  width: 35px; /* Adjust the width to your preference 
+} */
 
 /* Hide labels when the sidebar is collapsed */
-.Sidebar.collapsed .label {
+/* .Sidebar.collapsed .label {
   display: none;
-}
+} */
 
 ul {
   list-style-position: inside;
@@ -58,7 +58,7 @@ ul {
   margin-top: 60px; /* Height of the header */
   margin-left: 55px; /* Width of the sidebar */
   flex: 1;
- /* min-height: 100vh;
+  /* min-height: 100vh;
   height: 100%; */
   width: calc(100% - 250px);
   /* Take remaining height after considering the header */
@@ -88,30 +88,6 @@ ul {
 .profile-name {
   margin-top: 10px;
   font-weight: bold;
-}
-
-.icon-button {
-  font-size: 24px; /* Adjust the font size for the button */
-  text-align: left; /* Align the text to the left within the button */
-  background-color: transparent; /* Make the button background transparent */
-  border: none; /* Remove button border if needed */
-  margin-bottom: 15px;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.icon {
-  font-size: 15px; /* Adjust the icon size */
-  margin-right: 20px; /* Add margin between the icon and label */
-  color: whitesmoke;
-}
-
-.label {
-  font-size: 18px; /* Adjust the label font size */
-  vertical-align: middle; /* Align the label vertically with the icon */
-  color: whitesmoke;
-  /* opacity: 0; Initially hide labels */
-  transition: opacity 0.3s ease, transform 0.3s ease; /* Transition for opacity and position */
 }
 
 .breadcrumb a {
@@ -183,27 +159,26 @@ ul {
 @media (max-width: 768px) {
   .App {
     flex-direction: column; /* Change to a column layout for smaller screens */
-  } 
+  }
 
   .Sidebar {
-    width: 35px; 
-  } 
+    width: 35px;
+  }
 
   .Sidebar.collapsed .label {
     display: none;
-  }   
+  }
 }
 
 /* Styles for smaller screens */
 @media (max-width: 480px) {
-
   .Sidebar {
-    width: 35px; 
-  } 
+    width: 35px;
+  }
 
   .Sidebar.collapsed .label {
     display: none;
-  }  
+  }
 
   .Main {
     padding: 10px 10px 0px 10px; /* Adjust padding for smaller screens */

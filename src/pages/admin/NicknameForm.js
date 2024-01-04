@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { createInventoryClass } from "../../services/api";
 
-function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
+function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
   const [className, setClassName] = useState("");
   const [classDescription, setClassDescription] = useState("");
   const [attributes, setAttributes] = useState([]);
-  const [extendsClass, setExtendsClass] = useState([]);
-  const [permittedChildClass, setPermittedChildClass] = useState([]);
 
   const addAttribute = () => {
     setAttributes([
@@ -32,9 +30,8 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
 
     const classData = {
       name: className,
-      description: classDescription,
-      extendsClass: extendsClass,
-      permittedChildClass: permittedChildClass,
+      type: selectedClassType,
+      description: classDescription, // [newInventoryClassDTO] description: must not be empty
       attributes: attributes.map((attribute) => ({
         name: attribute.name,
         description: attribute.description,
@@ -53,13 +50,14 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
 
   return (
     <div className="admin-container">
-      <div className={`modal ${showClassForm ? "show" : "hide"}`}>
+      <div className={`modal ${showNicknameForm ? "show" : "hide"}`}>
         <div className="modal-content">
-          <span className="close" onClick={() => setShowClassForm(false)}>
+          <span className="close" onClick={() => setShowNicknameForm(false)}>
             &times;
           </span>
           
           <form className="class-form" onSubmit={handleSubmit}>
+            
             <label htmlFor="className">Name:</label>
             <input
               type="text"
@@ -68,6 +66,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
               value={className}
               onChange={(event) => setClassName(event.target.value)}
             />
+            <br />
 
             <label htmlFor="classDescription">Description:</label>
             <input
@@ -77,24 +76,21 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
               value={classDescription}
               onChange={(event) => setClassDescription(event.target.value)}
             />
+            <br />
 
-            <label htmlFor="extendsClass">Extends Class:</label>
-            <input
-              type="text"
-              id="extendsClass"
-              name="extendsClass"
-              value={extendsClass}
-              onChange={(event) => setExtendsClass(event.target.value)}
-            />
-
-            <label htmlFor="permittedChildClass">Child Class:</label>
-            <input
-              type="text"
-              id="permittedChildClass"
-              name="permittedChildClass"
-              value={permittedChildClass}
-              onChange={(event) => setPermittedChildClass(event.target.value)}
-            />
+            <label htmlFor="classType">Select Class Type:</label>
+            <select
+            id="classType"
+            value={selectedClassType}
+            onChange={handleClassTypeChange}
+          >
+            <option value="">Select Class Type</option>
+            {classTypes.map((classType, index) => (
+              <option key={index} value={classType}>
+                {classType}
+              </option>
+            ))}
+          </select>
             <br />
 
             <label>Attributes:</label>
@@ -172,13 +168,11 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
                 <br />
               </div>
             ))}
-
             <button type="button" onClick={addAttribute}>
               Add Attribute
             </button>
-
-            <br /><br />
-            
+            <br />
+            <br />
             <input type="submit" value="Create Class" />
           </form>
         </div>
@@ -187,4 +181,4 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   );
 }
 
-export default ClassForm;
+export default NicknameForm;
