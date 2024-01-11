@@ -1,6 +1,6 @@
 // Inventory.js
 import React, { useState, useEffect } from "react";
-import { fetchAllElements, searchInventory } from "../../services/api";
+import { fetchAllElements, searchElements } from "../../services/api";
 import { useHistory } from "react-router-dom";
 import ItemForm from "../admin/ItemForm.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -38,7 +38,7 @@ const Inventory = () => {
       setCurrentPage(1);
       setLastItemId(null);
 
-      const searchData = await fetchAllElements(itemsPerPage, currentPage, null, searchInput);
+      const searchData = await searchElements(searchInput);
 
       setInventory(searchData.payload);
       setLastItemId(searchData.payload[searchData.payload.length - 1]?.id || null);

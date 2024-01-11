@@ -9,7 +9,7 @@ import LocationForm from "./LocationForm";
 import ObjectForm from "./ObjectForm";
 import ItemForm from "./ItemForm";
 import UpdateElementForm from "./UpdateElementForm";
-import "./Admin.css";
+import "./admin.css";
 
 function Admin() {
   const history = useHistory();

@@ -72,7 +72,7 @@ function Settings() {
 
   return (
     <div className="inventory-page">
-      <div className="search-container">
+      {/* <div className="search-container">
       <div className="search-wrapper">
         <FontAwesomeIcon icon={faSearch} className="search-icon" />
         <input
@@ -89,13 +89,13 @@ function Settings() {
           <option value="">Sort By</option>
           <option value="price">Price</option>
           {/* Add other sorting options */}
-        </select>
-        <div>
+        {/* </select>
+        <div>  */}
           {/* <span>
             {((currentPage - 1) * itemsPerPage) + 1}-
             {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
           </span> */}
-          <span>
+          {/* <span>
             Show:
             <select onChange={handleItemsPerPageChange}>
               <option value="10">10</option>
@@ -106,9 +106,9 @@ function Settings() {
             </select>
           </span>
         </div>
-      </div>
+      </div> */}
 
-      <div className="inventory-cards">
+      {/* <div className="inventory-cards">
       {inventoryData.map((item, index) => (
         <div className="inventory-card" key={index}>
           <div className="card-details">
@@ -121,7 +121,7 @@ function Settings() {
           </div>
         </div>
       ))}
-    </div>
+    </div> */}
     </div>
   );
 }

@@ -589,6 +589,40 @@ export const fetchAllClass = async () => {
   }
 };
 
+export const searchElements = async (searchQuery = "") => {
+  try {
+    const token = await extractJWT();
+    const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : "";
+
+    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?${searchParam}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-vouch-idp-accesstoken': token,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      // Log details before throwing the error
+      console.error(`Failed to fetch inventory elements. URL: ${url}, Status: ${response.status}, StatusText: ${response.statusText}`);
+
+      // Include detailed error message
+      const errorData = await response.json().catch(() => null); // Try to parse JSON error response
+      const errorMessage = errorData?.message || 'Unknown error';
+      
+      throw new Error(`Error fetching inventory elements. Status: ${response.status}, Message: ${errorMessage}`);
+    }
+  } catch (error) {
+    console.error('Error fetching inventory elements:', error.message);
+    throw error; // Re-throw the original error for higher-level handling
+  }
+};
+
 export const fetchAllElements = async (limit = 5, page = 1, anchorId = null, searchQuery = "") => {
   try {
     const token = await extractJWT();
