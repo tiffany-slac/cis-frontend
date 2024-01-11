@@ -1,51 +1,48 @@
-import React, { useState, useEffect} from "react";
-import { createInventoryClass } from "../../services/api";
+import React, { useState } from "react";
+import { createInventoryElement } from "../../services/api";
 
 function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
-  const [className, setClassName] = useState("");
-  const [classDescription, setClassDescription] = useState("");
+  const [itemName, setItemName] = useState("");
+  //   const [classDescription, setClassDescription] = useState("");
+  const [maker, setMaker] = useState('');
+  const [model, setModel] = useState('');
+  const [cueCategory, setCueCategory] = useState('');
+  const [revision, setRevision] = useState('');
+  const [parentId, setParentId] = useState('');
   const [attributes, setAttributes] = useState([]);
-
-  const addAttribute = () => {
-    setAttributes([
-      ...attributes,
-      {
-        name: "",
-        description: "",
-        mandatory: true,
-        type: "String",
-        unit: "",
-      },
-    ]);
-  };
-
-  const handleAttributeChange = (index, key, value) => {
-    const updatedAttributes = [...attributes];
-    updatedAttributes[index][key] = value;
-    setAttributes(updatedAttributes);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      const classData = {
+        name: itemName,
+        description: "A nickname",
+        classId: "65a022f8a11a67235b702edc", // nickname classId
+        parentId: null,
+        tags: [],
+        attributes: [
+          { name: "maker-name", description: maker },
+          { name: "model", description: model },
+          { name: "cue-category", description: cueCategory },
+          { name: "revision", description: revision },
+        ],
+      };
 
-    const classData = {
-      name: className,
-      type: selectedClassType,
-      description: classDescription, // [newInventoryClassDTO] description: must not be empty
-      attributes: attributes.map((attribute) => ({
-        name: attribute.name,
-        description: attribute.description,
-        mandatory: attribute.mandatory,
-        type: attribute.type,
-        unit: attribute.unit,
-      })),
-    };
+      console.log(classData);
+      const response = await createInventoryElement(classData);
+      console.log("API Response:", response); // Log the API response
 
-    console.log(classData);
-    const response = await createInventoryClass(classData);
+      // Display a success message or take further action based on the response
+      alert("Item created successfully!");
 
-    // Close the form after submission
-    setShowClassForm(false);
+      // Close the form after submission
+      setShowNicknameForm(false);
+    } catch (error) {
+      console.error("Error during item creation:", error);
+      alert(
+        "Failed to create item. Please check your connection or try again later."
+      );
+    }
   };
 
   return (
@@ -55,42 +52,52 @@ function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
           <span className="close" onClick={() => setShowNicknameForm(false)}>
             &times;
           </span>
-          
           <form className="class-form" onSubmit={handleSubmit}>
-            
-            <label htmlFor="className">Name:</label>
+            <label htmlFor="itemName">Name:</label>
             <input
               type="text"
-              id="className"
-              name="className"
-              value={className}
-              onChange={(event) => setClassName(event.target.value)}
+              id="itemName"
+              name="itemName"
+              value={itemName}
+              onChange={(event) => setItemName(event.target.value)}
             />
-            <br />
 
-            <label htmlFor="classDescription">Description:</label>
+            <label htmlFor="maker">Maker:</label>
             <input
               type="text"
-              id="classDescription"
-              name="classDescription"
-              value={classDescription}
-              onChange={(event) => setClassDescription(event.target.value)}
+              id="maker"
+              name="maker"
+              value={maker}
+              onChange={(event) => setMaker(event.target.value)}
             />
-            <br />
 
-            <label htmlFor="classType">Select Class Type:</label>
-            <select
-            id="classType"
-            value={selectedClassType}
-            onChange={handleClassTypeChange}
-          >
-            <option value="">Select Class Type</option>
-            {classTypes.map((classType, index) => (
-              <option key={index} value={classType}>
-                {classType}
-              </option>
-            ))}
-          </select>
+            <label htmlFor="model">Model:</label>
+            <input
+              type="text"
+              id="model"
+              name="model"
+              value={model}
+              onChange={(event) => setModel(event.target.value)}
+            />
+
+            <label htmlFor="cueCategory">CUE Category:</label>
+            <input
+              type="text"
+              id="cueCategory"
+              name="cueCategory"
+              value={cueCategory}
+              onChange={(event) => setCueCategory(event.target.value)}
+            />
+
+            <label htmlFor="revision">Revision:</label>
+            <input
+              type="text"
+              id="revision"
+              name="revision"
+              value={revision}
+              onChange={(event) => setRevision(event.target.value)}
+            />
+
             <br />
 
             <label>Attributes:</label>
@@ -108,72 +115,26 @@ function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
                 />
                 <br />
 
-                <label htmlFor={`attrDescription${index}`}>
-                  Attribute Description:
-                </label>
+                {/* Add input field for attribute value */}
+                <label htmlFor={`attrValue${index}`}>Attribute Value:</label>
                 <input
                   type="text"
-                  id={`attrDescription${index}`}
-                  name={`attrDescription${index}`}
-                  value={attribute.description}
+                  id={`attrValue${index}`}
+                  name={`attrValue${index}`}
+                  value={attribute.value}
                   onChange={(event) =>
-                    handleAttributeChange(
-                      index,
-                      "description",
-                      event.target.value
-                    )
-                  }
-                />
-                <br />
-
-                <label htmlFor={`attrMandatory${index}`}>Mandatory:</label>
-                <input
-                  type="checkbox"
-                  id={`attrMandatory${index}`}
-                  name={`attrMandatory${index}`}
-                  checked={attribute.mandatory}
-                  onChange={(event) =>
-                    handleAttributeChange(
-                      index,
-                      "mandatory",
-                      event.target.checked
-                    )
-                  }
-                />
-                <br />
-
-                <label htmlFor={`attrType${index}`}>Attribute Type:</label>
-                <input
-                  type="text"
-                  id={`attrType${index}`}
-                  name={`attrType${index}`}
-                  value={attribute.type}
-                  onChange={(event) =>
-                    handleAttributeChange(index, "type", event.target.value)
-                  }
-                />
-                <br />
-
-                <label htmlFor={`attrUnit${index}`}>Attribute Unit:</label>
-                <input
-                  type="text"
-                  id={`attrUnit${index}`}
-                  name={`attrUnit${index}`}
-                  value={attribute.unit}
-                  onChange={(event) =>
-                    handleAttributeChange(index, "unit", event.target.value)
+                    handleAttributeChange(index, "value", event.target.value)
                   }
                 />
                 <br />
                 <br />
               </div>
             ))}
-            <button type="button" onClick={addAttribute}>
-              Add Attribute
-            </button>
+
             <br />
             <br />
-            <input type="submit" value="Create Class" />
+
+            <input type="submit" value="Create Item" />
           </form>
         </div>
       </div>

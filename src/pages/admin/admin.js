@@ -1,26 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { fetchClassTypes, updateElement, fetchClass, fetchAllClass, fetchAllDomain, fetchDomain, fetchAllElements, fetchElement } from '../../services/api';
-import { faBox, faObjectGroup, faSquarePollVertical} from '@fortawesome/free-solid-svg-icons';
-import ClassForm from './ClassForm';
-import ElementForm from './ElementForm';
-import ObjectForm from './ObjectForm';
-import ItemForm from './ItemForm';
-import UpdateElementForm from './UpdateElementForm';
-import './Admin.css';
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { fetchPath, fetchAllClass, fetchAllDomain, countElementsByClassId, fetchAllElements, fetchElement, fetchImplementation, fetchClass } from "../../services/api";
+import { faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
+import ClassForm from "./ClassForm";
+import NicknameForm from "./NicknameForm";
+import LocationForm from "./LocationForm";
+import ObjectForm from "./ObjectForm";
+import ItemForm from "./ItemForm";
+import UpdateElementForm from "./UpdateElementForm";
+import "./Admin.css";
 
 function Admin() {
   const history = useHistory();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showElementForm, setShowElementForm] = useState(false);
+  const [showNicknameForm, setShowNicknameForm] = useState(false);
   const [showItemForm, setShowItemForm] = useState(false);
+  const [showLocationForm, setShowLocationForm] = useState(false);
   const [showObjectForm, setShowObjectForm] = useState(false);
   const [showClassForm, setShowClassForm] = useState(false);
   const [showUpdateElementForm, setShowUpdateElementForm] = useState(false);
   const [classTypes, setClassTypes] = useState([]);
 
+  const [domains, setDomains] = useState([]);
   const [classes, setClasses] = useState([]);
+  const [elements, setElements] = useState([]);
+  const [pathData, setPathData] = useState(null);
+  const [allElements, setAllElements] = useState(null);
+
+  const [nicknameCount, setNicknameCount] = useState(0);
+  const [buildingCount, setBuildingCount] = useState(0);
+  const [itemCount, setItemCount] = useState(0);
+
+useEffect(() => {
+  // Fetch and update the element count when the component mounts
+  const fetchNicknameCount = async () => {
+    try {
+      const count = await countElementsByClassId("65a022f8a11a67235b702edc");
+      setNicknameCount(count);
+    } catch (error) {
+      console.error('Error fetching element count:', error.message);
+    }
+  };
+
+  fetchNicknameCount();
+}, []);
+
+useEffect(() => {
+  // Fetch and update the element count when the component mounts
+  const fetchBuildingCount = async () => {
+    try {
+      const count = await countElementsByClassId('65a020bca11a67235b702ecf');
+      setBuildingCount(count);
+    } catch (error) {
+      console.error('Error fetching element count:', error.message);
+    }
+  };
+
+  fetchBuildingCount();
+}, []);
+
+useEffect(() => {
+  // Fetch and update the element count when the component mounts
+  const fetchItemCount = async () => {
+    try {
+      const count = await countElementsByClassId('65a02546a11a67235b702ee1');
+      setItemCount(count);
+    } catch (error) {
+      console.error('Error fetching element count:', error.message);
+    }
+  };
+
+  fetchItemCount();
+}, []);
+
+  useEffect(() => {
+
+    const elementId = "65a020bca11a67235b702ed9";
+
+    const fetchData = async () => {
+      try {
+        const pathResult = await fetchPath( elementId, 'Full');
+        setPathData(pathResult);
+      } catch (error) {
+        console.error("Error fetching path:", error);
+      }
+    };
+
+    fetchData(); 
+  }, []);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -32,61 +100,91 @@ function Admin() {
   };
 
   useEffect(() => {
+    const fetchDomains = async () => {
+      try {
+        const response = await fetchAllDomain();
+        if (response.errorCode === 0) {
+          setDomains(response.payload);
+        } else {
+          throw new Error("Error fetching classes");
+        }
+      } catch (error) {
+        console.error("Error fetching class types:", error.message);
+      }
+    };
+
+    fetchDomains(); // Call the function to fetch class types when the component mounts
+  }, []);
+
+  useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetchAllClass(); 
+        const response = await fetchAllClass();
         if (response.errorCode === 0) {
           setClasses(response.payload);
         } else {
-          throw new Error('Error fetching classes');
+          throw new Error("Error fetching classes");
         }
       } catch (error) {
-        console.error('Error fetching class types:', error.message);
+        console.error("Error fetching class types:", error.message);
       }
     };
 
     fetchClasses(); // Call the function to fetch class types when the component mounts
   }, []);
 
+  useEffect(() => {
+    const fetchElements = async () => {
+      try {
+        const response = await fetchAllElements(20);
+        if (response.errorCode === 0) {
+          setElements(response.payload);
+        } else {
+          throw new Error("Error fetching classes");
+        }
+      } catch (error) {
+        console.error("Error fetching class types:", error.message);
+      }
+    };
+
+    fetchElements(); // Call the function to fetch class types when the component mounts
+  }, []);
 
   const handleRowClick = (classId) => {
     history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const alldomain = await fetchAllDomain();
-        // console.log("ALL DOMAIN: " + JSON.stringify(alldomain));
-        // const adomain = await fetchAllDomain();
-        // console.log("ONE DOMAIN: " + JSON.stringify(adomain));
+        // const aChild = await fetchElementChildren();
+        // console.log("CHILDREN: " + JSON.stringify(aChild));
+        // const implementation = await fetchImplementation("659da090436dda6f355adc98");
+        // console.log("IMPLEMENTATION: " + JSON.stringify(implementation));
         const allClass = await fetchAllClass();
         console.log("ALL CLASSES: " + JSON.stringify(allClass));
-        const aclass = await fetchClass();
-        console.log("ONE CLASS: " + JSON.stringify(aclass));
-        // const element = await fetchAllElements();
-        // console.log("ALL ELEMENTS: " + JSON.stringify(element));
-        const aelement = await fetchElement();
-        console.log("ONE ELEMENT: " + JSON.stringify(aelement));
-    //     const data = await fetchClassTypes(); 
-    //     if (data && data.payload && Array.isArray(data.payload)) {
-    //       setClassTypes(data.payload); // Set state with the payload array
-    //     } else {
-    //       throw new Error('Invalid data structure received');
-    //     }
+        // const path = await fetchPath();
+        // console.log("A PATH: " + JSON.stringify(path));
+        // const aclass = await fetchClass('659f31048a79764e92f1d0d5');
+        // console.log("ONE CLASS: " + JSON.stringify(aclass));
+        // const abclass = await fetchClass('65a022f8a11a67235b702edc');
+        // console.log("ONE CLASS: " + JSON.stringify(abclass));
+        // const abclass = await fetchClass('659f23ad8a79764e92f1d0cc');
+        // console.log("ONE CLASS: " + JSON.stringify(abclass));
+        const element = await fetchAllElements();
+        console.log("ALL ELEMENTS: " + JSON.stringify(element));
+        // const aelement = await fetchElement('659f37c68a79764e92f1d0d8');
+        // console.log("ONE ELEMENT: " + JSON.stringify(aelement));
       } catch (error) {
-        console.error('Error fetching class types:', error.message);
+        console.error("Error fetching class types:", error.message);
       }
     };
 
     fetchData(); // Call the function to fetch class types when the component mounts
   }, []);
 
-
   return (
     <div>
-
       <h1>Admin Dashboard</h1>
 
       <div className="top-right">
@@ -96,58 +194,96 @@ function Admin() {
           </button>
           {showDropdown && (
             <div className="dropdown-content">
-              <button onClick={(event) => {
-                  handleItemClick(event); 
-                  setShowClassForm(!showClassForm); 
-                }}>Class</button>
-              {/* <button onClick={() => handleItemClick('Building')}>Building</button>
-              <button onClick={() => handleItemClick('Floor')}>Floor</button>
-              <button onClick={() => handleItemClick('Room')}>Room</button> */}
-              <button onClick={(event) => {
-                  handleItemClick(event); 
-                  setShowObjectForm(!showObjectForm); 
-                }}>Nickname</button>
-              <button onClick={(event) => {
-                handleItemClick(event);
-                setShowItemForm(!showItemForm); 
-                }}>Item</button>
-              {/* <button onClick={() => handleItemClick('Cable')}>Cable</button> */}
+              
+              {showClassForm && (
+                <ClassForm
+                  setShowClassForm={setShowClassForm}
+                  classTypes={classTypes}
+                />
+              )}
+              <button
+                onClick={(event) => {
+                  handleItemClick(event);
+                  setShowClassForm(!showClassForm);
+                }}
+              >
+                Class
+              </button>
+
+              {showLocationForm && (
+                <LocationForm setShowLocationForm={setShowLocationForm} />
+              )}
+              <button
+                onClick={(event) => {
+                  handleItemClick(event);
+                  setShowLocationForm(!showLocationForm);
+                }}
+              >
+                Location
+              </button>
+
+              {showNicknameForm && (
+                <NicknameForm setShowNicknameForm={setShowNicknameForm} />
+              )}
+              <button
+                onClick={(event) => {
+                  handleItemClick(event);
+                  setShowNicknameForm(!showNicknameForm);
+                }}
+              >
+                Nickname
+              </button>
+
+              {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />}
+              <button
+                onClick={(event) => {
+                  handleItemClick(event);
+                  setShowItemForm(!showItemForm);
+                }}
+              >
+                Item
+              </button>
+
             </div>
           )}
         </div>
       </div>
 
       <div className="card-container">
-
         <div className="admin-card">
           <div className="card-content">
             <div>
-              <h2>67</h2>
+              <h2>{buildingCount}</h2>
               <p>Buildings</p>
             </div>
             <div className="card-icon">
-            <FontAwesomeIcon icon={faBox} title="Home" />
-          </div>
+              <FontAwesomeIcon icon={faBox} title="Home" />
+            </div>
           </div>
           <div className="card-action">
-              <span className="card-add">+</span>
+            <span className="card-add">+</span>
           </div>
         </div>
 
         <div className="admin-card">
           <div className="card-content">
             <div>
-              <h2>12</h2>
+              <h2>{nicknameCount}</h2>
               <p>Nicknames</p>
             </div>
             <div className="card-icon">
-            <FontAwesomeIcon icon={faObjectGroup} title="Home" />
+              <FontAwesomeIcon icon={faObjectGroup} title="Home" />
+            </div>
           </div>
+          <div
+            className="card-action"
+            onClick={() => setShowObjectForm(!showObjectForm)}
+          >
+            <span className="card-add">+</span>
           </div>
-          <div className="card-action" onClick={() => setShowObjectForm(!showObjectForm)}>
-              <span className="card-add">+</span>
-          </div>
-          {showObjectForm && <ObjectForm setShowObjectForm={setShowObjectForm} />}
+          {showObjectForm && (
+            <ObjectForm setShowObjectForm={setShowObjectForm} />
+          )}
         </div>
 
         {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />}
@@ -155,46 +291,117 @@ function Admin() {
         <div className="admin-card">
           <div className="card-content">
             <div>
-              <h2>3</h2>
+              <h2>{itemCount}</h2>
               <p>Items</p>
             </div>
             <div className="card-icon">
-            <FontAwesomeIcon icon={faSquarePollVertical} title="Home" />
+              <FontAwesomeIcon icon={faSquarePollVertical} title="Home" />
+            </div>
           </div>
+          <div
+            className="card-action"
+            onClick={() => setShowClassForm(!showClassForm)}
+          >
+            <span className="card-add">+</span>
           </div>
-          <div className="card-action" onClick={() => setShowClassForm(!showClassForm)}>
-              <span className="card-add">+</span>
-          </div>
-          {showClassForm && <ClassForm setShowClassForm={setShowClassForm} classTypes={classTypes} />}
         </div>
-
       </div>
 
       <div>
-      <h2>Classes</h2>
-      <table className='class-table'>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>ID</th>
-          </tr>
-        </thead>
-        <tbody>
-          {classes.map((classItem, index) => (
-            <tr key={index} onClick={() => handleRowClick(classItem.id)} className="class-item">
-              <td>{classItem.name}</td>
-              <td>{classItem.id}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        <h3>Element Path</h3>
+        {pathData ? (
+          <div>
+            <pre>{JSON.stringify(pathData, null, 2)}</pre>
+          </div>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
 
-      <button className="create-class-btn" onClick={() => setShowUpdateElementForm(!showUpdateElementForm)}>
+      <div>
+        <h2>Domains</h2>
+        <table className="class-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {domains.map((classItem, index) => (
+              <tr
+                key={index}
+                onClick={() => handleRowClick(classItem.id)}
+                className="class-item"
+              >
+                <td>{classItem.name}</td>
+                <td>{classItem.id}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <h2>Classes</h2>
+        <table className="class-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {classes.map((classItem, index) => (
+              <tr
+                key={index}
+                onClick={() => handleRowClick(classItem.id)}
+                className="class-item"
+              >
+                <td>{classItem.name}</td>
+                <td>{classItem.id}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <h2>Elements</h2>
+        <table className="class-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {elements.map((classItem, index) => (
+              <tr
+                key={index}
+                onClick={() => handleRowClick(classItem.id)}
+                className="class-item"
+              >
+                <td>{classItem.name}</td>
+                <td>{classItem.id}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <button
+        className="create-class-btn"
+        onClick={() => setShowUpdateElementForm(!showUpdateElementForm)}
+      >
         Update Object
       </button>
-      {showUpdateElementForm && <UpdateElementForm setShowUpdateElementForm={setShowUpdateElementForm} />}
-   </div>
+      {showUpdateElementForm && (
+        <UpdateElementForm
+          setShowUpdateElementForm={setShowUpdateElementForm}
+        />
+      )}
+    </div>
   );
 }
 

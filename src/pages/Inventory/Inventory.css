@@ -52,14 +52,17 @@
 }
 
 
+
 .card {
   border: 1px solid #ccc;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin: 20px;
+  box-sizing: border-box;
   padding: 20px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  width: calc(100% - 40px);
 }
 
 
@@ -75,7 +78,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 10px; /* Adjust padding as needed */
+  padding: 10px 10px 20px 10px; /* Adjust padding as needed */
 }
 
 /* Style for the filter dropdown */

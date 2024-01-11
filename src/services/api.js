@@ -1,36 +1,23 @@
 // src/services/api.js
 
-// Example responseJSON with mock user data and JWTs
-const responseJSON = {
-  "errorCode":0,"payload":{"Name1 Surname1":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXIxQHNsYWMuc3RhbmZvcmQuZWR1IiwiaWF0IjoxNzA0NDAyNzU3LCJleHAiOjE3MDQ0MDYzNTd9.aXN3-uxrSl3yh62NHhMQKOElr_Pt6gfi3jwIbUorCqU","Name3 Surname3":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXIzQHNsYWMuc3RhbmZvcmQuZWR1IiwiaWF0IjoxNzA0NDAyNzU3LCJleHAiOjE3MDQ0MDYzNTd9.CAH2B4oHLn7yG3y1hq-40Dgy2fR6ON4lxWrYcisc4kE","Name2 Surname2":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXIyQHNsYWMuc3RhbmZvcmQuZWR1IiwiaWF0IjoxNzA0NDAyNzU3LCJleHAiOjE3MDQ0MDYzNTd9.4VNxLtyhasZ_rrLxzjcZLfVxLccyjTulk4goXTshtpk"}};
-let token;
-
-const extractJWT = () => {
-  return responseJSON.payload["Name1 Surname1"];
+// Auth TokenresponseJSON with mock user data and JWTs
+const extractJWT = async () => {
+  const responseJSON = await window.fetch("http://localhost:3000/api/v1/mock/users-auth");
+  const json = await responseJSON.json();
+  const token = json.payload["Name1 Surname1"];
+  return token;
 };
 
-(async () => {
-	const res = await window.fetch("api/v1/mock/users-auth");
-	const json = await res.json();
+// DOMAIN VARIABLE
+const DOMAIN_ID = '65a020bca11a67235b702ed8';
 
-	token = json.payload["Name1 Surname1"];
-})();
+/* ----------------------------------------- ADVANCED ----------------------------------------- */
 
-{/* ----------------------------------------- INVENTORY CLASS CONTROLLER ----------------------------------------- */}
-export const searchInventory = async (anchorId, contextSize, limit, search = '', tags, requireAllTags) => {
+export const countElementsByClassId = async (classId) => {
   try {
-    const token = extractJWT();
+    const token = await extractJWT();
 
-    const queryParams = new URLSearchParams({
-      anchorId,
-      contextSize,
-      limit,
-      search,
-      tags: Array.isArray(tags) ? tags.join(',') : '',
-      requireAllTags,
-    });
-
-    const url = `/v1/inventory/domain/6584ea2dca8f2363250a310a/element?${queryParams}`;
+    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?classId=${classId}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -40,254 +27,171 @@ export const searchInventory = async (anchorId, contextSize, limit, search = '',
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      console.error('Received unexpected content type:', contentType);
-      return null; // Return null or handle accordingly based on your logic for non-JSON content
-    }
-
-    const data = await response.json();
-    if (data === null || data.payload === undefined) {
-      console.error('Received unexpected response data:', data);
-      return null; // Return null or handle empty response based on your requirements
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error fetching inventory:', error);
-    throw error;
-  }
-};
-
-
-
-
-export const createInventoryClass = async (classData) => {
-  try {
-    const token = extractJWT(); // Example: Extract JWT token
-
-    const response = await fetch(`http://localhost:3000/api/v1/inventory/class`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token, // Include the authorization token header
-      },
-      body: JSON.stringify(classData),
-    });
-
-    console.log('api.js data: ' + JSON.stringify(classData));
-
-    if (response.status === 201) {
+    if (response.ok) {
       const data = await response.json();
-      console.log('API.js Class created successfully:', data);
-      alert('Class created successfully!'); // Handle success: show a success message or perform any necessary action
-      // You can also reset the form or close the modal here
+
+      // Check if payload exists and is an array
+      if (data.payload && Array.isArray(data.payload)) {
+        // Filter elements with classDTO's id equal to the specified classId
+        const filteredElements = data.payload.filter(
+          (element) => element.classDTO.id === classId
+        );
+
+        // Count the filtered elements
+        const elementCount = filteredElements.length;
+        return elementCount;
+      } else {
+        throw new Error('Invalid payload structure in the response');
+      }
     } else {
-      const errorData = await response.json();
-      console.error('Error creating class:', errorData);
-      // Handle error: display an error message to the user
-      alert('Error creating class. Please try again.');
+      throw new Error('Failed to fetch inventory elements');
     }
   } catch (error) {
-    console.error('Error creating class:', error);
-    // Handle network errors or other issues
-    alert('Network error. Please check your connection.');
+    throw new Error('Error counting inventory elements:', error.message);
   }
 };
 
-export const fetchClass = async () => {
+
+
+export const fetchInfiniteElements = async (
+  domainId,
+  anchorId,
+  contextSize,
+  limit,
+  search,
+  tags,
+  requireAllTags
+) => {
   try {
-    const token = extractJWT();
-    const response = await fetch(`http://localhost:3000/api/v1/inventory/class/6584ea2dca8f2363250a3108`, {
-      method: 'GET',
+    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element`;
+    const token = await extractJWT();
+    const response = await fetch(`${url}?anchorId=${anchorId}&contextSize=${contextSize}&limit=${limit}&search=${search}&tags=${tags}&requireAllTags=${requireAllTags}`, {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
+        "Content-Type": "application/json",
+        "x-vouch-idp-accesstoken": token,
       },
     });
 
     if (response.ok) {
       const data = await response.json();
-      return data;
+      return data.payload;
     } else {
-      throw new Error('Failed to fetch class types');
+      console.error("Server error response:", response.status, response.statusText);
+      throw new Error("Failed to fetch inventory elements");
     }
   } catch (error) {
-    throw new Error('Error fetching class types:', error.message);
+    console.error("Error fetching inventory elements:", error.message);
+    throw new Error("Error fetching inventory elements. Check console for details.");
   }
 };
 
-export const fetchClassTypes = async () => {
+
+export const fetchElementNicknames = async () => {
   try {
-    const token = extractJWT();
-    const response = await fetch('http://localhost:3000/api/v1/inventory/class/types', {
+    const data = await fetchAllElements(); // Ensure this function fetches elements
+    const filteredNames = data.payload
+      .filter(element => element.classDTO.id === '65a022f8a11a67235b702edc')
+      .map(element => element.name);
+    return filteredNames;
+  } catch (error) {
+    throw new Error('Error fetching element nicknames:', error.message);
+  }
+};
+
+
+
+export const searchInventory = async (anchorId, options) => {
+  try {
+    const token = await extractJWT();
+    const queryParams = new URLSearchParams(options).toString();
+
+    const response = await fetch(`http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?${queryParams}`, 
+    {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'x-vouch-idp-accesstoken': token,
       },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error('Failed to fetch class types');
-    }
-  } catch (error) {
-    throw new Error('Error fetching class types:', error.message);
-  }
-};
-
-export const fetchAllClass = async () => {
-  try {
-    const token = extractJWT();
-    const response = await fetch('http://localhost:3000/api/v1/inventory/class', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error('Failed to fetch class types');
-    }
-  } catch (error) {
-    throw new Error('Error fetching class types:', error.message);
-  }
-};
-
-
-{/* ----------------------------------------- INVENTORY ELEMENT CONTROLLER ----------------------------------------- */}
-
-export const fetchAllDomain = async () => {
-  try {
-    const token = extractJWT();
-    const response = await fetch('http://localhost:3000/api/v1/inventory/domain', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error('Failed to fetch class types');
-    }
-  } catch (error) {
-    throw new Error('Error fetching class types:', error.message);
-  }
-};
-
-export const fetchAllElements = async (domainId) => {
-  try {
-    const token = extractJWT(); // Assuming extractJWT() is a function that retrieves the JWT token
-    const response = await fetch(`http://localhost:3000/api/v1/inventory/domain/${domainId}/element`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error('Failed to fetch elements');
-    }
-  } catch (error) {
-    throw new Error(`Error fetching elements: ${error.message}`);
-  }
-};
-
-
-// export const fetchAllElements = async () => {
-//   try {
-//     const token = extractJWT();
-//     const response = await fetch('http://localhost:3000/api/v1/inventory/domain/6577481d1f936c48a322725a/element', {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'x-vouch-idp-accesstoken': token,
-//       },
-//     });
-
-//     if (response.ok) {
-//       const data = await response.json();
-//       return data;
-//     } else {
-//       throw new Error('Failed to fetch class types');
-//     }
-//   } catch (error) {
-//     throw new Error('Error fetching class types:', error.message);
-//   }
-// };
-
-export const fetchDomain = async () => {
-  try {
-    const token = extractJWT();
-    const response = await fetch('http://localhost:3000/api/v1/inventory/domain/6577481d1f936c48a322725a', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error('Failed to fetch class types');
-    }
-  } catch (error) {
-    throw new Error('Error fetching class types:', error.message);
-  }
-};
-
-export const createInventoryElement = async (elementData) => {
-  try {
-    const token = extractJWT();
-
-    const response = await fetch('http://localhost:3000/api/v1/inventory/domain/6584ea2dca8f2363250a310a/element', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-      body: JSON.stringify(elementData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('API: Error creating Inventory Element:', errorData);
+      throw new Error(`Error ${response.status}: ${errorData.message}`);
+    }
 
-      let errorMessage = 'Unknown error';
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+    throw error; // Re-throw the error for additional handling if needed
+  }
+};
+
+
+export const fetchElementChildren = async () => {
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/659833aa40949c037977ec08/children`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch element children");
+    }
+  } catch (error) {
+    throw new Error("Error fetching element children:", error.message);
+  }
+};
+
+
+export const fetchPath = async ( elementId, pathType) => {
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const queryParams = new URLSearchParams({
+      pathType: pathType 
+    });
+
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}/path?${queryParams}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("API: Error fetching path:", errorData);
+
+      let errorMessage = "Unknown error";
       if (response.status === 400) {
-        errorMessage = errorData.errorMessage || 'Bad Request';
+        errorMessage = errorData.errorMessage || "Bad Request";
       } else if (response.status === 401) {
-        errorMessage = 'Unauthorized - Please check your credentials';
+        errorMessage = "Unauthorized - Please check your credentials";
       } else if (response.status === 403) {
-        errorMessage = 'Forbidden - Access denied';
+        errorMessage = "Forbidden - Access denied";
       } else if (response.status === 404) {
-        errorMessage = 'Not Found - Endpoint or resource not found';
+        errorMessage = "Not Found - Endpoint or resource not found";
       } else {
         errorMessage = `Server Error - ${response.status}`;
       }
 
-      throw new Error(`API: Error creating Inventory Element: ${errorMessage}`);
+      throw new Error(`API: Error fetching path: ${errorMessage}`);
     }
 
     const responseData = await response.json();
@@ -295,16 +199,404 @@ export const createInventoryElement = async (elementData) => {
 
     return responseData;
   } catch (error) {
-    console.error('API: Error creating Inventory Element:', error.message);
-    alert('API: Network error. Please check your connection.');
-    throw new Error(`API: Error creating Inventory Element: ${error.message}`);
+    console.error("API: Error fetching path:", error.message);
+    alert("API: Network error. Please check your connection.");
+    throw new Error(`API: Error fetching path: ${error.message}`);
+  }
+};
+
+export const createImplementation = async ( elementId, implementationData) => {
+  try {
+    const token = await extractJWT(); // Retrieve your token here
+
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}/implementation`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(implementationData),
+      }
+    );
+    console.log(JSON.stringify(implementationData));
+
+    if (response.status === 201) {
+      const data = await response.json();
+      console.log("API.js Class created successfully:", data);
+      alert("Class created successfully!"); 
+
+    // if (response.ok) {
+    //   const data = await response.json();
+    //   return data;
+    } else {
+      const errorData = await response.json(); // Retrieve error details
+      const errorMessage = errorData.message || 'Failed to create element implementation';
+      const error = new Error(errorMessage);
+      error.response = errorData; // Attach the response details to the error object
+      throw error;
+    }
+  } catch (error) {
+    // Log the error details for better visibility
+    console.error('Error creating element implementation:', error.message);
+    if (error.response) {
+      console.error('Response details:', error.response);
+    }
+    throw error; // Rethrow the error for further handling if needed
+  }
+};
+
+
+
+export const fetchImplementation = async (elementId) => {
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}/implementation`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json(); // Retrieve error details
+      throw new Error(
+        `Failed to fetch element implementation: ${errorData.message}`
+      );
+    }
+  } catch (error) {
+    throw new Error(`Error fetching element implementation: ${error.message}`);
+  }
+};
+
+// Function to simulate an API call to fetch inventory data
+export const fetchInventoryData = async () => {
+  try {
+    // Simulating an API call with a JWT in headers (replace with actual API endpoint)
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("Unauthorized: Please check your credentials");
+        // Handle unauthorized access, e.g., redirect to login page
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    }
+
+    const inventoryData = await response.json();
+    return inventoryData;
+  } catch (error) {
+    console.error("Error fetching inventory data:", error);
+    throw error;
+  }
+};
+
+
+/* ----------------------------------------- CREATION ----------------------------------------- */
+
+export const createInventoryClass = async (classData) => {
+  try {
+    const token = await extractJWT();
+
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/class`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token, // Include the authorization token header
+        },
+        body: JSON.stringify(classData),
+      }
+    );
+
+    console.log("api.js data: " + JSON.stringify(classData));
+
+    if (response.status === 201) {
+      const data = await response.json();
+      console.log("API.js Class created successfully:", data);
+      alert("Class created successfully!"); // Handle success: show a success message or perform any necessary action
+      // You can also reset the form or close the modal here
+    } else {
+      const errorData = await response.json();
+      console.error("Error creating class:", errorData);
+      alert("Error creating class. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error creating class:", error);
+    alert("Network error. Please check your connection.");
+  }
+};
+
+export const createInventoryElement = async (elementData) => {
+  try {
+    const token = await extractJWT();
+
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(elementData),
+      }
+    );
+
+    if (response.status === 201) {
+      const data = await response.json();
+      console.log("API.js Element created successfully:", data);
+      alert("Element created successfully!"); // Handle success: show a success message or perform any necessary action
+      // You can also reset the form or close the modal here
+    } else {
+      const errorData = await response.json();
+      console.error("Error creating element:", errorData);
+      alert("Error creating element. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error creating element:", error);
+    alert("Network error. Please check your connection.");
+  }
+};
+
+/* ----------------------------------------- UPDATE ----------------------------------------- */
+
+// Function to update an inventory element
+export const updateElement = async (
+  domainId,
+  elementId,
+  updatedElementData
+) => {
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${domainId}/element/${elementId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(updatedElementData), // Pass updated data in the request body
+      }
+    );
+
+    if (!response.ok) {
+      // Handle non-successful status codes
+      const errorData = await response.json();
+      throw new Error(
+        `Failed to update element: ${errorData.errorMessage || "Unknown error"}`
+      );
+    }
+
+    // Successful request
+    const responseData = await response.json();
+    alert("Updated Element successfully!");
+    console.log(response);
+    return responseData;
+  } catch (error) {
+    throw new Error(`Error updating element: ${error.message}`);
+  }
+};
+
+export const updateInventoryDomain = async (domainId, requestBody) => {
+  const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}`;
+
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-vouch-idp-accesstoken": token,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("Unauthorized: Please check your credentials");
+        // Handle unauthorized access, e.g., redirect to login page
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    }
+
+    const inventoryData = await response.json();
+    return inventoryData;
+  } catch (error) {
+    // Handle errors or log them
+    console.error("Error fetching inventory data:", error);
+    throw error;
+  }
+};
+
+/* ----------------------------------------- SINGLES ----------------------------------------- */
+
+export const fetchDomain = async () => {
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch class types");
+    }
+  } catch (error) {
+    throw new Error("Error fetching class types:", error.message);
+  }
+};
+
+export const fetchClass = async (classId) => {
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/class/${classId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch class types");
+    }
+  } catch (error) {
+    throw new Error("Error fetching class types:", error.message);
   }
 };
 
 export const fetchElement = async (elementId) => {
   try {
-    const token = extractJWT();
-    const response = await fetch(`http://localhost:3000/api/v1/inventory/domain/6584ea2dca8f2363250a310a/element/${elementId}`, {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch class types");
+    }
+  } catch (error) {
+    throw new Error("Error fetching class types:", error.message);
+  }
+};
+
+/* ----------------------------------------- STARTERS ----------------------------------------- */
+
+
+export const fetchAllDomain = async () => {
+  try {
+    // const token = await retrieveToken();
+    const token = await extractJWT();
+    const response = await fetch(
+      "http://localhost:3000/api/v1/inventory/domain",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch class types");
+    }
+  } catch (error) {
+    throw new Error("Error fetching class types:", error.message);
+  }
+};
+
+export const fetchAllClass = async () => {
+  try {
+    const token = await extractJWT();
+    // const token = await retrieveToken();
+    const response = await fetch(
+      "http://localhost:3000/api/v1/inventory/class",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch class types");
+    }
+  } catch (error) {
+    throw new Error("Error fetching class types:", error.message);
+  }
+};
+
+export const fetchAllElements = async (limit = 5, page = 1, anchorId = null, searchQuery = "") => {
+  try {
+    const token = await extractJWT();
+    const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : "";
+
+    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?limit=${limit}&page=${page}${anchorId ? `&anchorId=${anchorId}` : ''}${searchParam}`;
+
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -316,108 +608,22 @@ export const fetchElement = async (elementId) => {
       const data = await response.json();
       return data;
     } else {
-      throw new Error('Failed to fetch class types');
+      // Log details before throwing the error
+      console.error(`Failed to fetch inventory elements. URL: ${url}, Status: ${response.status}, StatusText: ${response.statusText}`);
+
+      // Include detailed error message
+      const errorData = await response.json().catch(() => null); // Try to parse JSON error response
+      const errorMessage = errorData?.message || 'Unknown error';
+      
+      throw new Error(`Error fetching inventory elements. Status: ${response.status}, Message: ${errorMessage}`);
     }
   } catch (error) {
-    throw new Error('Error fetching class types:', error.message);
+    console.error('Error fetching inventory elements:', error.message);
+    throw error; // Re-throw the original error for higher-level handling
   }
 };
 
 
-// Function to update an inventory element
-export const updateElement = async (domainId, elementId, updatedElementData) => {
-  try {
-    const token = extractJWT(); // Assuming you have a function to extract the JWT token
-
-    const response = await fetch(`http://localhost:3000/api/v1/inventory/domain/${domainId}/element/${elementId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-      body: JSON.stringify(updatedElementData), // Pass updated data in the request body
-    });
-
-    if (!response.ok) {
-      // Handle non-successful status codes
-      const errorData = await response.json();
-      throw new Error(`Failed to update element: ${errorData.errorMessage || 'Unknown error'}`);
-    }
-
-    // Successful request
-    const responseData = await response.json();
-    alert('Updated Element successfully!');
-    console.log(response);
-    return responseData;
-  } catch (error) {
-    throw new Error(`Error updating element: ${error.message}`);
-  }
-};
 
 
-export const updateInventoryDomain = async (domainId, requestBody) => {
-  const url = `http://localhost:3000/api/v1/inventory/domain/657255739020e27c45093338`;
-
-  try {
-    const token = extractJWT(); 
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error('Unauthorized: Please check your credentials');
-        // Handle unauthorized access, e.g., redirect to login page
-      } else {
-        throw new Error('Network response was not ok');
-      }
-    }
-
-    const inventoryData = await response.json();
-    return inventoryData;
-  } catch (error) {
-    // Handle errors or log them
-    console.error('Error fetching inventory data:', error);
-    throw error;
-  }
-};
-
-
-// Function to simulate an API call to fetch inventory data
-export const fetchInventoryData = async () => {
-  try {
-    // Simulating an API call with a JWT in headers (replace with actual API endpoint)
-    const token = extractJWT(); 
-    const response = await fetch('http://localhost:3000/api/v1/inventory/domain/657255739020e27c45093338', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-vouch-idp-accesstoken': token,
-          },
-        });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error('Unauthorized: Please check your credentials');
-        // Handle unauthorized access, e.g., redirect to login page
-      } else {
-        throw new Error('Network response was not ok');
-      }
-    }
-
-    const inventoryData = await response.json();
-    return inventoryData;
-  } catch (error) {
-    console.error('Error fetching inventory data:', error);
-    throw error;
-  }
-};
-
-export default {
-  extractJWT,
-  fetchInventoryData,
-};
+export default {};

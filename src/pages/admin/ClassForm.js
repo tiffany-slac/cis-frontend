@@ -5,8 +5,9 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   const [className, setClassName] = useState("");
   const [classDescription, setClassDescription] = useState("");
   const [attributes, setAttributes] = useState([]);
-  const [extendsClass, setExtendsClass] = useState([]);
-  const [permittedChildClass, setPermittedChildClass] = useState([]);
+  const [extendsClass, setExtendsClass] = useState("");
+  const [permittedChildClass, setPermittedChildClass] = useState("");
+  const [implementedByClass, setImplementedByClass] = useState("");
 
   const addAttribute = () => {
     setAttributes([
@@ -33,8 +34,9 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
     const classData = {
       name: className,
       description: classDescription,
-      extendsClass: extendsClass,
-      permittedChildClass: permittedChildClass,
+      extendsClass: [extendsClass],
+      permittedChildClass: [permittedChildClass],
+      implementedByClass: [implementedByClass],
       attributes: attributes.map((attribute) => ({
         name: attribute.name,
         description: attribute.description,
@@ -94,6 +96,16 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
               name="permittedChildClass"
               value={permittedChildClass}
               onChange={(event) => setPermittedChildClass(event.target.value)}
+            />
+            <br />
+
+            <label htmlFor="implementedByClass">Implemented By Class:</label>
+            <input
+              type="text"
+              id="implementedByClass"
+              name="implementedByClass"
+              value={implementedByClass}
+              onChange={(event) => setImplementedByClass(event.target.value)}
             />
             <br />
 

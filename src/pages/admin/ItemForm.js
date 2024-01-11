@@ -1,64 +1,96 @@
-import React, { useState } from "react";
-import { createInventoryElement } from "../../services/api";
+import React, { useState, useEffect } from "react";
+import { createInventoryElement, fetchElementNicknames } from "../../services/api";
 
 function ItemForm({ showItemForm, setShowItemForm }) {
-  const [itemName, setItemName] = useState("");
-//   const [classDescription, setClassDescription] = useState("");
-  const [serialNumber, setSerialNumber] = useState([]);
-  const [parentId, setParentId] = useState([]);
+  const [slacId, setSlacId] = useState("");
+  const [serial, setSerial] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [location, setLocation] = useState("");
+  const [chargeCode, setChargeCode] = useState("");
+  const [parentId, setParentId] = useState('');
+  const [tags, setTags] = useState([]);
+  const [elementNames, setElementNames] = useState([]);
   const [attributes, setAttributes] = useState([]);
 
-//   const addAttribute = () => {
-//     setAttributes([
-//       ...attributes,
-//       {
-//         name: "",
-//         description: "",
-//         mandatory: true,
-//         type: "String",
-//         unit: "",
-//       },
-//     ]);
-//   };
+  useEffect(() => {
+    const fetchFilteredNames = async () => {
+      try {
+        const filteredNames = await fetchElementNicknames();
+        setElementNames(filteredNames);
+      } catch (error) {
+        console.error("Error fetching element names:", error);
+      }
+    };
+  
+    fetchFilteredNames();
+  }, []);
+  
 
-//   const handleAttributeChange = (index, key, value) => {
-//     const updatedAttributes = [...attributes];
-//     updatedAttributes[index][key] = value;
-//     setAttributes(updatedAttributes);
-//   };
+  const handleNicknameChange = (event) => {
+    setNickname(event.target.value);
+  };
+
+  //   const addAttribute = () => {
+  //     setAttributes([
+  //       ...attributes,
+  //       {
+  //         name: "",
+  //         description: "",
+  //         mandatory: true,
+  //         type: "String",
+  //         unit: "",
+  //       },
+  //     ]);
+  //   };
+
+  //   const handleAttributeChange = (index, key, value) => {
+  //     const updatedAttributes = [...attributes];
+  //     updatedAttributes[index][key] = value;
+  //     setAttributes(updatedAttributes);
+  //   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-try{
-    const classData = {
-      name: itemName,
-      classId: "6584ea2dca8f2363250a3108",
-      parentId: null,
-      description: serialNumber,
-      tags: [],
-    //   attributes: [{"name": "string", "value": "string"}],
-      attributes: attributes.map((attribute) => ({
-        name: attribute.name,
-        description: attribute.description,
-        mandatory: attribute.mandatory,
-        type: attribute.type,
-        unit: attribute.unit,
-      })),
-    };
+    console.log("submitting");
+    try {
+      const itemData = {
+        name: slacId,
+        classId: '65a02546a11a67235b702ee1',
+        parentId: parentId.trim() !== '' ? parentId.trim() : null,
+        description: 'DEPOT Item',
+        tags: [],
+        attributes: [
+          { name: "Slac-Id", value: slacId },
+          { name: "Serial", value: serial },
+          { name: "Nickname", value: nickname },
+          { name: "Location", value: location },
+          { name: "Charge-Code", value: chargeCode },
+        ],
+        
+        // attributes: attributes.map((attribute) => ({
+        //   name: attribute.name,
+        //   description: attribute.description,
+        //   mandatory: attribute.mandatory,
+        //   type: attribute.type,
+        //   unit: attribute.unit,
+        // })),
+      };
 
-    console.log(classData);
-    const response = await createInventoryElement(classData);
-    console.log("API Response:", response); // Log the API response
+      console.log(itemData);
+      const response = await createInventoryElement(itemData);
+      console.log("API Response:", response); // Log the API response
 
-    // Display a success message or take further action based on the response
-    alert('Item created successfully!');
+      // Display a success message or take further action based on the response
+      alert("Item created successfully!");
 
-    // Close the form after submission
-    setShowItemForm(false);
-} catch (error) {
-    console.error("Error during item creation:", error);
-    alert('Failed to create item. Please check your connection or try again later.');
-  }
+      // Close the form after submission
+      setShowItemForm(false);
+    } catch (error) {
+      console.error("Error during item creation:", error);
+      alert(
+        "Failed to create item. Please check your connection or try again later."
+      );
+    }
   };
 
   return (
@@ -70,82 +102,68 @@ try{
           </span>
           <form className="class-form" onSubmit={handleSubmit}>
 
-            <label htmlFor="itemName">Name:</label>
+            <label htmlFor="slacId">SLAC ID:</label>
             <input
               type="text"
-              id="itemName"
-              name="itemName"
-              value={itemName}
-              onChange={(event) => setItemName(event.target.value)}
+              id="slacId"
+              name="slacId"
+              value={slacId}
+              onChange={(event) => setSlacId(event.target.value)}
             />
 
-            {/* <label htmlFor="classDescription">Description:</label>
+            <label htmlFor="serial">Serial:</label>
             <input
               type="text"
-              id="classDescription"
-              name="classDescription"
-              value={classDescription}
-              onChange={(event) => setClassDescription(event.target.value)}
-            /> */}
-
-            {/* <label htmlFor="classId">Class:</label>
-            <input
-              type="text"
-              id="classId"
-              name="classId"
-              value={classId}
-              onChange={(event) => setClassId(event.target.value)}
-            /> */}
-
-            <label htmlFor="serialNumber">Serial:</label>
-            <input
-              type="text"
-              id="serialNumber"
-              name="serialNumber"
-              value={serialNumber}
-              onChange={(event) => setSerialNumber(event.target.value)}
+              id="serial"
+              name="seźial"
+              value={serial}
+              onChange={(event) => setSerial(event.target.value)}
             />
 
-            <label htmlFor="parentId">Parent:</label>
+<label htmlFor="nickname">Nickname:</label>
+          <select
+            id="nickname"
+            name="nickname"
+            value={nickname}
+            onChange={handleNicknameChange}
+          >
+            <option value="">Select a nickname</option>
+            {elementNames.map((elementName, index) => (
+              <option key={index} value={elementName}>
+                {elementName}
+              </option>
+            ))}
+          </select>
+
+<label htmlFor="location">Location:</label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={location}
+              onChange={(event) => setLocation(event.target.value)}
+            />
+
+<label htmlFor="chargeCode">Charge Code:</label>
+            <input
+              type="text"
+              id="chargeCode"
+              name="chargeCode"
+              value={chargeCode}
+              onChange={(event) => setChargeCode(event.target.value)}
+            />
+
+
+            <label htmlFor="parentId">Parent ID:</label>
             <input
               type="text"
               id="parentId"
               name="parentId"
               value={parentId}
-              onChange={(event) => setParentId(event.target.value)}
+              onChange={(event) => setParentId(event.target.value.trim() || null)}
             />
+
             <br />
-
-            <label>Attributes:</label>
-            {attributes.map((attribute, index) => (
-              <div key={index}>
-                <label htmlFor={`attrName${index}`}>Attribute Name:</label>
-                <input
-                  type="text"
-                  id={`attrName${index}`}
-                  name={`attrName${index}`}
-                  value={attribute.name}
-                  onChange={(event) =>
-                    handleAttributeChange(index, "name", event.target.value)
-                  }
-                />
-                <br />
-
-                {/* Add input field for attribute value */}
-                <label htmlFor={`attrValue${index}`}>Attribute Value:</label>
-                <input
-                  type="text"
-                  id={`attrValue${index}`}
-                  name={`attrValue${index}`}
-                  value={attribute.value}
-                  onChange={(event) =>
-                    handleAttributeChange(index, "value", event.target.value)
-                  }
-                />
-                <br />
-                <br />
-              </div>
-            ))}
 
             {/* <label>Attributes:</label>
             {attributes.map((attribute, index) => (
@@ -227,8 +245,9 @@ try{
               Add Attribute
             </button> */}
 
-            <br /><br />
-            
+            <br />
+            <br />
+
             <input type="submit" value="Create Item" />
           </form>
         </div>

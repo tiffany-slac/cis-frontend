@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { createInventoryClass } from "../../services/api";
+import { createInventoryElement } from "../../services/api";
 
-function BuildingForm({ showClassForm, setShowClassForm, classTypes }) {
+function LocationForm({ showLocationForm, setShowLocationForm }) {
   const [className, setClassName] = useState("");
   const [classDescription, setClassDescription] = useState("");
+  const [parentId, setParentId] = useState("");
   const [attributes, setAttributes] = useState([]);
   const [extendsClass, setExtendsClass] = useState([]);
   const [permittedChildClass, setPermittedChildClass] = useState([]);
@@ -29,33 +30,60 @@ function BuildingForm({ showClassForm, setShowClassForm, classTypes }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+try{
     const classData = {
       name: className,
+      classId: '65a020bca11a67235b702ecf',
+      parentId: parentId.trim() !== '' ? parentId.trim() : null,
       description: classDescription,
-      extendsClass: extendsClass,
-      permittedChildClass: permittedChildClass,
-      attributes: attributes.map((attribute) => ({
-        name: attribute.name,
-        description: attribute.description,
-        mandatory: attribute.mandatory,
-        type: attribute.type,
-        unit: attribute.unit,
-      })),
+      tags: [],
+      attributes: [
+        { name: "Building-Number", value: "41" },
+        { name: "Security-Level", description: "Green" },
+      ],
+
+      // attributes: attributes.map((attribute) => ({
+      //   name: attribute.name,
+      //   description: attribute.description,
+      //   mandatory: attribute.mandatory,
+      //   type: attribute.type,
+      //   unit: attribute.unit,
+      // })),
     };
 
     console.log(classData);
-    const response = await createInventoryClass(classData);
+    const response = await createInventoryElement(classData);
 
-    // Close the form after submission
-    setShowClassForm(false);
+     // Check if the response indicates success (assuming 200 is a success status code)
+     if (response.status == 201) {
+      console.log('Inventory element created successfully!');
+      // Display a success message (e.g., a toast notification or an alert)
+      alert('Inventory element created successfully!');
+    } else {
+      console.error('Failed to create inventory element:', response.statusText);
+      // Handle other status codes or unexpected responses if needed
+      alert('Failed to create inventory element. Please try again later.');
+    }
+
+    // Close the form after submission (regardless of success or failure)
+    setShowLocationForm(false);
+  } catch (error) {
+    console.error('Error during inventory element creation:', error);
+  
+    if (error.response) {
+      console.error('Response status:', error.response.status);
+      console.error('Response data:', error.response.data);
+    }
+  
+    alert('Failed to create inventory element. Please check your connection or try again later.');
+  }
   };
 
   return (
     <div className="admin-container">
-      <div className={`modal ${showClassForm ? "show" : "hide"}`}>
+      <div className={`modal ${showLocationForm ? "show" : "hide"}`}>
         <div className="modal-content">
-          <span className="close" onClick={() => setShowClassForm(false)}>
+          <span className="close" onClick={() => setShowLocationForm(false)}>
             &times;
           </span>
           
@@ -78,24 +106,15 @@ function BuildingForm({ showClassForm, setShowClassForm, classTypes }) {
               onChange={(event) => setClassDescription(event.target.value)}
             />
 
-            <label htmlFor="extendsClass">Extends Class:</label>
+            <label htmlFor="parentId">Parent ID:</label>
             <input
               type="text"
-              id="extendsClass"
-              name="extendsClass"
-              value={extendsClass}
-              onChange={(event) => setExtendsClass(event.target.value)}
+              id="parentId"
+              name="parentId"
+              value={parentId}
+              onChange={(event) => setParentId(event.target.value.trim() || null)}
             />
 
-            <label htmlFor="permittedChildClass">Child Class:</label>
-            <input
-              type="text"
-              id="permittedChildClass"
-              name="permittedChildClass"
-              value={permittedChildClass}
-              onChange={(event) => setPermittedChildClass(event.target.value)}
-            />
-            <br />
 
             <label>Attributes:</label>
             {attributes.map((attribute, index) => (
@@ -187,4 +206,4 @@ function BuildingForm({ showClassForm, setShowClassForm, classTypes }) {
   );
 }
 
-export default BuildingForm;
+export default LocationForm;

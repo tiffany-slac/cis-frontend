@@ -1,6 +1,6 @@
 // Inventory.js
 import React, { useState, useEffect } from "react";
-import { fetchAllElements } from "../../services/api";
+import { fetchAllElements, searchInventory } from "../../services/api";
 import { useHistory } from "react-router-dom";
 import ItemForm from "../admin/ItemForm.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,29 +8,75 @@ import { faSearch, faBarcode } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import "./Inventory.css";
 
+function formatItemName(name) {
+  // Capitalize the first letter
+  const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+
+  // Replace dashes "-" with spaces " "
+  const finalName = formattedName.replace(/-/g, ' ');
+
+  return finalName;
+}
+
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [showItemForm, setShowItemForm] = useState(false);
   const [searchInput, setSearchInput] = useState(""); // State to store the search input
+  const [currentPage, setCurrentPage] = useState(1); // New state for current page
+  const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
+  const itemsPerPage = 5; 
 
   const handleItemClick = (classId) => {
     // Handle item click here (e.g., navigate to a specific form or perform an action)
     console.log(`Clicked ${classId}`);
   };
 
+  const handleSearch = async () => {
+    try {
+      // Reset currentPage and lastItemId when initiating a new search
+      setCurrentPage(1);
+      setLastItemId(null);
+
+      const searchData = await fetchAllElements(itemsPerPage, currentPage, null, searchInput);
+
+      setInventory(searchData.payload);
+      setLastItemId(searchData.payload[searchData.payload.length - 1]?.id || null);
+    } catch (error) {
+      console.error("Error fetching inventory elements:", error);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    try {
+      const nextPageData = await fetchAllElements(itemsPerPage, currentPage + 1, lastItemId);
+  
+      if (nextPageData.payload.length > 0) {
+        setInventory((prevInventory) => [...prevInventory, ...nextPageData.payload]);
+        setCurrentPage((prevPage) => prevPage + 1);
+        setLastItemId(nextPageData.payload[nextPageData.payload.length - 1].id);
+      }
+    } catch (error) {
+      console.error("Error fetching more inventory elements:", error);
+    }
+  };
+  
+
   useEffect(() => {
-    const fetchInventory = async () => {
+    const fetchInitialInventory = async () => {
       try {
-        const data = await fetchAllElements("6584ea2dca8f2363250a310a"); // Replace with your domain ID
-        setInventory(data.payload);
+        const initialData = await fetchAllElements(itemsPerPage, currentPage, lastItemId);
+
+        setInventory(initialData.payload);
+        setLastItemId(initialData.payload[initialData.payload.length - 1]?.id || null);
       } catch (error) {
-        console.error("Error fetching inventory elements:", error);
+        console.error("Error fetching initial inventory elements:", error);
       }
     };
 
-    fetchInventory();
-  }, []);
+    fetchInitialInventory();
+  }, []); 
+
 
   // Function to handle change in primary filter selection
   const handleFilterChange = (event) => {
@@ -77,30 +123,17 @@ const Inventory = () => {
             placeholder="Search..."
             value={searchInput} // Set the value of the input field
             onChange={(e) => setSearchInput(e.target.value)} // Handle input change
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
           />
+          <button onClick={handleSearch}>Search</button>
         </div>
-        {/* Dropdown for filters */}
-        {/* <div className="primary-filter">
-          <label htmlFor="primary-filter">Filter by: </label>
-          <select id="primary-filter" onChange={handleFilterChange}>
-            // Options for primary filter selection
-          </select>
-        </div> */}
-
-        {/* Go button */}
-        {/* <button onClick={() => fetchInventory()}>Go</button> */}
+        
       </div>
-      {/* <div className="row-pull-down">
-        <label htmlFor="row-selection">Rows per page: </label>
-        <select id="row-selection" onChange={handleRowChange}>
-          <option value="15">15</option>
-          <option value="30">30</option>
-          <option value="45">45</option>
-          <option value="60">60</option>
-          <option value="100">100</option>
-          <option value="all">All</option>
-        </select>
-      </div> */}
+
       <div className="advanced-filters">
         {/* Conditionally render advanced filter based on selected primary filter */}
         {selectedFilter === "Location" && (
@@ -112,22 +145,28 @@ const Inventory = () => {
           </div>
         )}
       </div>
-      <div className="assets-cards">
-        {inventory && inventory.length > 0 ? (
-          inventory.map((item) => (
-            <div key={item.id} onClick={() => handleCardClick(item.id)}>
-              <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
-              <div className="card">
-                <h3>ID: {item.id}</h3>
-                <p>Name: {item.name}</p>
-                <p>Class ID: {item.classId}</p>
-                {/* Add other information here */}
-              </div>
-            </div>
-          ))
-        ) : (
-          <div>No inventory items available</div>
-        )}
+      <div className="assets-cards-container">
+        <div className="assets-cards">
+          {inventory && inventory.length > 0 ? (
+            inventory.map((item) => (
+              <div key={item.id} onClick={() => handleCardClick(item.id)}>
+              
+                <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
+                <div className="card">
+                  <h2>{formatItemName(item.name)}</h2>
+                  <p>ID: {item.id}</p>
+                  <p>Class ID: {item.classId}</p>
+                  {/* Add other information here */}
+                </div>
+                </div>
+            ))
+          ) : (
+            <div>No inventory items available</div>
+          )}
+        </div>
+        <div className="load-more-button">
+          <button onClick={handleLoadMore}>Load More</button>
+        </div>
       </div>
     </div>
   );

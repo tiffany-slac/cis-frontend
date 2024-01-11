@@ -30,16 +30,17 @@ h1 {
 
 .class-table {
   border: black;
+  overflow-y: auto;
 }
 
 .class-item {
   border: black;
 }
 
-.class-item:hover {
+/* .class-item:hover {
   background-color: #f0f0f0;
   cursor: pointer;
-}
+} */
 
 .modal {
   display: block;
@@ -120,6 +121,17 @@ h1 {
   justify-content: space-between;
 }
 
+/* Card content styles */
+.card-content {
+  padding: 50px;
+  display: flex; /* Added */
+  flex-direction: column;
+  justify-content: space-between; /* Added */
+  align-items: center; /* Added */
+  height: 80%; /* Updated */
+  text-align: left;
+}
+
 /* Generic card styles */
 .admin-card {
   margin: 10px;
@@ -132,16 +144,6 @@ h1 {
   position: relative; /* Added */
   display: flex; /* Added */
   flex-direction: column;
-}
-
-/* Card content styles */
-.card-content {
-  padding: 50px;
-  display: flex; /* Added */
-  justify-content: space-between; /* Added */
-  align-items: center; /* Added */
-  height: 80%; /* Updated */
-  text-align: left;
 }
 
 .card-icon {

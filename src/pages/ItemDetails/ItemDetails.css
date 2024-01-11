@@ -1,3 +1,111 @@
+/* ItemDetails.css */
+
+/* Add indentation for expand/collapse and hierarchy */
+
+.white-background {
+  background-color: blue;
+  /* position: fixed; */
+  z-index: 2;
+}
+.details-page-container {
+  overflow-y: auto;
+}
+
+.tree-table {
+  border-collapse: collapse;
+}
+
+.tree-table th,
+.tree-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.tree-table .expand-button {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: solid #000;
+  border-width: 0 1px 1px 0;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease-in-out;
+}
+
+.tree-table .expand-button.clickable {
+  cursor: pointer;
+}
+
+.tree-table .expand-button.expanded {
+  transform: rotate(-135deg);
+}
+
+/* Add left margin for indentation */
+.tree-table td:first-child {
+  padding-left: 20px; /* Adjust the indentation as needed */
+}
+
+
+/* Tree structure styles */
+.tree-container {
+  margin-top: 20px;
+}
+
+.tree {
+  list-style: none;
+  padding-left: 20px;
+}
+
+.tree li {
+  position: relative;
+}
+
+.tree-node {
+  cursor: pointer;
+  /* Style your nodes as needed */
+}
+
+.sub-tree {
+  list-style: none;
+  padding-left: 20px;
+  display: none; /* Hide child nodes by default */
+}
+
+.tree li:hover > .sub-tree {
+  display: block; /* Show child nodes on hover */
+}
+
+/* Branch styles */
+.tree li:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -10px; /* Adjust as needed for the spacing */
+  width: 1px; /* Width of the branch line */
+  height: 100%;
+  border-left: 1px solid #ccc; /* Color of the branch line */
+}
+
+.tree li:last-child:before {
+  height: 50%; /* Adjust for the last child node */
+}
+
+.tree-node {
+  position: relative;
+  padding-left: 20px; /* Space for the nodes */
+}
+
+.tree-node:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -20px; /* Adjust for branch line */
+  width: 10px; /* Width of the connector */
+  height: 100%;
+  border-top: 1px solid #ccc; /* Color of the connector */
+}
+
+
+
 .content-container {
     display: flex;
     justify-content: space-between; /* Items placed at the start and end of the container */
@@ -13,9 +121,55 @@
 }
 
 .item-details-content {
-  padding-left: 50px;
-  padding-right: 50px;
-  width: 100%;
+
+    margin-top: 200px;
+    width: 80%;
+    max-width: 600px; /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    height: 100vh;
+    position: relative;
+
+  
+  /* padding-left: 50px;
+  padding-right: 50px; */
+  /* margin-top: 200px;
+  width: 90%;
+  align-content: center;
+  z-index: -100;
+  height: 100vh; */
+}
+
+.line {
+  border-top: 1px solid grey; /* Adjust thickness and color as needed */
+  width: calc(100% - 100px);
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px; /* Adjust margin as needed */
+}
+
+/* Example styles for ID, name, and description */
+.id, .name, .description {
+  flex: 1; /* Equal width distribution */
+  /* Additional styles for each element */
+}
+
+
+
+.location-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  height: 70%;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  z-index: 102;
 }
 
 /* Add card styles for the sections */
@@ -26,7 +180,6 @@
   padding: 30px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%;
   position: relative; /* Required for positioning */
 }
 
@@ -39,7 +192,7 @@
   background-color: white;
   padding: 0 10px;
   font-size: 16px;
-  z-index: 1;
+  z-index: 0;
 }
 
 .card::before {
@@ -52,14 +205,22 @@
   z-index: -1;
 }
 
-  
+.item-details-header {
+  /* padding-left: 50px;
+  padding-right: 50px;
+  width: 100%; */
+  padding-left: 60px;
+  width: 100%;
+  align-content: center;
+  position: fixed;
+  background-color: white;
+  box-shadow: 0 4px 2px -2px gray;
+  z-index: 1;
+}
 
 .item-details-container {
-    /* width: calc(100% - 270px); */
     width: 80%;
     margin: 0 auto;
-    /* This centers the container horizontally */
-    /* Add other styles as needed */
 }
 
 .statusmenu {
