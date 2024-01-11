@@ -120,7 +120,7 @@ function Sidebar() {
         <div>
           <Link to="/admin">
             <button onClick={() => handleClick('admin', '/admin')}
-            className={`icon-button ${activeButton === 'admin' ? 'active-button' : ''}`}>
+            className={`icon-button ${activeButton === '/admin' ? 'active-button' : ''}`}>
               <div className="button-label">
                 <FontAwesomeIcon icon={faLock} className="icon" title="Admin" />
                 <div className="small-label">Admin</div>
@@ -133,7 +133,7 @@ function Sidebar() {
         <div>
           <Link to="/settings">
             <button onClick={() => handleClick('settings')}
-            className={`icon-button ${activeButton === 'settings' ? 'active-button' : ''}`}>
+            className={`icon-button ${activeButton === '/settings' ? 'active-button' : ''}`}>
               <div className="button-label">
                 <FontAwesomeIcon
                   icon={faCog}
