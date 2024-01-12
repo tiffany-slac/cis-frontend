@@ -11,10 +11,8 @@ import "./Inventory.css";
 function formatItemName(name) {
   // Capitalize the first letter
   const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-
   // Replace dashes "-" with spaces " "
   const finalName = formattedName.replace(/-/g, ' ');
-
   return finalName;
 }
 

@@ -21,8 +21,21 @@ h1 {
   margin-left: 10px;
 }
 
+.form-content {
+  background-color: #fefefe;
+  /* margin-top: 200px; */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  height: 70%;
+}
+
 .class-form {
   margin-top: 20px;
+  height: 600px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -45,25 +58,15 @@ h1 {
 .modal {
   display: block;
   position: fixed;
-  z-index: 1;
+  z-index: 100;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
+  height: 70%;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   overflow: auto;
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  border-radius: 5px;
-  position: relative;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
 
 .close {
   color: #aaa;
@@ -118,18 +121,30 @@ h1 {
 /* Card container styles */
 .card-container {
   display: flex;
-  justify-content: space-between;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Card content styles */
 .card-content {
-  padding: 50px;
+  padding: 20px;
   display: flex; /* Added */
   flex-direction: column;
   justify-content: space-between; /* Added */
   align-items: center; /* Added */
   height: 80%; /* Updated */
   text-align: left;
+}
+
+.admin-page {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Generic card styles */
@@ -197,6 +212,7 @@ h1 {
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
   display: block;
+  visibility: visible;
 }
 
 /* Styles for dropdown items */
@@ -218,5 +234,6 @@ h1 {
 }
 
 .top-right {
-  margin: 10px; /* Adjust as needed */
+  margin-left: 30px; /* Adjust as needed */
+  margin-bottom: 20px;
 }

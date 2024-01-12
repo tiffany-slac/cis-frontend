@@ -10,6 +10,7 @@ function ItemForm({ showItemForm, setShowItemForm }) {
   const [parentId, setParentId] = useState('');
   const [tags, setTags] = useState([]);
   const [elementNames, setElementNames] = useState([]);
+  const [classId, setClassId] = useState("");
   const [attributes, setAttributes] = useState([]);
 
   useEffect(() => {
@@ -24,30 +25,39 @@ function ItemForm({ showItemForm, setShowItemForm }) {
   
     fetchFilteredNames();
   }, []);
+
+  useEffect(() => {
+    const fetchItemClassId = async () => {
+      try {
+        const classResponse = await fetchAllClass();
+        if (classResponse.payload) {
+          // Find the class with name "nickname"
+          const itemClass = classResponse.payload.find(classItem => {
+            return classItem.name === "depot";
+          });
+  
+          if (itemClass) {
+            // If the class is found, you can access its ID
+            setClassId(itemClass.id);
+          } else {
+            window.alert("Class 'Item' not found. Please create the class before creating elements.");
+            console.error("Class 'Item' not found.");
+          }
+        } else {
+          console.error("Error in API response. No payload found.");
+        }
+      } catch (error) {
+        console.error('Error fetching class types:', error.message);
+      }
+    };
+  
+    fetchItemClassId();
+  }, []);
   
 
   const handleNicknameChange = (event) => {
     setNickname(event.target.value);
   };
-
-  //   const addAttribute = () => {
-  //     setAttributes([
-  //       ...attributes,
-  //       {
-  //         name: "",
-  //         description: "",
-  //         mandatory: true,
-  //         type: "String",
-  //         unit: "",
-  //       },
-  //     ]);
-  //   };
-
-  //   const handleAttributeChange = (index, key, value) => {
-  //     const updatedAttributes = [...attributes];
-  //     updatedAttributes[index][key] = value;
-  //     setAttributes(updatedAttributes);
-  //   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,7 +65,7 @@ function ItemForm({ showItemForm, setShowItemForm }) {
     try {
       const itemData = {
         name: slacId,
-        classId: '65a02546a11a67235b702ee1',
+        classId: classId,
         parentId: parentId.trim() !== '' ? parentId.trim() : null,
         description: 'DEPOT Item',
         tags: [],
@@ -66,14 +76,6 @@ function ItemForm({ showItemForm, setShowItemForm }) {
           { name: "Location", value: location },
           { name: "Charge-Code", value: chargeCode },
         ],
-        
-        // attributes: attributes.map((attribute) => ({
-        //   name: attribute.name,
-        //   description: attribute.description,
-        //   mandatory: attribute.mandatory,
-        //   type: attribute.type,
-        //   unit: attribute.unit,
-        // })),
       };
 
       console.log(itemData);

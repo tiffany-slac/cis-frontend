@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLocation } from "react-router-dom";
 import {
   faHome,
   faNewspaper,
@@ -14,16 +15,20 @@ import {
 import "./Sidebar.css";
 
 function Sidebar() {
+  const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [activeButton, setActiveButton] = useState('/home');
+  const [activeButton, setActiveButton] = useState(location.pathname);
 
   const handleClick = (buttonName, path) => {
     if (activeButton === path) {
-      setActiveButton(null); // Toggle off active state if same button clicked
+      setActiveButton(null);
+      localStorage.removeItem("activeButton");
     } else {
-      setActiveButton(path); // Set the active button
+      setActiveButton(path);
+      localStorage.setItem("activeButton", path);
     }
   };
+  
   
 
   const toggleSidebar = () => {
@@ -132,7 +137,7 @@ function Sidebar() {
 
         <div>
           <Link to="/settings">
-            <button onClick={() => handleClick('settings')}
+            <button onClick={() => handleClick('settings', '/settings')}
             className={`icon-button ${activeButton === '/settings' ? 'active-button' : ''}`}>
               <div className="button-label">
                 <FontAwesomeIcon

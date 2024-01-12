@@ -56,7 +56,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   return (
     <div className="admin-container">
       <div className={`modal ${showClassForm ? "show" : "hide"}`}>
-        <div className="modal-content">
+        <div className="form-content">
           <span className="close" onClick={() => setShowClassForm(false)}>
             &times;
           </span>

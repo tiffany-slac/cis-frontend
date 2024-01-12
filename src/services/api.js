@@ -1,6 +1,6 @@
 // src/services/api.js
 
-// Auth TokenresponseJSON with mock user data and JWTs
+// Set Auth TokenresponseJSON with mock user data and JWTs
 const extractJWT = async () => {
   const responseJSON = await window.fetch("http://localhost:3000/api/v1/mock/users-auth");
   const json = await responseJSON.json();
@@ -8,84 +8,18 @@ const extractJWT = async () => {
   return token;
 };
 
-// DOMAIN VARIABLE
-const DOMAIN_ID = '65a020bca11a67235b702ed8';
+export const setDomainId = async () => {
+  try {
+    const domainData = await fetchAllDomain();
+    const domain_id = domainData.payload[0].id;
+    return domain_id;
+  } catch (error) {
+    console.error('Error setting domain_id:', error.message);
+    throw new Error('Unable to determine domain_id');
+  }
+};
 
 /* ----------------------------------------- ADVANCED ----------------------------------------- */
-
-export const countElementsByClassId = async (classId) => {
-  try {
-    const token = await extractJWT();
-
-    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?classId=${classId}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-vouch-idp-accesstoken': token,
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-
-      // Check if payload exists and is an array
-      if (data.payload && Array.isArray(data.payload)) {
-        // Filter elements with classDTO's id equal to the specified classId
-        const filteredElements = data.payload.filter(
-          (element) => element.classDTO.id === classId
-        );
-
-        // Count the filtered elements
-        const elementCount = filteredElements.length;
-        return elementCount;
-      } else {
-        throw new Error('Invalid payload structure in the response');
-      }
-    } else {
-      throw new Error('Failed to fetch inventory elements');
-    }
-  } catch (error) {
-    throw new Error('Error counting inventory elements:', error.message);
-  }
-};
-
-
-
-export const fetchInfiniteElements = async (
-  domainId,
-  anchorId,
-  contextSize,
-  limit,
-  search,
-  tags,
-  requireAllTags
-) => {
-  try {
-    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element`;
-    const token = await extractJWT();
-    const response = await fetch(`${url}?anchorId=${anchorId}&contextSize=${contextSize}&limit=${limit}&search=${search}&tags=${tags}&requireAllTags=${requireAllTags}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-vouch-idp-accesstoken": token,
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.payload;
-    } else {
-      console.error("Server error response:", response.status, response.statusText);
-      throw new Error("Failed to fetch inventory elements");
-    }
-  } catch (error) {
-    console.error("Error fetching inventory elements:", error.message);
-    throw new Error("Error fetching inventory elements. Check console for details.");
-  }
-};
-
 
 export const fetchElementNicknames = async () => {
   try {
@@ -100,13 +34,13 @@ export const fetchElementNicknames = async () => {
 };
 
 
-
 export const searchInventory = async (anchorId, options) => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     const queryParams = new URLSearchParams(options).toString();
 
-    const response = await fetch(`http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?${queryParams}`, 
+    const response = await fetch(`http://localhost:3000/api/v1/inventory/domain/${domain_id}/element?${queryParams}`, 
     {
       method: 'GET',
       headers: {
@@ -131,9 +65,10 @@ export const searchInventory = async (anchorId, options) => {
 export const fetchElementChildren = async () => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/659833aa40949c037977ec08/children`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/659833aa40949c037977ec08/children`,
       {
         method: "GET",
         headers: {
@@ -158,13 +93,14 @@ export const fetchElementChildren = async () => {
 export const fetchPath = async ( elementId, pathType) => {
   try {
     const token = await extractJWT();
-    // const token = await retrieveToken();
+    const domain_id = await setDomainId();
+
     const queryParams = new URLSearchParams({
       pathType: pathType 
     });
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}/path?${queryParams}`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}/path?${queryParams}`,
       {
         method: "GET",
         headers: {
@@ -205,12 +141,14 @@ export const fetchPath = async ( elementId, pathType) => {
   }
 };
 
+
 export const createImplementation = async ( elementId, implementationData) => {
   try {
     const token = await extractJWT(); // Retrieve your token here
+    const domain_id = await setDomainId();
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}/implementation`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}/implementation`,
       {
         method: "POST",
         headers: {
@@ -248,13 +186,13 @@ export const createImplementation = async ( elementId, implementationData) => {
 };
 
 
-
 export const fetchImplementation = async (elementId) => {
   try {
     const token = await extractJWT();
-    // const token = await retrieveToken();
+    const domain_id = await setDomainId();
+
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}/implementation`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}/implementation`,
       {
         method: "GET",
         headers: {
@@ -268,7 +206,7 @@ export const fetchImplementation = async (elementId) => {
       const data = await response.json();
       return data;
     } else {
-      const errorData = await response.json(); // Retrieve error details
+      const errorData = await response.json(); 
       throw new Error(
         `Failed to fetch element implementation: ${errorData.message}`
       );
@@ -278,14 +216,15 @@ export const fetchImplementation = async (elementId) => {
   }
 };
 
-// Function to simulate an API call to fetch inventory data
+
 export const fetchInventoryData = async () => {
   try {
     // Simulating an API call with a JWT in headers (replace with actual API endpoint)
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}`,
       {
         method: "GET",
         headers: {
@@ -352,9 +291,10 @@ export const createInventoryClass = async (classData) => {
 export const createInventoryElement = async (elementData) => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element`,
       {
         method: "POST",
         headers: {
@@ -423,7 +363,8 @@ export const updateElement = async (
 };
 
 export const updateInventoryDomain = async (domainId, requestBody) => {
-  const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}`;
+  const domain_id = await setDomainId();
+  const url = `http://localhost:3000/api/v1/inventory/domain/${domain_id}`;
 
   try {
     const token = await extractJWT();
@@ -459,9 +400,10 @@ export const updateInventoryDomain = async (domainId, requestBody) => {
 export const fetchDomain = async () => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}`,
       {
         method: "GET",
         headers: {
@@ -485,6 +427,7 @@ export const fetchDomain = async () => {
 export const fetchClass = async (classId) => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
       `http://localhost:3000/api/v1/inventory/class/${classId}`,
@@ -511,9 +454,10 @@ export const fetchClass = async (classId) => {
 export const fetchElement = async (elementId) => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element/${elementId}`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}`,
       {
         method: "GET",
         headers: {
@@ -592,9 +536,10 @@ export const fetchAllClass = async () => {
 export const searchElements = async (searchQuery = "") => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : "";
 
-    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?${searchParam}`;
+    const url = `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element?${searchParam}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -626,9 +571,11 @@ export const searchElements = async (searchQuery = "") => {
 export const fetchAllElements = async (limit = 5, page = 1, anchorId = null, searchQuery = "") => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
+
     const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : "";
 
-    const url = `http://localhost:3000/api/v1/inventory/domain/${DOMAIN_ID}/element?limit=${limit}&page=${page}${anchorId ? `&anchorId=${anchorId}` : ''}${searchParam}`;
+    const url = `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element?limit=${limit}&page=${page}${anchorId ? `&anchorId=${anchorId}` : ''}${searchParam}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -656,8 +603,5 @@ export const fetchAllElements = async (limit = 5, page = 1, anchorId = null, sea
     throw error; // Re-throw the original error for higher-level handling
   }
 };
-
-
-
 
 export default {};

@@ -1,13 +1,42 @@
-import React, { useState } from "react";
-import { createInventoryElement } from "../../services/api";
+import React, { useState, useEffect} from "react";
+import { createInventoryElement, fetchAllClass } from "../../services/api";
 
 function LocationForm({ showLocationForm, setShowLocationForm }) {
   const [className, setClassName] = useState("");
   const [classDescription, setClassDescription] = useState("");
   const [parentId, setParentId] = useState("");
   const [attributes, setAttributes] = useState([]);
+  const [classId, setClassId] = useState("");
   const [extendsClass, setExtendsClass] = useState([]);
   const [permittedChildClass, setPermittedChildClass] = useState([]);
+
+  useEffect(() => {
+    const fetchBuildingClassId = async () => {
+      try {
+        const classResponse = await fetchAllClass();
+        if (classResponse.payload) {
+          // Find the class with name "nickname"
+          const buildingClass = classResponse.payload.find(classItem => {
+            return classItem.name === "building";
+          });
+  
+          if (buildingClass) {
+            // If the class is found, you can access its ID
+            setClassId(buildingClass.id);
+          } else {
+            window.alert("Class 'Location' not found. Please create the class before creating elements.");
+            console.error("Class 'Location' not found.");
+          }
+        } else {
+          console.error("Error in API response. No payload found.");
+        }
+      } catch (error) {
+        console.error('Error fetching class types:', error.message);
+      }
+    };
+  
+    fetchBuildingClassId();
+  }, []);
 
   const addAttribute = () => {
     setAttributes([
@@ -33,7 +62,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
 try{
     const classData = {
       name: className,
-      classId: '65a020bca11a67235b702ecf',
+      classId: classId,
       parentId: parentId.trim() !== '' ? parentId.trim() : null,
       description: classDescription,
       tags: [],
@@ -41,14 +70,6 @@ try{
         { name: "Building-Number", value: "41" },
         { name: "Security-Level", description: "Green" },
       ],
-
-      // attributes: attributes.map((attribute) => ({
-      //   name: attribute.name,
-      //   description: attribute.description,
-      //   mandatory: attribute.mandatory,
-      //   type: attribute.type,
-      //   unit: attribute.unit,
-      // })),
     };
 
     console.log(classData);
@@ -82,7 +103,7 @@ try{
   return (
     <div className="admin-container">
       <div className={`modal ${showLocationForm ? "show" : "hide"}`}>
-        <div className="modal-content">
+        <div className="form-content">
           <span className="close" onClick={() => setShowLocationForm(false)}>
             &times;
           </span>

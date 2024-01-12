@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchPath, fetchAllClass, fetchAllDomain, countElementsByClassId, fetchAllElements, fetchElement, fetchImplementation, fetchClass } from "../../services/api";
+import { fetchPath, fetchAllClass, fetchAllDomain, countElementsByClassName, fetchAllElements, fetchElement, fetchImplementation, fetchClass } from "../../services/api";
 import { faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
 import ClassForm from "./ClassForm";
 import NicknameForm from "./NicknameForm";
@@ -32,71 +32,72 @@ function Admin() {
   const [buildingCount, setBuildingCount] = useState(0);
   const [itemCount, setItemCount] = useState(0);
 
-useEffect(() => {
-  // Fetch and update the element count when the component mounts
-  const fetchNicknameCount = async () => {
-    try {
-      const count = await countElementsByClassId("65a022f8a11a67235b702edc");
-      setNicknameCount(count);
-    } catch (error) {
-      console.error('Error fetching element count:', error.message);
-    }
-  };
-
-  fetchNicknameCount();
-}, []);
-
-useEffect(() => {
-  // Fetch and update the element count when the component mounts
-  const fetchBuildingCount = async () => {
-    try {
-      const count = await countElementsByClassId('65a020bca11a67235b702ecf');
-      setBuildingCount(count);
-    } catch (error) {
-      console.error('Error fetching element count:', error.message);
-    }
-  };
-
-  fetchBuildingCount();
-}, []);
-
-useEffect(() => {
-  // Fetch and update the element count when the component mounts
-  const fetchItemCount = async () => {
-    try {
-      const count = await countElementsByClassId('65a02546a11a67235b702ee1');
-      setItemCount(count);
-    } catch (error) {
-      console.error('Error fetching element count:', error.message);
-    }
-  };
-
-  fetchItemCount();
-}, []);
-
   useEffect(() => {
-
-    const elementId = "65a020bca11a67235b702ed9";
-
-    const fetchData = async () => {
+    // Fetch and update the element counts when the component mounts
+    const fetchElementCounts = async () => {
       try {
-        const pathResult = await fetchPath( elementId, 'Full');
-        setPathData(pathResult);
+        const elementsResponse = await fetchAllElements();
+        if (elementsResponse.payload) {
+          // Filter elements with class name "building"
+          const buildingElements = elementsResponse.payload.filter(element => {
+            return element.classDTO && element.classDTO.name === "building";
+          });
+
+          // Count the number of building elements
+          const buildingCount = buildingElements.length;
+          setBuildingCount(buildingCount);
+
+          // Filter elements with class name "nickname"
+          const nicknameElements = elementsResponse.payload.filter(element => {
+            return element.classDTO && element.classDTO.name === "nickname";
+          });
+
+          // Count the number of nickname elements
+          const nicknameCount = nicknameElements.length;
+          setNicknameCount(nicknameCount);
+
+          // Filter elements with class name "nickname"
+          const itemElements = elementsResponse.payload.filter(element => {
+            return element.classDTO && element.classDTO.name === "depot";
+          });
+
+          // Count the number of nickname elements
+          const itemCount = itemElements.length;
+          setItemCount(itemCount);
+        } else {
+          console.error("Error in API response. No payload found.");
+        }
       } catch (error) {
-        console.error("Error fetching path:", error);
+        console.error('Error fetching element counts:', error.message);
       }
     };
 
-    fetchData(); 
+    fetchElementCounts();
   }, []);
+
+  // useEffect(() => {
+
+  //   const elementId = "65a020bca11a67235b702ed9";
+
+  //   const fetchData = async () => {
+  //     try {
+  //       const pathResult = await fetchPath( elementId, 'Full');
+  //       setPathData(pathResult);
+  //     } catch (error) {
+  //       console.error("Error fetching path:", error);
+  //     }
+  //   };
+
+  //   fetchData(); 
+  // }, []);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleItemClick = (classId) => {
+  const handleItemClick = (formType) => {
     // Handle item click here (e.g., navigate to a specific form or perform an action)
-    console.log(`Clicked ${classId}`);
+    console.log(`Clicked ${formType}`);
   };
 
   useEffect(() => {
@@ -202,9 +203,9 @@ useEffect(() => {
                 />
               )}
               <button
-                onClick={(event) => {
-                  handleItemClick(event);
-                  setShowClassForm(!showClassForm);
+                onClick={() => {
+                  handleItemClick("Class");
+                  setShowClassForm(true);
                 }}
               >
                 Class
@@ -307,7 +308,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <h3>Element Path</h3>
         {pathData ? (
           <div>
@@ -316,9 +317,10 @@ useEffect(() => {
         ) : (
           <p>Loading...</p>
         )}
-      </div>
+      </div> */}
 
-      <div>
+      <div className="admin-page">
+        <div>
         <h2>Domains</h2>
         <table className="class-table">
           <thead>
@@ -340,7 +342,7 @@ useEffect(() => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div><br /><br />
 
       <div>
         <h2>Classes</h2>
@@ -364,7 +366,7 @@ useEffect(() => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div><br /><br />
 
       <div>
         <h2>Elements</h2>
@@ -388,9 +390,9 @@ useEffect(() => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div><br /><br /><br /><br /><br />
 
-      <button
+      {/* <button
         className="create-class-btn"
         onClick={() => setShowUpdateElementForm(!showUpdateElementForm)}
       >
@@ -400,7 +402,8 @@ useEffect(() => {
         <UpdateElementForm
           setShowUpdateElementForm={setShowUpdateElementForm}
         />
-      )}
+      )} */}
+    </div>
     </div>
   );
 }

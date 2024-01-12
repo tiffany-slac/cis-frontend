@@ -20,12 +20,11 @@ function AppRouter() {
           <Route path="/inventory/:id" component={ItemDetails} />
           <Route path="/inventory" component={Inventory} />
           <Route path="/home" component={Home} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/jobs" component={Jobs} />
+          <Route path="/elogs" component={Reports} />
           <Route path="/admin" component={Admin} />
           <Route path="/admin/:classId" component={ClassDetails} />
           <Route path="/profile" component={Reports} />
-          <Route path="/settings" component={Settings} />
+          <Route path="/settings" component={Profile} />
         </Switch>
       </Layout>
     </Router>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { createInventoryElement } from "../../services/api";
+import React, { useState, useEffect } from "react";
+import { createInventoryElement, fetchAllClass } from "../../services/api";
 
 function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
   const [itemName, setItemName] = useState("");
@@ -10,6 +10,36 @@ function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
   const [revision, setRevision] = useState('');
   const [parentId, setParentId] = useState('');
   const [attributes, setAttributes] = useState([]);
+  const [classId, setClassId] = useState('');
+
+  useEffect(() => {
+    const fetchNicknameClassId = async () => {
+      try {
+        const classResponse = await fetchAllClass();
+        if (classResponse.payload) {
+          // Find the class with name "nickname"
+          const nicknameClass = classResponse.payload.find(classItem => {
+            return classItem.name === "nickname";
+          });
+  
+          if (nicknameClass) {
+            // If the class is found, you can access its ID
+            setClassId(nicknameClass.id);
+          } else {
+            window.alert("Class 'nickname' not found. Please create the class before creating elements.");
+            console.error("Class 'nickname' not found.");
+          }
+        } else {
+          console.error("Error in API response. No payload found.");
+        }
+      } catch (error) {
+        console.error('Error fetching class types:', error.message);
+      }
+    };
+  
+    fetchNicknameClassId();
+  }, []);
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,7 +47,7 @@ function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
       const classData = {
         name: itemName,
         description: "A nickname",
-        classId: "65a022f8a11a67235b702edc", // nickname classId
+        classId: classId,
         parentId: null,
         tags: [],
         attributes: [
@@ -48,7 +78,7 @@ function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
   return (
     <div className="admin-container">
       <div className={`modal ${showNicknameForm ? "show" : "hide"}`}>
-        <div className="modal-content">
+        <div className="form-content">
           <span className="close" onClick={() => setShowNicknameForm(false)}>
             &times;
           </span>
