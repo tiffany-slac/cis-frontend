@@ -5,31 +5,26 @@ import { useLocation } from "react-router-dom";
 import {
   faHome,
   faNewspaper,
-  faUser,
   faCog,
   faBox,
   faTicket,
   faLock,
-  faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
 function Sidebar() {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [activeButton, setActiveButton] = useState(location.pathname);
+  const [activeButton, setActiveButton] = useState(
+    localStorage.getItem("activeButton") || location.pathname
+  );
 
   const handleClick = (buttonName, path) => {
-    if (activeButton === path) {
-      setActiveButton(null);
-      localStorage.removeItem("activeButton");
-    } else {
+    if (activeButton !== path) {
       setActiveButton(path);
       localStorage.setItem("activeButton", path);
     }
   };
-  
-  
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -63,9 +58,12 @@ function Sidebar() {
 
         <div>
           <Link to="/home">
-            <button 
-            onClick={() => handleClick('home', '/home')}
-            className={`icon-button ${activeButton === '/home' ? 'active-button' : ''}`}> 
+            <button
+              onClick={() => handleClick("home", "/home")}
+              className={`icon-button ${
+                activeButton === "/home" ? "active-button" : ""
+              }`}
+            >
               <div className="button-label">
                 <FontAwesomeIcon icon={faHome} className="icon" title="Home" />
                 <div className="small-label">Home</div>
@@ -77,8 +75,12 @@ function Sidebar() {
 
         <div>
           <Link to="/inventory">
-            <button onClick={() => handleClick('inventory', '/inventory')}
-            className={`icon-button ${activeButton === '/inventory' ? 'active-button' : ''}`}>
+            <button
+              onClick={() => handleClick("inventory", "/inventory")}
+              className={`icon-button ${
+                activeButton === "/inventory" ? "active-button" : ""
+              }`}
+            >
               <div className="button-label">
                 <FontAwesomeIcon
                   icon={faBox}
@@ -94,8 +96,12 @@ function Sidebar() {
 
         <div>
           <Link to="/jobs">
-            <button onClick={() => handleClick('cater', '/cater')}
-            className={`icon-button ${activeButton === '/cater' ? 'active-button' : ''}`}>
+            <button
+              onClick={() => handleClick("cater", "/cater")}
+              className={`icon-button ${
+                activeButton === "/cater" ? "active-button" : ""
+              }`}
+            >
               <div className="button-label">
                 <FontAwesomeIcon
                   icon={faTicket}
@@ -111,10 +117,18 @@ function Sidebar() {
 
         <div>
           <Link to="/profile">
-            <button onClick={() => handleClick('elogs', '/elogs')}
-            className={`icon-button ${activeButton === '/elogs' ? 'active-button' : ''}`}>
+            <button
+              onClick={() => handleClick("elogs", "/elogs")}
+              className={`icon-button ${
+                activeButton === "/elogs" ? "active-button" : ""
+              }`}
+            >
               <div className="button-label">
-                <FontAwesomeIcon icon={faNewspaper} className="icon" title="User" />
+                <FontAwesomeIcon
+                  icon={faNewspaper}
+                  className="icon"
+                  title="User"
+                />
                 <div className="small-label">eLogs</div>
                 <span className="label">User</span>
               </div>
@@ -124,8 +138,12 @@ function Sidebar() {
 
         <div>
           <Link to="/admin">
-            <button onClick={() => handleClick('admin', '/admin')}
-            className={`icon-button ${activeButton === '/admin' ? 'active-button' : ''}`}>
+            <button
+              onClick={() => handleClick("admin", "/admin")}
+              className={`icon-button ${
+                activeButton === "/admin" ? "active-button" : ""
+              }`}
+            >
               <div className="button-label">
                 <FontAwesomeIcon icon={faLock} className="icon" title="Admin" />
                 <div className="small-label">Admin</div>
@@ -137,8 +155,12 @@ function Sidebar() {
 
         <div>
           <Link to="/settings">
-            <button onClick={() => handleClick('settings', '/settings')}
-            className={`icon-button ${activeButton === '/settings' ? 'active-button' : ''}`}>
+            <button
+              onClick={() => handleClick("settings", "/settings")}
+              className={`icon-button ${
+                activeButton === "/settings" ? "active-button" : ""
+              }`}
+            >
               <div className="button-label">
                 <FontAwesomeIcon
                   icon={faCog}

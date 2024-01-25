@@ -311,15 +311,28 @@ export const createInventoryElement = async (elementData) => {
       alert("Element created successfully!"); // Handle success: show a success message or perform any necessary action
       // You can also reset the form or close the modal here
     } else {
-      const errorData = await response.json();
-      console.error("Error creating element:", errorData);
-      alert("Error creating element. Please try again.");
+      console.error(
+        `Failed to create inventory element. Status: ${response.status}, StatusText: ${response.statusText}`
+      );
+
+      if (response.headers.get("content-type")?.includes("application/json")) {
+        // If the response contains JSON, log and handle the error
+        const errorData = await response.json();
+        console.error("Error creating element:", errorData);
+        alert("Error creating element. Please try again.");
+      } else {
+        // If the response is not JSON, log and handle the error accordingly
+        const errorText = await response.text();
+        console.error("Error creating element:", errorText);
+        alert("Error creating element. Please try again.");
+      }
     }
   } catch (error) {
     console.error("Error creating element:", error);
     alert("Network error. Please check your connection.");
   }
 };
+
 
 /* ----------------------------------------- UPDATE ----------------------------------------- */
 
@@ -424,11 +437,12 @@ export const fetchDomain = async () => {
   }
 };
 
+// Updated fetchClass function
 export const fetchClass = async (classId) => {
   try {
     const token = await extractJWT();
     const domain_id = await setDomainId();
-    // const token = await retrieveToken();
+
     const response = await fetch(
       `http://localhost:3000/api/v1/inventory/class/${classId}`,
       {
@@ -440,16 +454,19 @@ export const fetchClass = async (classId) => {
       }
     );
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error("Failed to fetch class types");
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch class details: ${data.message}`);
     }
+
+    return data;
   } catch (error) {
-    throw new Error("Error fetching class types:", error.message);
+    console.error("Error fetching class details:", error.message);
+    throw error;
   }
 };
+
 
 export const fetchElement = async (elementId) => {
   try {
@@ -568,7 +585,7 @@ export const searchElements = async (searchQuery = "") => {
   }
 };
 
-export const fetchAllElements = async (limit = 5, page = 1, anchorId = null, searchQuery = "") => {
+export const fetchAllElements = async (limit = 10, page = 1, anchorId = null, searchQuery = "") => {
   try {
     const token = await extractJWT();
     const domain_id = await setDomainId();

@@ -1,36 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchPath, fetchAllClass, fetchAllDomain, countElementsByClassName, fetchAllElements, fetchElement, fetchImplementation, fetchClass } from "../../services/api";
+import { fetchAllClass, fetchAllDomain, fetchAllElements, fetchPath, fetchClass } from "../../services/api";
 import { faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
 import ClassForm from "./ClassForm";
-import NicknameForm from "./NicknameForm";
-import LocationForm from "./LocationForm";
-import ObjectForm from "./ObjectForm";
 import ItemForm from "./ItemForm";
-import UpdateElementForm from "./UpdateElementForm";
+import ElementForm from "./ElementForm";
 import "./admin.css";
 
 function Admin() {
   const history = useHistory();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showNicknameForm, setShowNicknameForm] = useState(false);
   const [showItemForm, setShowItemForm] = useState(false);
-  const [showLocationForm, setShowLocationForm] = useState(false);
-  const [showObjectForm, setShowObjectForm] = useState(false);
   const [showClassForm, setShowClassForm] = useState(false);
-  const [showUpdateElementForm, setShowUpdateElementForm] = useState(false);
+  const [showElementForm, setShowElementForm] = useState(false)
   const [classTypes, setClassTypes] = useState([]);
-
   const [domains, setDomains] = useState([]);
   const [classes, setClasses] = useState([]);
   const [elements, setElements] = useState([]);
-  const [pathData, setPathData] = useState(null);
-  const [allElements, setAllElements] = useState(null);
-
   const [nicknameCount, setNicknameCount] = useState(0);
   const [buildingCount, setBuildingCount] = useState(0);
   const [itemCount, setItemCount] = useState(0);
+  const [pathData, setPathData] = useState("");
 
   useEffect(() => {
     // Fetch and update the element counts when the component mounts
@@ -77,12 +68,13 @@ function Admin() {
 
   // useEffect(() => {
 
-  //   const elementId = "65a020bca11a67235b702ed9";
+  //   const elementId = "65a963b3fdbbf84ec98ee189";
 
   //   const fetchData = async () => {
   //     try {
   //       const pathResult = await fetchPath( elementId, 'Full');
   //       setPathData(pathResult);
+  //       console.log(pathResult);
   //     } catch (error) {
   //       console.error("Error fetching path:", error);
   //     }
@@ -166,14 +158,14 @@ function Admin() {
         console.log("ALL CLASSES: " + JSON.stringify(allClass));
         // const path = await fetchPath();
         // console.log("A PATH: " + JSON.stringify(path));
-        // const aclass = await fetchClass('659f31048a79764e92f1d0d5');
+        // const aclass = await fetchClass('65b14ed0da7e78564e80beec');
         // console.log("ONE CLASS: " + JSON.stringify(aclass));
-        // const abclass = await fetchClass('65a022f8a11a67235b702edc');
+        // const abclass = await fetchClass('65aaf10f32fa4728306c9d5d');
         // console.log("ONE CLASS: " + JSON.stringify(abclass));
         // const abclass = await fetchClass('659f23ad8a79764e92f1d0cc');
         // console.log("ONE CLASS: " + JSON.stringify(abclass));
-        const element = await fetchAllElements();
-        console.log("ALL ELEMENTS: " + JSON.stringify(element));
+        // const element = await fetchAllElements();
+        // console.log("ALL ELEMENTS: " + JSON.stringify(element));
         // const aelement = await fetchElement('659f37c68a79764e92f1d0d8');
         // console.log("ONE ELEMENT: " + JSON.stringify(aelement));
       } catch (error) {
@@ -188,9 +180,22 @@ function Admin() {
     <div>
       <h1>Admin Dashboard</h1>
 
-      <div className="top-right">
-        <div className="dropdown">
-          <button onClick={toggleDropdown} className="dropbtn">
+<div className="new-class-button">
+  <button
+    onClick={() => {
+      handleItemClick("Class");
+      setShowClassForm(true);
+    }}
+    className="dropbtn"
+  >
+    <span>+</span> New Class
+  </button>
+  {showClassForm && (
+    <ClassForm setShowClassForm={setShowClassForm} classTypes={classTypes} />
+  )}
+</div><br />
+        {/* <div className="dropdown"> */}
+          {/* <button onClick={toggleDropdown} className="dropbtn">
             <span>+</span> New
           </button>
           {showDropdown && (
@@ -247,8 +252,7 @@ function Admin() {
 
             </div>
           )}
-        </div>
-      </div>
+        </div>*/}
 
       <div className="card-container">
         <div className="admin-card">
@@ -270,7 +274,7 @@ function Admin() {
           <div className="card-content">
             <div>
               <h2>{nicknameCount}</h2>
-              <p>Nicknames</p>
+              <p>Element</p>
             </div>
             <div className="card-icon">
               <FontAwesomeIcon icon={faObjectGroup} title="Home" />
@@ -278,12 +282,12 @@ function Admin() {
           </div>
           <div
             className="card-action"
-            onClick={() => setShowObjectForm(!showObjectForm)}
+            onClick={() => setShowElementForm(!showElementForm)}
           >
             <span className="card-add">+</span>
           </div>
-          {showObjectForm && (
-            <ObjectForm setShowObjectForm={setShowObjectForm} />
+          {showElementForm && (
+            <ElementForm setShowElementForm={setShowElementForm} />
           )}
         </div>
 
@@ -319,8 +323,8 @@ function Admin() {
         )}
       </div> */}
 
-      <div className="admin-page">
-        <div>
+      <div className="card-container">
+        <div className="card-display">
         <h2>Domains</h2>
         <table className="class-table">
           <thead>
@@ -344,7 +348,7 @@ function Admin() {
         </table>
       </div><br /><br />
 
-      <div>
+      <div className="card-display">
         <h2>Classes</h2>
         <table className="class-table">
           <thead>
@@ -368,7 +372,7 @@ function Admin() {
         </table>
       </div><br /><br />
 
-      <div>
+      <div className="card-display">
         <h2>Elements</h2>
         <table className="class-table">
           <thead>
@@ -390,7 +394,8 @@ function Admin() {
             ))}
           </tbody>
         </table>
-      </div><br /><br /><br /><br /><br />
+      </div>
+      <br /><br /><br /><br /><br />
 
       {/* <button
         className="create-class-btn"

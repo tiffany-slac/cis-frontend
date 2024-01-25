@@ -1,86 +1,437 @@
-import React, { useState } from 'react';
-import { createInventoryElement } from '../../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  fetchAllElements,
+  createInventoryElement,
+  fetchClass,
+  fetchAllClass,
+} from "../../services/api";
+
+import "./admin.css";
 
 function ElementForm({ showElementForm, setShowElementForm }) {
-  const [slacId, setSlacId] = useState('');
-  const [serialNumber, setSerialNumber] = useState('');
-  const [location, setLocation] = useState('');
-  const [classType, setClassType] = useState('Item');
-  const [chargeCode, setChargeCode] = useState('');
-  
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-  
-    const elementData = {
-      name: slacId,
-      classId: '65776b431f936c48a322725e',
-      parentId: null,
-      description: 'description',
-      tags: [],
-      attributes: [],
+  const [parents, setParents] = useState([]);
+  const [parentId, setParentId] = useState("");
+  const [classId, setClassId] = useState("");
+  const [classesName, setClassesName] = useState([]);
+  const [selectedParent, setSelectedParent] = useState("");
+  const [showParentDropdown, setShowParentDropdown] = useState(false);
+  const [selectedClassName, setSelectedClassName] = useState("");
+  const [dynamicForm, setDynamicForm] = useState([]);
+  const [extendsClassId, setExtendsClassId] = useState("");
+  const [extendsClassAttributes, setExtendsClassAttributes] = useState([]);
+  const [taggedClassId, setTaggedClassId] = useState(""); // New state for tagged class
+  const [taggedClassAttributes, setTaggedClassAttributes] = useState([]); // New state for tagged class attributes
+
+  useEffect(() => {
+    const fetchParents = async () => {
+      try {
+        const response = await fetchAllElements();
+        if (response.errorCode === 0) {
+          const elementDetails = response.payload.map((element) => ({
+            id: element.id,
+            name: element.name,
+          }));
+          setParents(elementDetails);
+        } else {
+          throw new Error("Error fetching elements");
+        }
+      } catch (error) {
+        console.error("Error fetching elements:", error.message);
+      }
     };
-  
+
+    fetchParents();
+  }, []);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetchAllClass();
+        if (response.errorCode === 0) {
+          const classesDetails = response.payload.map((classes) => ({
+            id: classes.id,
+            name: classes.name,
+          }));
+          setClassesName(classesDetails);
+        } else {
+          throw new Error("Error fetching elements");
+        }
+      } catch (error) {
+        console.error("Error fetching elements:", error.message);
+      }
+    };
+
+    fetchClasses();
+  }, []);
+
+  useEffect(() => {
+    if (classId) {
+      fetchClassDetails();
+    }
+  }, [classId, taggedClassId, taggedClassAttributes]);
+
+  useEffect(() => {
+    if (extendsClassId) {
+      // Fetch attributes of the extends class
+      fetchExtendsClassAttributes();
+    }
+  }, [extendsClassId]);
+
+  useEffect(() => {
+    if (taggedClassId) {
+      // Fetch attributes of the tagged class
+      fetchTaggedClassAttributes();
+    }
+  }, [taggedClassId]);
+
+  const fetchClassDetails = async () => {
     try {
-      const response = await createInventoryElement(elementData);
-      if (response.status === 201) {
-        alert('FORM: Inventory Element created successfully!');
-        // Additional actions after successful creation
+      const classDetails = await fetchClass(classId);
+
+      if (classDetails.errorCode === 0) {
+        const classAttributes = classDetails.payload.attributes || [];
+        const taggedClassAttributesElements = taggedClassAttributes.map(
+          (attribute) => (
+            <div
+              key={attribute.name}
+              className={attribute.description ? "with-description" : ""}
+            >
+              <label htmlFor={attribute.name}>
+                {formatAttributeName(attribute.name)}:
+              </label>
+              {attribute.description ? (
+                <div className="attribute-description">
+                  {attribute.description}
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  id={attribute.name}
+                  name={attribute.name}
+                  onChange={(e) =>
+                    handleInputChange(attribute.name, e.target.value)
+                  }
+                />
+              )}
+            </div>
+          )
+        );
+
+        // Generate dynamicForm elements for classAttributes
+        const dynamicFormElements = classAttributes.map((attribute) => (
+          <div
+            key={attribute.name}
+            className={attribute.description ? "with-description" : ""}
+          >
+            <label htmlFor={attribute.name}>
+              {formatAttributeName(attribute.name)}:
+            </label>
+            {attribute.description ? (
+              <div className="attribute-description">
+                {attribute.description}
+              </div>
+            ) : attribute.name === "parent" ? (
+              // Render a dropdown for the "parent" attribute
+              <select
+                id={attribute.name}
+                name={attribute.name}
+                value={selectedParent}
+                onChange={(event) => {
+                  setSelectedParent(event.target.value);
+                  setItemData((prevData) => ({
+                    ...prevData,
+                    parentId: event.target.value,
+                  }));
+                }}
+              >
+                <option value="">Select a parent</option>
+                {parents.map((parent) => (
+                  <option key={parent.id} value={parent.id}>
+                    {parent.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              // Render a text input for other attributes
+              <input
+                type="text"
+                id={attribute.name}
+                name={attribute.name}
+                onChange={(e) =>
+                  handleInputChange(attribute.name, e.target.value)
+                }
+              />
+            )}
+          </div>
+        ));
+
+        setDynamicForm([
+          ...dynamicFormElements,
+          ...taggedClassAttributesElements,
+        ]);
+      } else {
+        throw new Error("Error fetching class details");
       }
     } catch (error) {
-      console.error('FORM: Error creating Inventory Element:', error);
-      alert('FORM: Network error. Please check your connection.');
+      console.error("Error fetching class details:", error.message);
     }
   };
-  
+
+  const fetchExtendsClassAttributes = async () => {
+    try {
+      const extendsClassDetails = await fetchClass(extendsClassId);
+
+      if (extendsClassDetails.errorCode === 0) {
+        const attributes = extendsClassDetails.payload.attributes || [];
+        setExtendsClassAttributes(attributes);
+      } else {
+        throw new Error("Error fetching extends class details");
+      }
+    } catch (error) {
+      console.error("Error fetching extends class details:", error.message);
+    }
+  };
+
+  const fetchTaggedClassAttributes = async () => {
+    try {
+      const taggedClassDetails = await fetchClass(taggedClassId);
+
+      if (taggedClassDetails.errorCode === 0) {
+        const attributes = taggedClassDetails.payload.attributes || [];
+        setTaggedClassAttributes(attributes);
+
+        // Update dynamicForm with tagged class attributes
+        const dynamicFormElements = attributes.map((attribute) => (
+          <div
+            key={attribute.name}
+            className={attribute.description ? "with-description" : ""}
+          >
+            <label htmlFor={attribute.name}>
+              {formatAttributeName(attribute.name)}:
+            </label>
+            {attribute.description ? (
+              <div className="attribute-description">
+                {attribute.description}
+              </div>
+            ) : (
+              <input
+                type="text"
+                id={attribute.name}
+                name={attribute.name}
+                onChange={(e) =>
+                  handleInputChange(attribute.name, e.target.value)
+                }
+              />
+            )}
+          </div>
+        ));
+
+        setDynamicForm((prevDynamicForm) => [
+          ...prevDynamicForm.filter(
+            (element) => !attributes.find((attr) => attr.name === element.key)
+          ),
+          ...dynamicFormElements,
+        ]);
+      } else {
+        throw new Error("Error fetching tagged class details");
+      }
+    } catch (error) {
+      console.error("Error fetching tagged class details:", error.message);
+    }
+  };
+
+  const [itemData, setItemData] = useState({
+    name: "",
+    classId: classId,
+    parentId: "",
+    description: "",
+    tags: [],
+    attributes: {}, // Updated to store attribute values dynamically
+  });
+
+  const handleInputChange = (attributeName, attributeValue) => {
+    if (attributeName === "slac-id") {
+      setItemData((prevData) => ({
+        ...prevData,
+        name: attributeValue,
+      }));
+    } else if (attributeName === "parent") {
+      setSelectedParent(attributeValue);
+      setItemData((prevData) => ({
+        ...prevData,
+        parentId: attributeValue,
+      }));
+    } else if (attributeName === "classesName") {
+      setSelectedClassName(attributeValue);
+      // Set classId based on the selected class name
+      const selectedClasses = classesName.find(
+        (classes) => classes.name === attributeValue
+      );
+      setItemData((prevData) => ({
+        ...prevData,
+        classId: selectedClasses ? selectedClasses.id : "",
+      }));
+    } else {
+      setItemData((prevData) => ({
+        ...prevData,
+        attributes: {
+          ...prevData.attributes,
+          [attributeName]: attributeValue.trim() === "" ? null : attributeValue,
+        },
+      }));
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log("submitting");
+
+    const attributesData = Object.entries(itemData.attributes).map(
+      ([key, value]) => ({
+        name: key,
+        value,
+      })
+    );
+
+    // Include extendsClass as a tag
+    const tags = extendsClassId ? [extendsClassId] : [];
+    // Include taggedClass as a tag
+    if (taggedClassId) {
+      tags.push(taggedClassId);
+    }
+
+    const postData = {
+      name: itemData.name,
+      classId: classId,
+      parentId: itemData.parentId,
+      description: "DEPOT Item",
+      tags: tags,
+      attributes: [
+        ...attributesData,
+        ...extendsClassAttributes.map((attribute) => ({
+          name: attribute.name,
+          value: attribute.description || "n/a", // Use "n/a" for attributes without a description
+        })),
+        ...taggedClassAttributes.map((attribute) => ({
+          name: attribute.name,
+          value: attribute.description || "n/a", // Use "n/a" for attributes without a description
+        })),
+      ],
+    };
+
+    console.log("Post Data:", postData);
+
+    try {
+      const response = await createInventoryElement(postData);
+      console.log("API Response:", response); // Log the API response
+      alert("Item created successfully!");
+      setShowElementForm(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during item creation:", error);
+      alert(
+        "Failed to create item. Please check your connection or try again later."
+      );
+    }
+  };
+
+  function formatAttributeName(name) {
+    // Split the string into words
+    const words = name
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+    // Join the words with spaces
+    return words.join(" ");
+  }
 
   return (
-    <div className='admin-container'>
-    <div className={`modal ${showElementForm ? 'show' : 'hide'}`}>
-      <div className="modal-content">
-        <span className="close" onClick={() => setShowElementForm(false)}>&times;</span>
-        <form className="class-form" onSubmit={handleSubmit}>
-            <label htmlFor="slacId">SLAC ID:</label><br />
-              <input
-                  type="text"
-                  id="slacId"
-                  name="slacId"
-                  value={slacId}
-                  onChange={(event) => setSlacId(event.target.value)}
-              /><br /><br />
+    <div>
+      <div className={`item-form-format ${showElementForm ? "show" : "hide"}`}>
+        <div className="modal-content">
+          <span className="close" onClick={() => setShowElementForm(false)}>
+            &times;
+          </span>
+          <form className="class-form" onSubmit={handleSubmit}>
 
-              <label htmlFor="serialNumber">Serial Number:</label><br />
-              <input
-                  type="text"
-                  id="serialNumber"
-                  name="serialNumber"
-                  value={serialNumber}
-                  onChange={(event) => setSerialNumber(event.target.value)}
-              /><br /><br />
+            {/* Dropdown for selecting the nickname class */}
+            <label htmlFor="classesName">Nickname:</label>
+            <select
+              id="classesName"
+              name="classesName"
+              value={selectedClassName}
+              onChange={(event) => {
+                setSelectedClassName(event.target.value);
+                // Set classId based on the selected class name
+                const selectedClasses = classesName.find(
+                  (classes) => classes.name === event.target.value
+                );
+                setClassId(selectedClasses ? selectedClasses.id : "");
+              }}
+            >
+              <option value="">Select a type</option>
+              {classesName.map((classes) => (
+                <option key={classes.id} value={classes.name}>
+                  {classes.name}
+                </option>
+              ))}
+            </select>
+            <br />
 
-              <label htmlFor="location">Location:</label><br />
-              <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  value={location}
-                  onChange={(event) => setLocation(event.target.value)}
-              /><br /><br />
+            {/* Dropdown for selecting the tagged class */}
+            {/* <label htmlFor="taggedClassId">Tags:</label>
+            <select
+              id="taggedClassId"
+              name="taggedClassId"
+              value={taggedClassId}
+              onChange={(event) => {
+                setTaggedClassId(event.target.value);
+                // Clear tagged class attributes when a new tagged class is selected
+                setTaggedClassAttributes([]);
+              }}
+            >
+              <option value="">Select a tagged class</option>
+              {classesName.map((classes) => (
+                <option key={classes.id} value={classes.id}>
+                  {classes.name}
+                </option>
+              ))}
+            </select>
+            <br /> */}
 
-              <label htmlFor="chargeCode">Charge Code:</label><br />
-              <input
-                  type="text"
-                  id="chargeCode"
-                  name="chargeCode"
-                  value={chargeCode}
-                  onChange={(event) => setChargeCode(event.target.value)}
-              /><br /><br />
+            {showParentDropdown && (
+  <>
+    <label htmlFor="parentId">Parent:</label>
+    <select
+  id="parentId"
+  name="parentId"
+  value={selectedParent}
+  onChange={(event) => {
+    const selectedValue = event.target.value;
+    console.log("Selected Parent:", selectedValue);
+    setSelectedParent(selectedValue);
+  }}
+>
 
-              {/* Submit button */}
+      <option value="">Select a parent</option>
+      {parents.map((parent) => (
+        <option key={parent.id} value={parent.id}>
+          {parent.name}
+        </option>
+      ))}
+    </select>
+    <br />
+  </>
+)}
+
+
+            {dynamicForm}
             <input type="submit" value="Create Element" />
+            <br />
+            <br />
           </form>
         </div>
       </div>
-  </div>
+    </div>
   );
 }
 

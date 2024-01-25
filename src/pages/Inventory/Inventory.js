@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { fetchAllElements, searchElements } from "../../services/api";
 import { useHistory } from "react-router-dom";
 import ItemForm from "../admin/ItemForm.js";
+import ElementForm from "../admin/ElementForm.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faBarcode } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
@@ -20,6 +21,7 @@ const Inventory = () => {
   const [inventory, setInventory] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [showItemForm, setShowItemForm] = useState(false);
+  const [showElementForm, setShowElementForm] = useState(false);
   const [searchInput, setSearchInput] = useState(""); // State to store the search input
   const [currentPage, setCurrentPage] = useState(1); // New state for current page
   const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
@@ -35,15 +37,16 @@ const Inventory = () => {
       // Reset currentPage and lastItemId when initiating a new search
       setCurrentPage(1);
       setLastItemId(null);
-
-      const searchData = await searchElements(searchInput);
-
+  
+      const searchData = await fetchAllElements(5, 1, null, searchInput); // Assuming default values for limit, page, and anchorId
+  
       setInventory(searchData.payload);
       setLastItemId(searchData.payload[searchData.payload.length - 1]?.id || null);
     } catch (error) {
       console.error("Error fetching inventory elements:", error);
     }
   };
+  
 
   const handleLoadMore = async () => {
     try {
@@ -95,17 +98,17 @@ const Inventory = () => {
       <div className="top-right">
         <div className="dropdown">
           <div className="item-form-wrapper">
-            {showItemForm && (
-              <div className={`item-form ${showItemForm ? "slide-in" : ""}`}>
-                <ItemForm
-                  showItemForm={showItemForm}
-                  setShowItemForm={setShowItemForm}
+            {showElementForm && (
+              <div className={`item-form ${showElementForm ? "slide-in" : ""}`}>
+                <ElementForm
+                  showElementForm={showElementForm}
+                  setShowElementForm={setShowElementForm}
                 />
               </div>
             )}
           </div>
           <button
-            onClick={() => setShowItemForm(!showItemForm)}
+            onClick={() => setShowElementForm(!showElementForm)}
             className="dropbtn"
           >
             <span>+</span> New

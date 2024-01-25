@@ -1,5 +1,33 @@
 /* ItemDetails.css */
 
+/* Add this CSS to your ItemDetails.css or relevant stylesheet */
+
+.tree-container {
+  margin-top: 20px;
+}
+
+.tree {
+  list-style-type: none;
+  padding-left: 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.tree li {
+  margin-bottom: 5px;
+}
+
+.tree-node {
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.sub-tree {
+  padding-left: 20px;
+}
+
+
 /* Add indentation for expand/collapse and hierarchy */
 
 .white-background {
@@ -13,12 +41,14 @@
 
 .tree-table {
   border-collapse: collapse;
+  border-radius: 8px;
 }
 
 .tree-table th,
 .tree-table td {
   padding: 8px;
   border: 1px solid #ddd;
+  margin-bottom: 10px;
 }
 
 .tree-table .expand-button {
@@ -30,6 +60,11 @@
   transform: rotate(45deg);
   transition: transform 0.2s ease-in-out;
 }
+
+.tree-table .tree-table-cell {
+  padding-left: 20px; /* Adjust the indentation as needed */
+}
+
 
 .tree-table .expand-button.clickable {
   cursor: pointer;
@@ -48,11 +83,6 @@
 /* Tree structure styles */
 .tree-container {
   margin-top: 20px;
-}
-
-.tree {
-  list-style: none;
-  padding-left: 20px;
 }
 
 .tree li {
@@ -150,6 +180,7 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 10px; /* Adjust margin as needed */
+  margin-left: 50px;
 }
 
 /* Example styles for ID, name, and description */
@@ -206,17 +237,21 @@
 }
 
 .item-details-header {
-  /* padding-left: 50px;
-  padding-right: 50px;
-  width: 100%; */
-  padding-left: 60px;
+  /* padding-left: 60px; */
   width: 100%;
-  align-content: center;
   position: fixed;
   background-color: white;
-  box-shadow: 0 4px 2px -2px gray;
+  box-shadow: 0 1px 4px -2px gray;
   z-index: 1;
 }
+
+.item-details-header .line {
+  width: 90%;
+  margin-left: 50px;
+  /* margin: 0 5%;  */
+  border-top: 1px solid #ccc; /* Example border styling */
+}
+
 
 .item-details-container {
     width: 80%;
