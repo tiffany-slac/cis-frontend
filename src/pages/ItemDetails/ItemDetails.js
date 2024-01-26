@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
 import LocationHistForm from "./LocationHistForm";
 import { fetchElement, fetchPath } from "../../services/api";
@@ -13,81 +13,95 @@ const ItemDetails = () => {
   const [elementPath, setElementPath] = useState(null);
   const [expandedRows, setExpandedRows] = useState([]);
   const [showLocationHistForm, setShowLocationHistForm] = useState(false);
+  const [isCardExpanded, setIsCardExpanded] = useState(true);
+  const [editedId, setEditedId] = useState("");
+
 
   const TreeView = ({ items, parentId = null, level = 0 }) => {
+    const location = useLocation();
+    const currentItemId = location.pathname.split("/").pop(); // Get the current item id from the URL
+
     if (!items) {
       return null; // Return early if items is falsy
     }
-  
-    const childItems = items.filter(
-      (item) =>
-        (parentId === null ? item.parentId === undefined : item.parentId === parentId)
+
+    const childItems = items.filter((item) =>
+      parentId === null
+        ? item.parentId === undefined
+        : item.parentId === parentId
     );
-  
+
     if (childItems.length === 0) {
       return null;
     }
-  
+
     return (
       <>
         {childItems.map((item, index) => (
           <React.Fragment key={item.id}>
             <tr>
               <td colSpan="3">
-                <div
-                  style={{
-                    position: "relative",
-                    padding: "10px",
-                    marginLeft: `${level * 20 + 10}px`,
-                    borderRadius: "5px",
-                  }}
+                <Link
+                  to={`/inventory/${item.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div
                     style={{
-                      position: "absolute",
-                      bottom: "-10px",  // Updated to bottom
-                      left: "-10px",
-                      width: "10px",
-                      height: "100%",
+                      position: "relative",
+                      padding: "10px",
+                      marginLeft: `${level * 20 + 10}px`,
+                      borderRadius: "5px",
+                      background: item.id === currentItemId ? "#ddd" : "none",
                     }}
                   >
                     <div
                       style={{
                         position: "absolute",
-                        bottom: "0",  // Updated to bottom
-                        left: "0",
-                        width: "100%",
-                        height: "10px",
-                        borderBottom: "1px solid #ddd",
-                      }}
-                    ></div>
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "0",  // Updated to top
-                        left: "0",
+                        bottom: "-10px", // Updated to bottom
+                        left: "-10px",
                         width: "10px",
                         height: "100%",
-                        borderLeft: "1px solid #ddd",
                       }}
-                    ></div>
-                  </div>
-                  <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-                    {item.name}
-                  </div>
-                  {/* <div style={{ fontSize: "14px", color: "#888" }}>
-                    Serial:{" "}
-                    {item.attributes && item.attributes.serial
-                      ? item.attributes.serial.join(", ")
-                      : ""}
-                  </div>
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: "0", // Updated to bottom
+                          left: "0",
+                          width: "100%",
+                          height: "10px",
+                          borderBottom: "1px solid #ddd",
+                        }}
+                      ></div>
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "0", // Updated to top
+                          left: "0",
+                          width: "10px",
+                          height: "100%",
+                          borderLeft: "1px solid #ddd",
+                        }}
+                      ></div>
+                    </div>
+                    <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+                      {item.name}
+                    </div>
+                    {/* 
                   <div style={{ fontSize: "14px", color: "#888" }}>
                     ID: {item.id || ""}
                   </div> */}
-                  <div style={{ fontSize: "14px", color: "#888" }}>
-                    Type: {item.classDTO.name}
+                    <div style={{ fontSize: "14px", color: "#888" }}>
+                      Type: {item.classDTO.name}
+                    </div>
+                    <div style={{ fontSize: "14px", color: "#888" }}>
+                      Serial:{" "}
+                      {item.attributes && item.attributes.serial
+                        ? item.attributes.serial.join(", ")
+                        : ""}
+                    </div>
                   </div>
-                </div>
+                </Link>
               </td>
             </tr>
             <TreeView
@@ -101,10 +115,10 @@ const ItemDetails = () => {
       </>
     );
   };
-  
-  
-  
-  
+
+  const toggleCard = () => {
+    setIsCardExpanded((prevIsCardExpanded) => !prevIsCardExpanded);
+  };
 
   const handleButtonClick = () => {
     setShowLocationHistForm(true); // Show the form when the button is clicked
@@ -122,7 +136,7 @@ const ItemDetails = () => {
       try {
         const pathData = await fetchPath(id, "Full");
         setElementPath(pathData.payload);
-        console.log(pathData);
+        // console.log(pathData);
       } catch (error) {
         console.error("Error fetching element path:", error);
       }
@@ -151,8 +165,6 @@ const ItemDetails = () => {
         setLoading(false);
       }
     };
-    console.log("elementDetails: " + elementDetails);
-
     fetchData();
   }, [id]);
 
@@ -175,24 +187,42 @@ const ItemDetails = () => {
     return capitalizedFirstLetter + formattedName;
   }
 
+  const truncateText = (text, minLines, maxLines) => {
+    const splitText = text.split("\n");
+    const truncatedLines = splitText.slice(0, 2, 3); // Keep the first two lines
+    const remainingLines = splitText.slice(2, maxLines);
+    const isTruncated = splitText.length > maxLines;
+
+    return (
+      <div>
+        {truncatedLines.map((line, index) => (
+          <p key={index}>{line}</p>
+        ))}
+        {isTruncated && (
+          <p
+            style={{ margin: 0, color: "blue", cursor: "pointer" }}
+            onClick={toggleCard}
+          >
+            {isCardExpanded ? "Read more..." : "Show less"}
+          </p>
+        )}
+        {isCardExpanded && isTruncated && (
+          <div>
+            {remainingLines.map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div>
-
-      <div
-        style={{
-          position: "fixed",
-          top: "60px",
-          left: "80px",
-          width: "100%",
-          zIndex: "1",
-          backgroundColor: "white",
-        }}
-      >
-        <Breadcrumb items={breadcrumbItems} />
-      </div>
-      <br />
-      <br />
       <div className="item-details-header">
+        <div style={{ marginLeft: "10px" }}>
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
         <h1 style={{ textAlign: "left", marginLeft: "50px" }}>
           {elementDetails &&
           elementDetails.payload &&
@@ -220,20 +250,41 @@ const ItemDetails = () => {
         {elementDetails && (
           <>
             <div className="item-card">
-              <div className="card-header">Details</div>
-              <div className="card-body">
-                {loading ? (
-                  <p>Loading...</p>
-                ) : elementDetails ? (
-                  <div>
-                    <p>ID: {elementDetails.payload.id}</p>
-                    {/* <p>{elementDetails.payload.name.toUpperCase()}</p> */}
-                    <p>Serial: {elementDetails.payload.attributes[0].value}</p>
-                  </div>
-                ) : (
-                  <p>No details available</p>
-                )}
+              <div
+                className="card-header"
+                onClick={toggleCard}
+                style={{ cursor: "pointer", marginBottom: "5px" }}
+              >
+                Details
+                <span
+                  style={{
+                    float: "right",
+                    transform: `rotate(${isCardExpanded ? 0 : -180}deg)`,
+                    transition: "transform 0.3s ease-in-out",
+                    marginLeft: "5px",
+                  }}
+                >
+                  ▼
+                </span>
               </div>
+
+              {isCardExpanded ? (
+                <div className="card-body">
+                  {loading ? (
+                    <p>Loading...</p>
+                  ) : elementDetails ? (
+                    <div>
+                      {truncateText(
+                        `ID: ${elementDetails.payload.id}\nType: ${elementDetails.payload.classDTO.name}`,
+                        3,
+                        6 // Change 6 to the maximum number of lines you want to display
+                      )}
+                    </div>
+                  ) : (
+                    <p>No details available</p>
+                  )}
+                </div>
+              ) : null}
             </div>
 
             {/* Location section */}
@@ -268,14 +319,16 @@ const ItemDetails = () => {
             <div>
               <h2>Hierarchy Tree</h2>
               <div className="tree">
-                <TreeView items={elementPath} />
+                <table>
+                  <tbody>
+                    <TreeView items={elementPath} />
+                  </tbody>
+                </table>
               </div>
             </div>
           </>
         )}
       </div>
-
-
     </div>
   );
 };

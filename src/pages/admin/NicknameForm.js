@@ -8,7 +8,7 @@ function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
   const [model, setModel] = useState('');
   const [cueCategory, setCueCategory] = useState('');
   const [revision, setRevision] = useState('');
-  const [parentId, setParentId] = useState('');
+  // const [parentId, setParentId] = useState('');
   const [attributes, setAttributes] = useState([]);
   const [classId, setClassId] = useState('');
 

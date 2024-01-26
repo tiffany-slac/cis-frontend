@@ -132,7 +132,7 @@
 .search-bar input[type="text"] {
   padding: 8px 30px 8px 40px; /* Adjust the padding to fit the icons */
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 10px 0px 0px 10px;
   font-size: 14px;
   color: #333;
   outline: none;
@@ -153,11 +153,11 @@
 
 /* Style for the button */
 .search-bar button {
-  padding: 8px 16px;
+  padding: 10px 10px 9px 9px;
   background-color: #007bff; /* Example color */
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 0px 10px 10px 0px;
   cursor: pointer;
 }
 

@@ -28,6 +28,7 @@
 }
 
 
+
 /* Add indentation for expand/collapse and hierarchy */
 
 .white-background {
@@ -152,7 +153,7 @@
 
 .item-details-content {
 
-    margin-top: 200px;
+    margin-top: 250px;
     width: 80%;
     max-width: 600px; /* Adjust the maximum width as needed */
     margin-left: auto;
@@ -225,6 +226,23 @@
   font-size: 16px;
   z-index: 0;
 }
+
+.add-button {
+  margin-left: 5px;
+  background-color: rgba(144, 21, 21, 1); /* Change the background color */
+  color: white; /* Change the text color */
+  border: none;
+  border-radius: 20px; /* Make it round */
+  padding: 1px 5px;
+  cursor: pointer;
+  font-size: 16px; /* Adjust font size as needed */
+  transition: background-color 0.3s ease-in-out; /* Add a smooth transition */
+}
+
+.add-button:hover {
+  background-color: #a61717; /* Change the background color on hover */
+}
+
 
 .card::before {
   content: ""; /* To create a pseudo-element for the border */
@@ -354,6 +372,7 @@
     background-color: rgba(144, 21, 21, 0.1); /* Adjust the shade/color as needed */
     /* Additional styles to indicate the active tab */
   }
+  
 
   /* Styles for medium-sized screens */
 @media (max-width: 768px) {

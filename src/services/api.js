@@ -21,6 +21,37 @@ export const setDomainId = async () => {
 
 /* ----------------------------------------- ADVANCED ----------------------------------------- */
 
+export const submitEdits = async () => {
+  const token = await extractJWT();
+  const domain_id = await setDomainId();
+  try {
+    const response = await fetch(`/v1/inventory/domain/${domain_id}/element/${elementId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        'x-vouch-idp-accesstoken': token,
+      },
+      body: JSON.stringify({
+        id: editedId,
+        // Include other edited attributes
+      }),
+    });
+
+    const data = await response.json();
+
+    // Handle success or show error message
+    if (data.payload) {
+      // Data was successfully updated
+      console.log("Data updated successfully");
+    } else {
+      console.error("Error updating data:", data.errorMessage);
+    }
+  } catch (error) {
+    console.error("Error updating data:", error);
+  }
+};
+
+
 export const fetchElementNicknames = async () => {
   try {
     const data = await fetchAllElements(); // Ensure this function fetches elements
