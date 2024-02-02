@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  fetchAllElements,
-  createInventoryElement,
-  fetchClass,
-  fetchAllClass,
-} from "../../services/api";
-
+import { fetchAllElements, createInventoryElement, fetchClass, fetchAllClass } from "../../services/api";
 import "./admin.css";
 
 function ElementForm({ showElementForm, setShowElementForm }) {
+  // State to manage form input values
   const [parents, setParents] = useState([]);
   const [parentId, setParentId] = useState("");
   const [classId, setClassId] = useState("");
@@ -19,9 +14,10 @@ function ElementForm({ showElementForm, setShowElementForm }) {
   const [dynamicForm, setDynamicForm] = useState([]);
   const [extendsClassId, setExtendsClassId] = useState("");
   const [extendsClassAttributes, setExtendsClassAttributes] = useState([]);
-  const [taggedClassId, setTaggedClassId] = useState(""); // New state for tagged class
-  const [taggedClassAttributes, setTaggedClassAttributes] = useState([]); // New state for tagged class attributes
+  const [taggedClassId, setTaggedClassId] = useState("");
+  const [taggedClassAttributes, setTaggedClassAttributes] = useState([]);
 
+  // Fetch all elements to populate the 'parents' state
   useEffect(() => {
     const fetchParents = async () => {
       try {
@@ -43,6 +39,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     fetchParents();
   }, []);
 
+  // Fetch all classes to populate the 'classesName' state
   useEffect(() => {
     const fetchClasses = async () => {
       try {
@@ -64,26 +61,28 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     fetchClasses();
   }, []);
 
+  // Fetch class details when 'classId', 'taggedClassId', or 'taggedClassAttributes' change
   useEffect(() => {
     if (classId) {
       fetchClassDetails();
     }
   }, [classId, taggedClassId, taggedClassAttributes]);
 
+  // Fetch extends class attributes when 'extendsClassId' changes
   useEffect(() => {
     if (extendsClassId) {
-      // Fetch attributes of the extends class
       fetchExtendsClassAttributes();
     }
   }, [extendsClassId]);
 
+  // Fetch tagged class attributes when 'taggedClassId' changes
   useEffect(() => {
     if (taggedClassId) {
-      // Fetch attributes of the tagged class
       fetchTaggedClassAttributes();
     }
   }, [taggedClassId]);
 
+  // Function to fetch class details
   const fetchClassDetails = async () => {
     try {
       const classDetails = await fetchClass(classId);
@@ -117,7 +116,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
           )
         );
 
-        // Generate dynamicForm elements for classAttributes
         const dynamicFormElements = classAttributes.map((attribute) => (
           <div
             key={attribute.name}
@@ -131,7 +129,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
                 {attribute.description}
               </div>
             ) : attribute.name === "parent" ? (
-              // Render a dropdown for the "parent" attribute
               <select
                 id={attribute.name}
                 name={attribute.name}
@@ -152,7 +149,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
                 ))}
               </select>
             ) : (
-              // Render a text input for other attributes
               <input
                 type="text"
                 id={attribute.name}
@@ -177,6 +173,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     }
   };
 
+  // Function to fetch extends class attributes
   const fetchExtendsClassAttributes = async () => {
     try {
       const extendsClassDetails = await fetchClass(extendsClassId);
@@ -192,6 +189,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     }
   };
 
+  // Function to fetch tagged class attributes
   const fetchTaggedClassAttributes = async () => {
     try {
       const taggedClassDetails = await fetchClass(taggedClassId);
@@ -200,7 +198,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
         const attributes = taggedClassDetails.payload.attributes || [];
         setTaggedClassAttributes(attributes);
 
-        // Update dynamicForm with tagged class attributes
         const dynamicFormElements = attributes.map((attribute) => (
           <div
             key={attribute.name}
@@ -240,15 +237,17 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     }
   };
 
+  // State to store form data
   const [itemData, setItemData] = useState({
     name: "",
     classId: classId,
     parentId: "",
     description: "",
     tags: [],
-    attributes: {}, // Updated to store attribute values dynamically
+    attributes: {},
   });
 
+  // Function to handle input changes
   const handleInputChange = (attributeName, attributeValue) => {
     if (attributeName === "slac-id") {
       setItemData((prevData) => ({
@@ -263,7 +262,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
       }));
     } else if (attributeName === "classesName") {
       setSelectedClassName(attributeValue);
-      // Set classId based on the selected class name
       const selectedClasses = classesName.find(
         (classes) => classes.name === attributeValue
       );
@@ -282,6 +280,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     }
   };
 
+  // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("submitting");
@@ -293,9 +292,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
       })
     );
 
-    // Include extendsClass as a tag
     const tags = extendsClassId ? [extendsClassId] : [];
-    // Include taggedClass as a tag
     if (taggedClassId) {
       tags.push(taggedClassId);
     }
@@ -310,11 +307,11 @@ function ElementForm({ showElementForm, setShowElementForm }) {
         ...attributesData,
         ...extendsClassAttributes.map((attribute) => ({
           name: attribute.name,
-          value: attribute.description || "n/a", // Use "n/a" for attributes without a description
+          value: attribute.description || "n/a",
         })),
         ...taggedClassAttributes.map((attribute) => ({
           name: attribute.name,
-          value: attribute.description || "n/a", // Use "n/a" for attributes without a description
+          value: attribute.description || "n/a",
         })),
       ],
     };
@@ -323,7 +320,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
 
     try {
       const response = await createInventoryElement(postData);
-      console.log("API Response:", response); // Log the API response
+      console.log("API Response:", response);
       alert("Item created successfully!");
       setShowElementForm(false);
       window.location.reload();
@@ -335,15 +332,15 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     }
   };
 
+  // Helper function to format attribute names
   function formatAttributeName(name) {
-    // Split the string into words
     const words = name
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
-    // Join the words with spaces
     return words.join(" ");
   }
 
+  // JSX for the component
   return (
     <div>
       <div className={`item-form-format ${showElementForm ? "show" : "hide"}`}>
@@ -352,8 +349,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
             &times;
           </span>
           <form className="class-form" onSubmit={handleSubmit}>
-
-            {/* Dropdown for selecting the nickname class */}
             <label htmlFor="classesName">Nickname:</label>
             <select
               id="classesName"
@@ -361,7 +356,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
               value={selectedClassName}
               onChange={(event) => {
                 setSelectedClassName(event.target.value);
-                // Set classId based on the selected class name
                 const selectedClasses = classesName.find(
                   (classes) => classes.name === event.target.value
                 );
@@ -377,52 +371,29 @@ function ElementForm({ showElementForm, setShowElementForm }) {
             </select>
             <br />
 
-            {/* Dropdown for selecting the tagged class */}
-            {/* <label htmlFor="taggedClassId">Tags:</label>
-            <select
-              id="taggedClassId"
-              name="taggedClassId"
-              value={taggedClassId}
-              onChange={(event) => {
-                setTaggedClassId(event.target.value);
-                // Clear tagged class attributes when a new tagged class is selected
-                setTaggedClassAttributes([]);
-              }}
-            >
-              <option value="">Select a tagged class</option>
-              {classesName.map((classes) => (
-                <option key={classes.id} value={classes.id}>
-                  {classes.name}
-                </option>
-              ))}
-            </select>
-            <br /> */}
-
             {showParentDropdown && (
-  <>
-    <label htmlFor="parentId">Parent:</label>
-    <select
-  id="parentId"
-  name="parentId"
-  value={selectedParent}
-  onChange={(event) => {
-    const selectedValue = event.target.value;
-    console.log("Selected Parent:", selectedValue);
-    setSelectedParent(selectedValue);
-  }}
->
-
-      <option value="">Select a parent</option>
-      {parents.map((parent) => (
-        <option key={parent.id} value={parent.id}>
-          {parent.name}
-        </option>
-      ))}
-    </select>
-    <br />
-  </>
-)}
-
+              <>
+                <label htmlFor="parentId">Parent:</label>
+                <select
+                  id="parentId"
+                  name="parentId"
+                  value={selectedParent}
+                  onChange={(event) => {
+                    const selectedValue = event.target.value;
+                    console.log("Selected Parent:", selectedValue);
+                    setSelectedParent(selectedValue);
+                  }}
+                >
+                  <option value="">Select a parent</option>
+                  {parents.map((parent) => (
+                    <option key={parent.id} value={parent.id}>
+                      {parent.name}
+                    </option>
+                  ))}
+                </select>
+                <br />
+              </>
+            )}
 
             {dynamicForm}
             <input type="submit" value="Create Element" />

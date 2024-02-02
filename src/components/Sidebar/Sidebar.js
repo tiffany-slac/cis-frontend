@@ -2,23 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation } from "react-router-dom";
-import {
-  faHome,
-  faNewspaper,
-  faCog,
-  faBox,
-  faTicket,
-  faLock,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHome, faNewspaper, faCog, faBox, faTicket, faLock } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
 function Sidebar() {
+  // Use the current location to determine the active button
   const location = useLocation();
+  // State to manage the collapsed/expanded state of the sidebar
   const [isCollapsed, setIsCollapsed] = useState(true);
+  // State to keep track of the active button
   const [activeButton, setActiveButton] = useState(
     localStorage.getItem("activeButton") || location.pathname
   );
 
+  // Handle button clicks and update the active button
   const handleClick = (buttonName, path) => {
     if (activeButton !== path) {
       setActiveButton(path);
@@ -26,10 +23,7 @@ function Sidebar() {
     }
   };
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
+  // Use useEffect to add a resize event listener and handle collapsing the sidebar on small screens
   useEffect(() => {
     const handleResize = () => {
       const sidebar = document.querySelector(".Sidebar");
@@ -48,11 +42,7 @@ function Sidebar() {
   return (
     <div className={`Sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <ul>
-        {/* <div>
-          <button onClick={toggleSidebar} className="icon-button">
-            <FontAwesomeIcon icon={faBars} className="icon" title="Menu" />
-          </button>
-        </div> */}
+        {/* Sidebar buttons with links */}
 
         <br></br>
 

@@ -21,6 +21,73 @@ export const setDomainId = async () => {
 
 /* ----------------------------------------- ADVANCED ----------------------------------------- */
 
+
+export const getRootElements = async () => {
+  try {
+    const token = await extractJWT();
+    const domain_id = await setDomainId();
+
+    const response = await fetch(`/v1/inventory/domain/${domain_id}/roots`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        'x-vouch-idp-accesstoken': token,
+        'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+      },
+    });
+
+    const data = await response.json();
+
+    // Ensure data is defined and has a valid structure
+    if (response.ok) {
+      if (data.errorCode === 0) {
+        // Handle successful JSON response
+        setRootElements(data.payload);
+      } else {
+        // Handle error in the JSON response
+        throw new Error(`Error fetching root elements: ${data.errorMessage}`);
+      }
+    } else {
+      // Handle non-OK responses (e.g., 404, 500)
+      throw new Error(`Failed to fetch root elements. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error fetching root elements:", error);
+    // Handle the error and return an error response if necessary
+    return {
+      errorCode: -1,
+      errorMessage: "Error fetching root elements",
+    };
+  }
+};
+
+export const getChildElements = async (elementId) => {
+  try {
+    const token = await extractJWT();
+    const domain_id = await setDomainId();
+    const response = await fetch(`/v1/inventory/domain/${domain_id}/element/${elementId}/children`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        'x-vouch-idp-accesstoken': token,
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.errorCode === 0) {
+      // Handle success, data.payload contains an array of child elements
+      console.log("Child elements:", data.payload);
+    } else {
+      console.error("Error fetching child elements:", data.errorMessage);
+    }
+  } catch (error) {
+    console.error("Error fetching child elements:", error);
+  }
+};
+
+
 export const submitEdits = async () => {
   const token = await extractJWT();
   const domain_id = await setDomainId();
@@ -369,15 +436,15 @@ export const createInventoryElement = async (elementData) => {
 
 // Function to update an inventory element
 export const updateElement = async (
-  domainId,
   elementId,
   updatedElementData
 ) => {
   try {
     const token = await extractJWT();
+    const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domainId}/element/${elementId}`,
+      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}`,
       {
         method: "PUT",
         headers: {

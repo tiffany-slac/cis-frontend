@@ -1,5 +1,6 @@
 /* ItemForm.css */
 
+/* General styling for the form wrapper */
 .item-form-wrapper {
   position: fixed;
   top: 0;
@@ -13,6 +14,7 @@
   pointer-events: none; /* Prevent clicking on content when form is hidden */
 }
 
+/* Semi-transparent overlay */
 .overlay {
   content: '';
   position: absolute;
@@ -24,6 +26,7 @@
   z-index: 99; /* Ensure the overlay is behind the form but on top of other content */
 }
 
+/* Styling for the modal form */
 .modal {
   display: block;
   position: fixed;
@@ -36,23 +39,12 @@
   overflow: auto;
 }
 
-/* .modal-stuff {
-  display: block;
-  position: fixed;
-  z-index: 100;
-  left: 0;
-  top: 67px;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); 
-  overflow: auto;
-} */
-
-/* Add this class to the body or another appropriate container when the form is visible */
+/* Styling for the visible overlay */
 .overlay-visible {
   pointer-events: auto; /* Allow clicking on the overlay */
 }
 
+/* Styling for the main form */
 .item-form {
   width: 300px; /* Adjust width as needed */
   height: 100vh;
@@ -63,23 +55,12 @@
   pointer-events: auto; /* Allow clicking on form when visible */
 }
 
+/* Slide-in animation for the form */
 .item-form.slide-in {
   transform: translateX(0); /* Slide in from the left */
 }
 
-.modal {
-  display: flex;
-  justify-content: center; /* Horizontal centering */
-  align-items: center; /* Vertical centering */
-  position: fixed;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.5);
-  overflow: auto;
-  padding: 5px;
-  width: calc(100% - 10px);
-  height: calc(100% - 10px);
-}
-
+/* Styling for the modal content */
 .modal-content {
   background-color: #fefefe;
   padding: 20px;
@@ -92,10 +73,8 @@
   overflow-y: auto;
 }
 
-
-
+/* Styling for a card element */
 .card {
-  border: 1px solid #ccc;
   border-radius: 8px;
   margin: 20px;
   box-sizing: border-box;
@@ -106,7 +85,7 @@
   width: calc(100% - 40px);
 }
 
-
+/* Styling for the search page */
 .search-page {
   justify-content: center;
   align-items: center;
@@ -115,6 +94,7 @@
   padding-right: 50px;
 }
 
+/* Styling for the search bar */
 .search-bar {
   display: flex;
   align-items: center;
@@ -122,13 +102,13 @@
   padding: 10px 10px 20px 10px; /* Adjust padding as needed */
 }
 
-/* Style for the filter dropdown */
+/* Styling for the filter dropdown in the search bar */
 .search-bar select {
   order: -1; /* Place this element first */
   margin-right: 10px; /* Adjust margin as needed */
 }
 
-/* Style for the input field */
+/* Styling for the input field in the search bar */
 .search-bar input[type="text"] {
   padding: 8px 30px 8px 40px; /* Adjust the padding to fit the icons */
   border: 1px solid #ccc;
@@ -139,6 +119,7 @@
   transition: border-color 0.3s ease-in-out;
 }
 
+/* Styling for the search icon */
 .search-icon {
   position: absolute;
   top: 50%;
@@ -147,11 +128,12 @@
   font-size: 18px;
 }
 
-.search-icon {
+/* Positioning for the search icon */
+.search-icon.left {
   left: 10px;
 }
 
-/* Style for the button */
+/* Styling for the search button */
 .search-bar button {
   padding: 10px 10px 9px 9px;
   background-color: #007bff; /* Example color */
@@ -161,7 +143,7 @@
   cursor: pointer;
 }
 
-/* Define styles for the table and its elements */
+/* Styling for the assets table and its elements */
 .assets-table {
   flex: 1;
   margin-top: 20px;
@@ -170,12 +152,14 @@
   align-items: center;
 }
 
+/* Styling for the table in the assets table */
 .assets-table table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
 }
 
+/* Styling for table headers in the assets table */
 .assets-table th {
   background-color: white;
   font-weight: bold;
@@ -184,6 +168,7 @@
   border-radius: 10px;
 }
 
+/* Styling for table cells in the assets table */
 .assets-table td {
   padding: 10px 20px;
   border-bottom: 1px solid #ddd;
@@ -191,12 +176,14 @@
   text-align: center;
 }
 
+/* Styling for table rows on hover in the assets table */
 .assets-table tbody tr:hover {
   background-color: #f0f0f0;
   border-radius: 10px;
   cursor: pointer;
 }
 
+/* Styling for a top-right element */
 .top-right {
   margin: 10px;
 }

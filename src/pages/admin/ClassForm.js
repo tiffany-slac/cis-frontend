@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  createInventoryClass,
-  fetchAllClass,
-  fetchClass,
-} from "../../services/api";
+import { createInventoryClass, fetchAllClass, fetchClass } from "../../services/api";
 
 function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
+  // State for managing form input values
   const [className, setClassName] = useState("");
   const [classDescription, setClassDescription] = useState("");
   const [attributes, setAttributes] = useState([]);
@@ -17,6 +14,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   const [extendsClassAttributes, setExtendsClassAttributes] = useState([]);
   const [selectedExtendsClass, setSelectedExtendsClass] = useState("");
 
+  // Fetches and updates extendsClassAttributes when selectedExtendsClass changes
   useEffect(() => {
     const fetchExtendsClassAttributes = async () => {
       try {
@@ -59,29 +57,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
     }
   };
   
-
-  // Inside your handleAttributeChange function
-  const handleAttributeChange = (index, key, value) => {
-    if (key === "extendsClassAttribute") {
-      // Handle extendsClassAttributes separately
-      const updatedExtendsClassAttributes = [...extendsClassAttributes];
-      updatedExtendsClassAttributes[index] = {
-        ...updatedExtendsClassAttributes[index],
-        description: formatAttributeName(value),
-      };
-      setExtendsClassAttributes(updatedExtendsClassAttributes);
-    } else {
-      // Handle other attributes
-      const updatedAttributes = [...attributes];
-      updatedAttributes[index][key] = formatAttributeName(value);
-      setAttributes(updatedAttributes);
-  
-      // Log the attributes state
-      console.log("Attributes state:", updatedAttributes);
-    }
-  };
-  
-
+  // Fetch all classes and update the classesName state
   useEffect(() => {
     const fetchClasses = async () => {
       try {
@@ -103,6 +79,28 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
     fetchClasses();
   }, []);
 
+  // Handle attribute changes for both extendsClassAttributes and other attributes
+  const handleAttributeChange = (index, key, value) => {
+    if (key === "extendsClassAttribute") {
+      // Handle extendsClassAttributes separately
+      const updatedExtendsClassAttributes = [...extendsClassAttributes];
+      updatedExtendsClassAttributes[index] = {
+        ...updatedExtendsClassAttributes[index],
+        description: formatAttributeName(value),
+      };
+      setExtendsClassAttributes(updatedExtendsClassAttributes);
+    } else {
+      // Handle other attributes
+      const updatedAttributes = [...attributes];
+      updatedAttributes[index][key] = formatAttributeName(value);
+      setAttributes(updatedAttributes);
+  
+      // Log the attributes state
+      console.log("Attributes state:", updatedAttributes);
+    }
+  };
+
+  // Adds an empty attribute to the attributes state
   const addAttribute = () => {
     setAttributes([
       ...attributes,
@@ -132,6 +130,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   //   setExtendsClass(selectedClass ? selectedClass.id : "");
   // };
 
+  // Submits the form data to create a new class
   const handleSubmit = async (event) => {
     event.preventDefault();
   
@@ -268,6 +267,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
             />
             <br /> */}
 
+            {/* Input fields for attributes */}
             <label>Attributes:</label>
             {attributes.map((attribute, index) => (
               <div key={index}>
@@ -344,16 +344,14 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
               </div>
             ))}
 
+            {/* Button to add a new attribute */}
             <button type="button" onClick={addAttribute}>
               Add Attribute
-            </button>
+            </button><br /><br />
 
-            <br />
-            <br />
-
+            {/* Submit button for the form */}
             <input type="submit" value="Create Class" />
-            <br />
-            <br />
+            <br /><br />
           </form>
         </div>
       </div>
