@@ -2,12 +2,13 @@
 
 // Set Auth TokenresponseJSON with mock user data and JWTs
 const extractJWT = async () => {
-  const responseJSON = await window.fetch("http://localhost:3000/api/v1/mock/users-auth");
+  const responseJSON = await fetch("/api/cis/v1/mock/users-auth");
   const json = await responseJSON.json();
   const token = json.payload["Name1 Surname1"];
   return token;
 };
 
+// Set domain id
 export const setDomainId = async () => {
   try {
     const domainData = await fetchAllDomain();
@@ -19,6 +20,137 @@ export const setDomainId = async () => {
   }
 };
 
+/* ----------------------------------------- LOCATION ----------------------------------------- */
+
+// Function to fetch users based on search prefix
+export const fetchUsers = async (search) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/auth/users${search ? `?search=${search}` : ''}`,
+      {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        }
+      }
+    );
+
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log("Users fetched successfully:", data);
+      return data.payload;
+    } else {
+      const errorData = await response.json();
+      console.error("Error fetching users:", errorData);
+      throw new Error("Error fetching users. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw new Error("Network error. Please check your connection.");
+  }
+};
+
+export const fetchShopGroups = async () => {
+  try {
+    const token = await extractJWT();
+
+    const response = await fetch(
+      '/api/cwm/v1/shop-group',
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          "x-vouch-idp-accesstoken": token,
+        }
+      }
+    );
+
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log('Shop groups fetched successfully:', data);
+      return data.payload;
+    } else {
+      const errorData = await response.json();
+      console.error('Error fetching shop groups:', errorData);
+      throw new Error('Error fetching shop groups. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error fetching shop groups:', error);
+    throw new Error('Network error. Please check your connection.');
+  }
+};
+
+
+
+// Function to create a new location
+export const createLocation = async (locationData) => {
+  try {
+    const token = await extractJWT();
+
+    const response = await fetch(
+      `/api/cwm/v1/location`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(locationData),
+      }
+    );
+
+    console.log("api.js data: " + JSON.stringify(locationData));
+
+    if (response.status === 201) {
+      const data = await response.json();
+      console.log("Location created successfully:", data);
+      alert("Location created successfully!");
+    } else {
+      const errorData = await response.json();
+      console.error("Error creating location:", errorData);
+      alert("Error creating location. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error creating location:", error);
+    alert("Network error. Please check your connection.");
+  }
+};
+
+// Function to retrieve a location by ID
+export const getLocationById = async (locationId) => {
+  try {
+    const token = await extractJWT();
+
+    const response = await fetch(
+      `/api/cwm/v1/location/${locationId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log("Location retrieved successfully:", data);
+      return data.payload; // Returning the location data
+    } else {
+      const errorData = await response.json();
+      console.error("Error retrieving location:", errorData);
+      alert("Error retrieving location. Please try again.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error retrieving location:", error);
+    alert("Network error. Please check your connection.");
+    return null;
+  }
+};
+
 /* ----------------------------------------- ADVANCED ----------------------------------------- */
 
 
@@ -27,7 +159,7 @@ export const getRootElements = async () => {
     const token = await extractJWT();
     const domain_id = await setDomainId();
 
-    const response = await fetch(`/v1/inventory/domain/${domain_id}/roots`, {
+    const response = await fetch(`/api/cis/v1/inventory/domain/${domain_id}/roots`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +198,7 @@ export const getChildElements = async (elementId) => {
   try {
     const token = await extractJWT();
     const domain_id = await setDomainId();
-    const response = await fetch(`/v1/inventory/domain/${domain_id}/element/${elementId}/children`, {
+    const response = await fetch(`/api/cis/v1/inventory/domain/${domain_id}/element/${elementId}/children`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +224,7 @@ export const submitEdits = async () => {
   const token = await extractJWT();
   const domain_id = await setDomainId();
   try {
-    const response = await fetch(`/v1/inventory/domain/${domain_id}/element/${elementId}`, {
+    const response = await fetch(`/api/cis/v1/inventory/domain/${domain_id}/element/${elementId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -138,7 +270,7 @@ export const searchInventory = async (anchorId, options) => {
     const domain_id = await setDomainId();
     const queryParams = new URLSearchParams(options).toString();
 
-    const response = await fetch(`http://localhost:3000/api/v1/inventory/domain/${domain_id}/element?${queryParams}`, 
+    const response = await fetch(`/api/cis/v1/inventory/domain/${domain_id}/element?${queryParams}`, 
     {
       method: 'GET',
       headers: {
@@ -166,7 +298,7 @@ export const fetchElementChildren = async () => {
     const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/659833aa40949c037977ec08/children`,
+      `/api/cis/v1/inventory/domain/${domain_id}/element/659833aa40949c037977ec08/children`,
       {
         method: "GET",
         headers: {
@@ -198,7 +330,7 @@ export const fetchPath = async ( elementId, pathType) => {
     });
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}/path?${queryParams}`,
+      `/api/cis/v1/inventory/domain/${domain_id}/element/${elementId}/path?${queryParams}`,
       {
         method: "GET",
         headers: {
@@ -246,7 +378,7 @@ export const createImplementation = async ( elementId, implementationData) => {
     const domain_id = await setDomainId();
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}/implementation`,
+      `/api/cis/v1/inventory/domain/${domain_id}/element/${elementId}/implementation`,
       {
         method: "POST",
         headers: {
@@ -290,7 +422,7 @@ export const fetchImplementation = async (elementId) => {
     const domain_id = await setDomainId();
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}/implementation`,
+      `/api/cis/v1/inventory/domain/${domain_id}/element/${elementId}/implementation`,
       {
         method: "GET",
         headers: {
@@ -322,7 +454,7 @@ export const fetchInventoryData = async () => {
     const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}`,
+      `/api/cis/v1/inventory/domain/${domain_id}`,
       {
         method: "GET",
         headers: {
@@ -357,7 +489,7 @@ export const createInventoryClass = async (classData) => {
     const token = await extractJWT();
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/class`,
+      `/api/cis/v1/inventory/class`,
       {
         method: "POST",
         headers: {
@@ -392,7 +524,7 @@ export const createInventoryElement = async (elementData) => {
     const domain_id = await setDomainId();
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element`,
+      `/api/cis/v1/inventory/domain/${domain_id}/element`,
       {
         method: "POST",
         headers: {
@@ -444,7 +576,7 @@ export const updateElement = async (
     const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}`,
+      `/api/cis/v1/inventory/domain/${domain_id}/element/${elementId}`,
       {
         method: "PUT",
         headers: {
@@ -475,7 +607,7 @@ export const updateElement = async (
 
 export const updateInventoryDomain = async (domainId, requestBody) => {
   const domain_id = await setDomainId();
-  const url = `http://localhost:3000/api/v1/inventory/domain/${domain_id}`;
+  const url = `/api/cis/v1/inventory/domain/${domain_id}`;
 
   try {
     const token = await extractJWT();
@@ -514,7 +646,7 @@ export const fetchDomain = async () => {
     const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}`,
+      `/api/cis/v1/inventory/domain/${domain_id}`,
       {
         method: "GET",
         headers: {
@@ -542,7 +674,7 @@ export const fetchClass = async (classId) => {
     const domain_id = await setDomainId();
 
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/class/${classId}`,
+      `/api/cis/v1/inventory/class/${classId}`,
       {
         method: "GET",
         headers: {
@@ -572,7 +704,7 @@ export const fetchElement = async (elementId) => {
     const domain_id = await setDomainId();
     // const token = await retrieveToken();
     const response = await fetch(
-      `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element/${elementId}`,
+      `/api/cis/v1/inventory/domain/${domain_id}/element/${elementId}`,
       {
         method: "GET",
         headers: {
@@ -598,10 +730,9 @@ export const fetchElement = async (elementId) => {
 
 export const fetchAllDomain = async () => {
   try {
-    // const token = await retrieveToken();
     const token = await extractJWT();
     const response = await fetch(
-      "http://localhost:3000/api/v1/inventory/domain",
+      "/api/cis/v1/inventory/domain",
       {
         method: "GET",
         headers: {
@@ -615,10 +746,10 @@ export const fetchAllDomain = async () => {
       const data = await response.json();
       return data;
     } else {
-      throw new Error("Failed to fetch class types");
+      throw new Error("Failed to fetch domain");
     }
   } catch (error) {
-    throw new Error("Error fetching class types:", error.message);
+    throw new Error("Error fetching domain:", error.message);
   }
 };
 
@@ -627,7 +758,7 @@ export const fetchAllClass = async () => {
     const token = await extractJWT();
     // const token = await retrieveToken();
     const response = await fetch(
-      "http://localhost:3000/api/v1/inventory/class",
+      "/api/cis/v1/inventory/class",
       {
         method: "GET",
         headers: {
@@ -654,7 +785,7 @@ export const searchElements = async (searchQuery = "") => {
     const domain_id = await setDomainId();
     const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : "";
 
-    const url = `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element?${searchParam}`;
+    const url = `/api/cis/v1/inventory/domain/${domain_id}/element?${searchParam}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -690,7 +821,7 @@ export const fetchAllElements = async (limit = 10, page = 1, anchorId = null, se
 
     const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : "";
 
-    const url = `http://localhost:3000/api/v1/inventory/domain/${domain_id}/element?limit=${limit}&page=${page}${anchorId ? `&anchorId=${anchorId}` : ''}${searchParam}`;
+    const url = `/api/cis/v1/inventory/domain/${domain_id}/element?limit=${limit}&page=${page}${anchorId ? `&anchorId=${anchorId}` : ''}${searchParam}`;
 
     const response = await fetch(url, {
       method: 'GET',

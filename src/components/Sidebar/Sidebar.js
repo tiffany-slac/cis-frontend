@@ -85,21 +85,21 @@ function Sidebar() {
         </div>
 
         <div>
-          <Link to="/jobs">
+          <Link to="/cwm">
             <button
-              onClick={() => handleClick("cater", "/cater")}
+              onClick={() => handleClick("cwm", "/cwm")}
               className={`icon-button ${
-                activeButton === "/cater" ? "active-button" : ""
+                activeButton === "/cwm" ? "active-button" : ""
               }`}
             >
               <div className="button-label">
                 <FontAwesomeIcon
                   icon={faTicket}
                   className="icon"
-                  title="Jobs"
+                  title="CWM"
                 />
-                <div className="small-label">CATER</div>
-                <span className="label">Jobs</span>
+                <div className="small-label">CWM</div>
+                <span className="label">CWM</span>
               </div>
             </button>
           </Link>
