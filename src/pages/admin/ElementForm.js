@@ -349,7 +349,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
             &times;
           </span>
           <form className="class-form" onSubmit={handleSubmit}>
-            <label htmlFor="classesName">Nickname:</label>
+            <label htmlFor="classesName">Select Manufacturer:</label>
             <select
               id="classesName"
               name="classesName"

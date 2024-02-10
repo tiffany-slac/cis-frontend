@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { fetchShopGroups, fetchUsers } from "../../services/api";
 import "./admin.css";
+import ShopGroupForm from "./ShopGroupForm.js"; // Import the ShopGroupForm component
 
 function CWMadmin() {
     const [shopGroups, setShopGroups] = useState([]);
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
+    const [showShopGroupForm, setShowShopGroupForm] = useState(false); // State to control the visibility of the form
 
     useEffect(() => {
       const fetchShopGroupsData = async () => {
@@ -64,6 +66,19 @@ function CWMadmin() {
             </li>
           ))}
         </ul>
+
+        {/* Button to toggle the visibility of the ShopGroupForm */}
+        <button onClick={() => setShowShopGroupForm(!showShopGroupForm)}>
+          {showShopGroupForm ? "Close Shop Group Form" : "Open Shop Group Form"}
+        </button>
+
+        {/* Render the ShopGroupForm conditionally */}
+        {showShopGroupForm && (
+          <ShopGroupForm
+            showShopGroupForm={showShopGroupForm}
+            setShowShopGroupForm={setShowShopGroupForm}
+          />
+        )}
       </div>
     );
   };

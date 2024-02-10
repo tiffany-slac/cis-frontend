@@ -16,7 +16,7 @@ function Admin() {
       case "ELOGadmin":
         return <ELOGadmin />;
       default:
-        return <div className="welcome-message">Welcome to the Admin Page</div>;
+        return <div className="welcome-message">Welcome to the Admin Page!</div>;
     }
   };
 

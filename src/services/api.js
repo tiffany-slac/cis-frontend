@@ -82,6 +82,32 @@ export const fetchShopGroups = async () => {
   }
 };
 
+export const createShopGroup = async (shopGroupData) => {
+  try {
+    const response = await fetch('/api/cwm/v1/shop-group', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        "x-vouch-idp-accesstoken": token,
+      },
+      body: JSON.stringify(shopGroupData)
+    });
+
+    if (response.status === 201) {
+      const data = await response.json();
+      console.log('Shop group created successfully:', data);
+      return data.payload;
+    } else {
+      const errorData = await response.json();
+      console.error('Error creating shop group:', errorData);
+      throw new Error('Error creating shop group. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error creating shop group:', error);
+    throw new Error('Network error. Please check your connection.');
+  }
+};
 
 
 // Function to create a new location

@@ -1,9 +1,8 @@
-// StickyHeader.js
-
 import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import LocationForm from './LocationForm.js';
+import "./Cwm.css";
 
 const SubHeader = ({ showLocationForm, setShowLocationForm, searchInput, setSearchInput, handleSearch }) => {
     const handleItemClick = (formType) => {
@@ -14,9 +13,9 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, searchInput, setSear
     return (
         <div className="sticky-header">
             {/* Header: WORK PLANS */}
-            <div className="header-left">
+            {/* <div className="header-left">
                 <p>WORK PLANS</p>
-            </div>
+            </div> */}
 
             {/* Search Bar */}
             <div className="search-wrapper">
@@ -44,7 +43,7 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, searchInput, setSear
                     }}
                     className="dropbtn"
                 >
-                    <span>+</span> Location
+                    <span>+ Location</span>
                 </button>
                 {showLocationForm && (
                     <LocationForm

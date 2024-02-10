@@ -311,7 +311,7 @@ const ItemDetails = () => {
       {/* Sidebar component for displaying item hierarchy */}
       <div className="sidebar">
         <div className="collapse-button" onClick={toggleSidebar}>
-          <div class="arrow-icon"></div>
+          <div className="arrow-icon"></div>
         </div>
         <div className="tree">
           <table>

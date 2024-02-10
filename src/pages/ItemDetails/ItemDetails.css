@@ -460,15 +460,14 @@ label {
   background-color: #f0f0f0; /* Greyed hover effect */
 }
 
-.tab.active {
+/* .tab.active {
   background-color: rgba(
     144,
     21,
     21,
     0.1
-  ); /* Adjust the shade/color as needed */
-  /* Additional styles to indicate the active tab */
-}
+  ); 
+} */
 
 .collapse-button {
   position: absolute;

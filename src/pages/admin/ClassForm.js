@@ -46,7 +46,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
     );
     setExtendsClass(selectedClass ? selectedClass.id : "");
   };
-  
+
 
   // Utility function to capitalize the first letter and replace "-" with a space
   const formatAttributeName = (name) => {
@@ -56,7 +56,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
       return ''; // or handle it based on your requirements
     }
   };
-  
+
   // Fetch all classes and update the classesName state
   useEffect(() => {
     const fetchClasses = async () => {
@@ -94,7 +94,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
       const updatedAttributes = [...attributes];
       updatedAttributes[index][key] = formatAttributeName(value);
       setAttributes(updatedAttributes);
-  
+
       // Log the attributes state
       console.log("Attributes state:", updatedAttributes);
     }
@@ -114,26 +114,10 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
     ]);
   };
 
-  // const handleAttributeChange = (index, key, value) => {
-  //   const updatedAttributes = [...attributes];
-  //   updatedAttributes[index][key] = value;
-  //   setAttributes(updatedAttributes);
-  // };
-
-  // const handleChange = (event) => {
-  //   const selectedClassName = event.target.value;
-  //   setSelectedClassName(selectedClassName);
-  //   // Set classId based on the selected class name
-  //   const selectedClass = classesName.find(
-  //     (classes) => classes.name === selectedClassName
-  //   );
-  //   setExtendsClass(selectedClass ? selectedClass.id : "");
-  // };
-
   // Submits the form data to create a new class
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     // Create an array of attribute objects based on user input and extendsClassAttributes
     const formattedAttributes = [
       ...extendsClassAttributes.map((attribute) => ({
@@ -151,7 +135,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
         unit: attribute.unit,
       })),
     ];
-  
+
     // Create the class data with the desired structure
     const classData = {
       name: className,
@@ -161,16 +145,16 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
       implementedByClass: implementedByClass ? [implementedByClass] : [],
       attributes: formattedAttributes,
     };
-  
+
     console.log(classData);
     const response = await createInventoryClass(classData);
-  
+
     // Close the form after submission
     setShowClassForm(false);
     window.location.reload();
   };
-  
-  
+
+
 
   return (
     <div className="admin-container">
@@ -180,8 +164,14 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
             &times;
           </span>
 
+          <div>
+            <h1 style={{ color: '#333333', fontWeight: 'normal', fontSize: '16px', }}>NEW OBJECT</h1>
+            <hr style={{ border: 'none', borderBottom: '1px solid #333333', margin: '10px 0' }} />
+          </div>
+
           <form className="class-form" onSubmit={handleSubmit}>
-            <label htmlFor="className">Name:</label>
+          <div style={{ width: '50%', margin: '0 auto' }}>
+            <label htmlFor="className">Name</label>
             <input
               type="text"
               id="className"
@@ -190,7 +180,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
               onChange={(event) => setClassName(event.target.value)}
             />
 
-            <label htmlFor="classDescription">Description:</label>
+            <label htmlFor="classDescription">Description</label>
             <input
               type="text"
               id="classDescription"
@@ -199,7 +189,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
               onChange={(event) => setClassDescription(event.target.value)}
             />
 
-            <label htmlFor="extendsClass">Extends Class:</label>
+            <label htmlFor="extendsClass">Type</label>
             <select
               id="extendsClass"
               name="extendsClass"
@@ -239,36 +229,12 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
                   }
                 />
                 <br />
-                {/* Add additional input fields as needed for other attributes */}
               </div>
             ))}
-
-            {/* <label htmlFor="permittedChildClass">Child Class:</label>
-            <input
-              type="text"
-              id="permittedChildClass"
-              name="permittedChildClass"
-              value={permittedChildClass}
-              onChange={(event) =>
-                setPermittedChildClass(
-                  event.target.value.trim() === "" ? null : event.target.value
-                )
-              }
-            />
-            <br /> */}
-
-            {/* <label htmlFor="implementedByClass">Implemented By Class:</label>
-            <input
-              type="text"
-              id="implementedByClass"
-              name="implementedByClass"
-              value={implementedByClass}
-              onChange={(event) => setImplementedByClass(event.target.value)}
-            />
-            <br /> */}
+            <br></br>
 
             {/* Input fields for attributes */}
-            <label>Attributes:</label>
+            <label>Attributes</label>
             {attributes.map((attribute, index) => (
               <div key={index}>
                 <label htmlFor={`attrName${index}`}>Attribute Name:</label>
@@ -348,7 +314,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
             <button type="button" onClick={addAttribute}>
               Add Attribute
             </button><br /><br />
-
+            </div>
             {/* Submit button for the form */}
             <input type="submit" value="Create Class" />
             <br /><br />
