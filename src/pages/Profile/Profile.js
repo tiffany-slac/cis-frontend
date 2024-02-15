@@ -22,9 +22,6 @@ const Profile = () => {
         <div className="user-info">
           <img src={profileImage} alt="User" className="user-picture" />
           <h2>{`${user.firstName} ${user.lastName}`}</h2>
-          {/* Add other user details here */}
-          <p>Email: johndoe@example.com</p>
-          <p>Location: New York</p>
         </div>
       </div>
       <div className="tabs">

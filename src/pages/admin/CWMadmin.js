@@ -38,38 +38,41 @@ function CWMadmin() {
     
         fetchUser(); // Call the function to fetch shop groups when the component mounts
       }, []);
+
+      const handleRowClick = (classId) => {
+        history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
+      };
   
     return (
-      <div>
-        <h2>Shop Groups</h2>
-        {error && <div>Error: {error}</div>}
-        <ul>
-          {shopGroups.map((group) => (
-            <li key={group.id}>
-              <div>ID: {group.id}</div>
-              <div>Name: {group.name}</div>
-              <div>Description: {group.description}</div>
-              {/* Add more details as needed */}
-            </li>
-          ))}
-        </ul>
-
-        <h2>Users</h2>
-        {error && <div>Error: {error}</div>}
-        <ul>
-          {users.map((group) => (
-            <li key={group.id}>
-              <div>uid: {group.uid}</div>
-              <div>Name: {group.commonName}</div>
-              <div>Description: {group.surname}</div>
-              {/* Add more details as needed */}
-            </li>
-          ))}
-        </ul>
-
+      <div className="cwmadmin-page">
+        <div className="card-display">
+          <h2>Shop Groups</h2>
+          <table className="class-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shopGroups.map((classItem, index) => (
+                <tr
+                  key={index}
+                  onClick={() => handleRowClick(classItem.id)}
+                  className="class-item"
+                >
+                  <td>{classItem.id}</td>
+                  <td>{classItem.name}</td>
+                  <td>{classItem.description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>        
         {/* Button to toggle the visibility of the ShopGroupForm */}
-        <button onClick={() => setShowShopGroupForm(!showShopGroupForm)}>
-          {showShopGroupForm ? "Close Shop Group Form" : "Open Shop Group Form"}
+        <button className="dropbtn" onClick={() => setShowShopGroupForm(!showShopGroupForm)}>
+          {showShopGroupForm ? "Close Shop Group Form" : " + Shop Group"}
         </button>
 
         {/* Render the ShopGroupForm conditionally */}
@@ -79,6 +82,32 @@ function CWMadmin() {
             setShowShopGroupForm={setShowShopGroupForm}
           />
         )}
+
+        <div className="card-display">
+          <h2>Users</h2>
+          <table className="class-table">
+            <thead>
+              <tr>
+                <th>UID</th>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((userItem, index) => (
+                <tr
+                  key={index}
+                  onClick={() => handleRowClick(userItem.id)}
+                  className="class-item"
+                >
+                  <td>{userItem.uid}</td>
+                  <td>{userItem.commonName}</td>
+                  <td>{userItem.surname}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };

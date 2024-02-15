@@ -22,6 +22,36 @@ export const setDomainId = async () => {
 
 /* ----------------------------------------- LOCATION ----------------------------------------- */
 
+export const fetchProfile = async () => {
+  try {
+    const token = await extractJWT();
+
+    const response = await fetch(
+      '/api/cis/v1/auth/me',
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          "x-vouch-idp-accesstoken": token,
+        }
+      }
+    );
+
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log('User profile fetched successfully:', data);
+      return data.payload;
+    } else {
+      const errorData = await response.json();
+      console.error('Error fetching profile:', errorData);
+      throw new Error('Error fetching profile. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    throw new Error('Network error. Please check your connection.');
+  }
+};
+
 // Function to fetch users based on search prefix
 export const fetchUsers = async (search) => {
   try {

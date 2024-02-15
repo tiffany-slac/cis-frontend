@@ -1,127 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faBarcode } from '@fortawesome/free-solid-svg-icons';
-import { fetchInventoryData, fetchAllElements } from '../../services/api';
+import { fetchProfile } from "../../services/api.js"
+import profileImage from '../../components/profile.jpg';
 import './Settings.css';
 
 function Settings() {
-  const [inventoryData, setInventoryData] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [activeTab, setActiveTab] = useState('history'); // State to manage active tab
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchInventoryData();
-        console.log(data);
-        setInventoryData(data); // Update the state with fetched data
-      } catch (error) {
-        console.error('Error fetching inventory data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // State for search query, sorting, filtering, etc.
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('');
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Default items per page
-
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    const filtered = hardcodedData.filter(item =>
-      item.name.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setFilteredItems(filtered);
-  };
-
-  const handleSortChange = (e) => {
-    // Implement your sorting logic here
-    setSortBy(e.target.value);
-    // Sort filtered items based on selected option
-  };
-
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(parseInt(e.target.value, 10)); // Convert value to integer
-  };
-
-  const getPageRange = () => {
-    const from = ((currentPage - 1) * itemsPerPage) + 1;
-    const to = Math.min(currentPage * itemsPerPage, totalItems);
-    return `${from}-${to} of ${totalItems}`;
-  };
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMe = async () => {
       try {
-        const data = await fetchAllElements();
-        setInventoryData(data.payload); // Update inventoryData with API response data
+        const data = await fetchProfile();
+        setProfile(data);
       } catch (error) {
-        console.error('Error fetching inventory elements:', error);
+        console.error('Error fetching shop groups:', error);
       }
     };
 
-    fetchData();
+    fetchMe(); // Call the function to fetch shop groups when the component mounts
   }, []);
 
   return (
-    <div className="inventory-page">
-      {/* <div className="search-container">
-      <div className="search-wrapper">
-        <FontAwesomeIcon icon={faSearch} className="search-icon" />
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="search-input"
-        />
-        <FontAwesomeIcon icon={faBarcode} className="barcode-icon" />
-      </div>
-       <button>Filter</button>
-        <select onChange={handleSortChange}>
-          <option value="">Sort By</option>
-          <option value="price">Price</option>
-          {/* Add other sorting options */}
-        {/* </select>
-        <div>  */}
-          {/* <span>
-            {((currentPage - 1) * itemsPerPage) + 1}-
-            {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
-          </span> */}
-          {/* <span>
-            Show:
-            <select onChange={handleItemsPerPageChange}>
-              <option value="10">10</option>
-              <option value="30">30</option>
-              <option value="60">60</option>
-              <option value="100">100</option>
-              <option value="all">All</option>
-            </select>
-          </span>
-        </div>
-      </div> */}
-
-      {/* <div className="inventory-cards">
-      {inventoryData.map((item, index) => (
-        <div className="inventory-card" key={index}>
-          <div className="card-details">
-            <img src={item.imageUrl} alt={item.name} className="card-image" />
-            <div>
-              <span className="card-id">{item.id}</span>
-              <h3 className="card-name">{item.name}</h3>
-              <span className="card-classid">{item.classId}</span>
-            </div>
+    <div className="profile">
+      <div className="user-card">
+        <div className="user-info">
+          <div className="user-picture-container">
+            <img src={profileImage} alt="User" className="user-picture" />
+          </div>
+          <div className="user-details">
+            {/* Render profile data if available */}
+            {profile && (
+              <>
+                <h2>{profile.commonName} {profile.surname}</h2>
+                <p>{profile.mail}</p>
+              </>
+            )}
           </div>
         </div>
-      ))}
-    </div> */}
+      </div>
+      <div className="tabs">
+        {/* Tabs for menu selection */}
+        <button onClick={() => handleTabChange('history')} className={activeTab === 'history' ? 'active' : ''}>
+          History
+        </button>
+        <button onClick={() => handleTabChange('notifications')} className={activeTab === 'notifications' ? 'active' : ''}>
+          Notifications
+        </button>
+      </div>
+      <div className="content">
+        {/* Content based on the active tab */}
+        {activeTab === 'history' && (
+          <div className="menu">
+            <p>History Content</p>
+          </div>
+        )}
+        {activeTab === 'notifications' && (
+          <div className="menu">
+            <p>Notifications Content</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

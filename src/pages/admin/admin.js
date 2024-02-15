@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CISadmin from "./CISadmin.js";
 import CWMadmin from "./CWMadmin.js";
 import ELOGadmin from "./ELOGadmin.js";
-import "./admin.css"; // Import CSS file for styling
+import "./admin.css";
 
 function Admin() {
   const [activeTab, setActiveTab] = useState(null);
@@ -33,7 +33,7 @@ function Admin() {
       </div>
 
       <h1>Admin Dashboard</h1>
-  
+
       {/* Render the selected page or welcome message */}
       {renderPage()}
     </div>

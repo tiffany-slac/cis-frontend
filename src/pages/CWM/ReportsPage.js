@@ -1,7 +1,12 @@
 import React from "react";
 
 const ReportsPage = () => {
-  return <div>Reports Page Content</div>;
+    return (
+        <div>
+            <br></br>
+            <div>Reports Page Content</div>
+        </div>
+    );
 };
 
 export default ReportsPage;
