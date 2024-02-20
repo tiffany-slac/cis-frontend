@@ -13,12 +13,23 @@
   .search-new-location-wrapper {
     display: flex;
     align-items: center;
-    margin-left: auto; /* Align contents to the right */
+    margin-right: 90px; 
   }
   
-  /* Search Bar */
-  .search-wrapper input[type="text"] {
-    padding: 8px 30px 8px 40px;
+  .cwm-searchbar {
+    display: flex;
+    align-items: center; /* Vertically center the items */
+    margin-left: 35px;
+    position: relative; /* Position the search icon relative to this container */
+  }
+  
+  .search-icon {
+    position: absolute; /* Position the icon absolutely */
+    font-size: 18px;
+  }
+  
+  .cwm-searchbar input[type="text"] {
+    padding: 8px 30px 8px 40px; /* Adjust padding to make space for the icon */
     border: 1px solid #ccc;
     border-radius: 10px 0px 0px 10px;
     font-size: 14px;
@@ -27,12 +38,8 @@
     transition: border-color 0.3s ease-in-out;
   }
   
-  .search-icon {
-    margin-right: 10px;
-    font-size: 18px;
-  }
   
-  .search-wrapper button {
+  .cwm-searchbar button {
     padding: 10px 10px 9px 9px;
     background-color: #007bff;
     color: white;

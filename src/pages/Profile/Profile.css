@@ -22,8 +22,8 @@
 }
 
   .user-card img {
-    width: 100px;
-    height: 100px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
