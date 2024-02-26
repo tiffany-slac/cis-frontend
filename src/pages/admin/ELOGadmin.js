@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
-import { faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
 import ClassForm from "./ClassForm";
 import ItemForm from "./ItemForm";
 import ElementForm from "./ElementForm";
@@ -161,6 +161,14 @@ function ELOGadmin() {
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
+    if (!showDropdown) {
+      // Redirect to the admin page when the dropdown is toggled to show
+      history.push('/admin');
+    }
+  };
+  
+  const handleTabChange = (tab) => {
+    history.push(`/${tab.toLowerCase()}`);
   };
 
   const handleItemClick = (formType) => {

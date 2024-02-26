@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
-import { faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
 import ClassForm from "./ClassForm";
 import ItemForm from "./ItemForm";
 import ElementForm from "./ElementForm";
@@ -95,8 +95,16 @@ function CISadmin() {
     history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
   };
 
+  const handleTabChange = (tab) => {
+    history.push(`/${tab.toLowerCase()}`);
+  };
+
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
+    if (!showDropdown) {
+      // Redirect to the admin page when the dropdown is toggled to show
+      history.push('/admin');
+    }
   };
 
   const handleItemClick = (formType) => {
@@ -175,7 +183,7 @@ function CISadmin() {
 
   return (
     <div>
-       <h3 style={{ textAlign: "center" }}>CIS Administrator Page</h3>
+      <h3 style={{ textAlign: 'center' }}>CIS Administrator Page</h3> 
 
       {/* Button to add a new class */}
       <div className="new-class-button">

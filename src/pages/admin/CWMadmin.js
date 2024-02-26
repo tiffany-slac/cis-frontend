@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from 'react-router-dom';
 import { fetchShopGroups, fetchUsers } from "../../services/api";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import "./admin.css";
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ShopGroupForm from "./ShopGroupForm.js"; // Import the ShopGroupForm component
 
 function CWMadmin() {
@@ -8,6 +11,8 @@ function CWMadmin() {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
     const [showShopGroupForm, setShowShopGroupForm] = useState(false); // State to control the visibility of the form
+    const history = useHistory();
+    const [showDropdown, setShowDropdown] = useState(false);
 
     useEffect(() => {
       const fetchShopGroupsData = async () => {
@@ -39,12 +44,28 @@ function CWMadmin() {
         fetchUser(); // Call the function to fetch shop groups when the component mounts
       }, []);
 
-      const handleRowClick = (classId) => {
-        history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
-      };
+  // Handle row click to navigate to detail page
+  const handleRowClick = (classId) => {
+    history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
+  };
+
+  const handleTabChange = (tab) => {
+    history.push(`/${tab.toLowerCase()}`);
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+    if (!showDropdown) {
+      // Redirect to the admin page when the dropdown is toggled to show
+      history.push('/admin');
+    }
+  };
+      
   
     return (
       <div className="cwmadmin-page">
+
+      <h3 style={{ textAlign: 'center' }}>CWM Administrator Page</h3>
         <div className="card-display">
           <h2>Shop Groups</h2>
           <table className="class-table">
