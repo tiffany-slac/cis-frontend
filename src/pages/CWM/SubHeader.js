@@ -18,7 +18,7 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, searchInput, setSear
             </div> */}
 
             {/* Search Bar */}
-            <div className="cwm-searchbar">
+            <div className="search-wrapper">
                 <FontAwesomeIcon icon={faSearch} className="search-icon" />
                 <input
                     type="text"

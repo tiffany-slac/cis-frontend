@@ -1,9 +1,5 @@
+/* Admin.css */
 /* admin.css */
-
-.general-admin {
-  width: 80%;
-  margin: 20px auto;
-}
 
 /* Styles for the dropdown */
 .admin-dropdown {
@@ -66,7 +62,7 @@
   font-size: 20px;
   color: #555555;
   margin-top: 20px;
-  margin-left: 10px;
+  margin-left: 20px;;
   justify-content: center;
   align-items: center;
 }

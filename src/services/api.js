@@ -69,6 +69,7 @@ export const fetchUsers = async (search) => {
 
     if (response.status === 200) {
       const data = await response.json();
+      console.log("Users fetched successfully:", data);
       return data.payload;
     } else {
       const errorData = await response.json();
