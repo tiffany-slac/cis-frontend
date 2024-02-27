@@ -12,10 +12,8 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
     try {
       // Fetch all classes
       const classes = await fetchAllClass();
-  
       // Find the class with the matching name
       const foundClass = classes.find((classItem) => classItem.name === className);
-  
       if (foundClass) {
         return foundClass.id; // Return the ID of the found class
       } else {
@@ -56,12 +54,7 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
         type: classData.name,
         // Access other form values based on the class data schema
       };
-
-      // Perform API call to create object with newObject data
-      // Example:
-      // const createdObject = await createObject(newObject);
       console.log("Submitted Data:", newObject);
-      // Handle the API response or other logic accordingly
     } catch (error) {
       console.error("Error submitting data:", error);
     }

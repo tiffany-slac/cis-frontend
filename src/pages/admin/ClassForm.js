@@ -166,7 +166,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
 
           <div>
             <h1 style={{ color: '#333333', fontWeight: 'normal', fontSize: '16px', }}>NEW OBJECT</h1>
-            <hr style={{ border: 'none', borderBottom: '1px solid #333333', margin: '10px 0' }} />
+            {/* <hr style={{ border: 'none', borderBottom: '1px solid #333333', margin: '10px 0' }} /> */}
           </div>
 
           <form className="class-form" onSubmit={handleSubmit}>
@@ -234,10 +234,10 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
             <br></br>
 
             {/* Input fields for attributes */}
-            <label>Attributes</label>
+            <label>ATTRIBUTES</label>
             {attributes.map((attribute, index) => (
               <div key={index}>
-                <label htmlFor={`attrName${index}`}>Attribute Name:</label>
+                <label htmlFor={`attrName${index}`}>Name:</label>
                 <input
                   type="text"
                   id={`attrName${index}`}
@@ -250,7 +250,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
                 <br />
 
                 <label htmlFor={`attrDescription${index}`}>
-                  Attribute Description:
+                  Description:
                 </label>
                 <input
                   type="text"
@@ -263,6 +263,30 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
                       "description",
                       event.target.value
                     )
+                  }
+                />
+                <br />
+
+                <label htmlFor={`attrType${index}`}>Type:</label>
+                <input
+                  type="text"
+                  id={`attrType${index}`}
+                  name={`attrType${index}`}
+                  value={attribute.type}
+                  onChange={(event) =>
+                    handleAttributeChange(index, "type", event.target.value)
+                  }
+                />
+                <br />
+
+                <label htmlFor={`attrUnit${index}`}>Unit:</label>
+                <input
+                  type="text"
+                  id={`attrUnit${index}`}
+                  name={`attrUnit${index}`}
+                  value={attribute.unit}
+                  onChange={(event) =>
+                    handleAttributeChange(index, "unit", event.target.value)
                   }
                 />
                 <br />
@@ -282,30 +306,6 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
                   }
                 />
                 <br />
-
-                <label htmlFor={`attrType${index}`}>Attribute Type:</label>
-                <input
-                  type="text"
-                  id={`attrType${index}`}
-                  name={`attrType${index}`}
-                  value={attribute.type}
-                  onChange={(event) =>
-                    handleAttributeChange(index, "type", event.target.value)
-                  }
-                />
-                <br />
-
-                <label htmlFor={`attrUnit${index}`}>Attribute Unit:</label>
-                <input
-                  type="text"
-                  id={`attrUnit${index}`}
-                  name={`attrUnit${index}`}
-                  value={attribute.unit}
-                  onChange={(event) =>
-                    handleAttributeChange(index, "unit", event.target.value)
-                  }
-                />
-                <br />
                 <br />
               </div>
             ))}
@@ -314,10 +314,11 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
             <button type="button" onClick={addAttribute}>
               Add Attribute
             </button><br /><br />
-            </div>
+            
             {/* Submit button for the form */}
-            <input type="submit" value="Create Class" />
+            <input className="create-class-button" type="submit" value="Create Class" />
             <br /><br />
+            </div>
           </form>
         </div>
       </div>

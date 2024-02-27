@@ -71,16 +71,16 @@ function CISadmin() {
   }, []);
 
   // Log class details when classDetails state changes
-  useEffect(() => {
-    console.log("Class Details:", classDetails);
-  }, [classDetails]);
+  // useEffect(() => {
+  //   console.log("Class Details:", classDetails);
+  // }, [classDetails]);
 
   // Fetch data for testing purposes
   useEffect(() => {
     const fetchData = async () => {
       try {
         const allClass = await fetchAllClass();
-        console.log("ALL CLASSES: " + JSON.stringify(allClass));
+        // console.log("ALL CLASSES: " + JSON.stringify(allClass));
 
       } catch (error) {
         console.error("Error fetching class types:", error.message);
@@ -182,8 +182,8 @@ function CISadmin() {
   };
 
   return (
-    <div>
-      <h3 style={{ textAlign: 'center' }}>CIS Administrator Page</h3> 
+    <div className="cis-admin">
+      <h3 style={{ textAlign: 'center' }}>CIS Administrator</h3> 
 
       {/* Button to add a new class */}
       <div className="new-class-button">
@@ -203,13 +203,12 @@ function CISadmin() {
           />
         )}
       </div>
-      <br />
 
       {/* Card container for displaying statistics */}
-      <div className="card-container">
+      {/* <div className="card-container"> */}
 
         {/* Card for total classes */}
-        <div className="admin-card">
+        {/* <div className="admin-card">
           <div className="card-content">
             <div>
               <h2>{buildingCount}</h2>
@@ -222,10 +221,10 @@ function CISadmin() {
           <div className="card-action">
             <span className="card-add">+</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card for total locations */}
-        <div className="admin-card">
+        {/* <div className="admin-card">
           <div className="card-content">
             <div>
               <h2>{nicknameCount}</h2>
@@ -246,10 +245,10 @@ function CISadmin() {
           )}
         </div>
 
-        {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />}
+        {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />} */}
 
         {/* Card for authorized users */}
-        <div className="admin-card">
+        {/* <div className="admin-card">
           <div className="card-content">
             <div>
               <h2>{itemCount}</h2>
@@ -266,12 +265,12 @@ function CISadmin() {
             <span className="card-add">+</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Display categories in a table */}
       <div className="categories-display">
         <div className="card-display">
-          <h2>Categories</h2>
+          <h2>Class Hierarchy</h2>
           <table className="class-table">
             <thead>
               <tr>

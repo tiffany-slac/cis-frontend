@@ -13,17 +13,13 @@ function ShopGroupForm({ showShopGroupForm, setShowShopGroupForm }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   useEffect(() => {
-    const fetchUsersData = async () => {
-      try {
-        const data = await fetchUsers();
-        setUsers(data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
+    console.log("fetching domain...");
+    const fetchTheUsers = async () => {
+        const response = await fetchUsers();
+        setUsers(response.payload);
     };
-
-    fetchUsersData();
-  }, []);
+    fetchTheUsers(); // Call the function to fetch class types when the component mounts
+}, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -42,16 +38,19 @@ function ShopGroupForm({ showShopGroupForm, setShowShopGroupForm }) {
     setSelectedUsers(selectedOptions);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await createShopGroup(shopGroupData);
-      alert("Shop group created successfully!");
-    } catch (error) {
-      console.error('Error creating shop group:', error);
-      alert("Error creating shop group. Please try again.");
-    }
-  };
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  try {
+    await createShopGroup(shopGroupData);
+    alert("Shop group created successfully!");
+    setShowShopGroupForm(false); // Close the form
+    window.location.reload(); // Reload the page
+  } catch (error) {
+    console.error('Error creating shop group:', error);
+    alert("Error creating shop group. Please try again.");
+  }
+};
+
 
   const options = users.map((user) => ({
     value: user.mail,

@@ -69,8 +69,8 @@ export const fetchUsers = async (search) => {
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log("Users fetched successfully:", data);
-      return data.payload;
+      console.log(data);
+      return data;
     } else {
       const errorData = await response.json();
       console.error("Error fetching users:", errorData);
@@ -78,9 +78,10 @@ export const fetchUsers = async (search) => {
     }
   } catch (error) {
     console.error("Error fetching users:", error);
-    throw new Error("Network error. Please check your connection.");
+    return { errorCode: -1, payload: [] }; // Return a default error response
   }
 };
+
 
 export const fetchShopGroups = async () => {
   try {
@@ -99,7 +100,7 @@ export const fetchShopGroups = async () => {
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log('Shop groups fetched successfully:', data);
+      // console.log('Shop groups fetched successfully:', data);
       return data.payload;
     } else {
       const errorData = await response.json();
@@ -114,6 +115,8 @@ export const fetchShopGroups = async () => {
 
 export const createShopGroup = async (shopGroupData) => {
   try {
+    const token = await extractJWT();
+
     const response = await fetch('/api/cwm/v1/shop-group', {
       method: 'POST',
       headers: {
@@ -889,6 +892,7 @@ export const fetchAllElements = async (limit = 10, page = 1, anchorId = null, se
 
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
       return data;
     } else {
       // Log details before throwing the error

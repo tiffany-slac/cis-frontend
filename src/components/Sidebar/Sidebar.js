@@ -106,11 +106,11 @@ function Sidebar() {
         </div>
 
         <div>
-          <Link to="/profile">
+          <Link to="/elog">
             <button
-              onClick={() => handleClick("elogs", "/elogs")}
+              onClick={() => handleClick("elog", "/elog")}
               className={`icon-button ${
-                activeButton === "/elogs" ? "active-button" : ""
+                activeButton === "/elog" ? "active-button" : ""
               }`}
             >
               <div className="button-label">
@@ -127,11 +127,11 @@ function Sidebar() {
         </div>
 
         <div>
-          <Link to="/admin">
+          <Link to="/admin/generalAdmin">
             <button
-              onClick={() => handleClick("admin", "/admin")}
+              onClick={() => handleClick("admin", "/admin/generalAdmin")}
               className={`icon-button ${
-                activeButton === "/admin" ? "active-button" : ""
+                activeButton === "/admin/generalAdmin" ? "active-button" : ""
               }`}
             >
               <div className="button-label">

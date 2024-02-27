@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, useLocation, Redirect } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 import { fetchUsers } from '../../services/api'
 import './admin.css';
 import CISadmin from "./CISadmin.js";
 import CWMadmin from "./CWMadmin.js";
 import ELOGadmin from "./ELOGadmin.js";
+import GeneralAdmin from "./generalAdmin.js";
 import { GridRowModes, GridRowEditStopReasons } from '@mui/x-data-grid';
 
 function Admin() {
-  // const [activeTab, setActiveTab] = useState(null);
-  // const [users, setUsers] = useState([]);
-  // const [rows, setRows] = useState([]);
-  // const [rowModesModel, setRowModesModel] = useState({});
-  // const history = useHistory();
   const location = useLocation();
 
   return (
     <Router>
       <div>
         <div className="tab-bar">
+          <NavLink to="/admin/generalAdmin">Admin</NavLink>
           <NavLink to="/admin/CISadmin">CIS</NavLink>
           <NavLink to="/admin/CWMadmin">CWM</NavLink>
           <NavLink to="/admin/ELOGadmin">ELOG</NavLink>
         </div>
         <Switch>
+          <Route exact path="/">
+            <Redirect to="/admin/generalAdmin" /> {/* Redirect the default route to generalAdmin */}
+          </Route>
           <Route path="/admin/CISadmin">
             <CISadmin />
           </Route>
@@ -34,10 +34,12 @@ function Admin() {
           <Route path="/admin/ELOGadmin">
             <ELOGadmin />
           </Route>
+          <Route path="/admin/generalAdmin"> {/* Define a new route for generalAdmin */}
+            <GeneralAdmin />
+          </Route>
         </Switch>
       </div>
     </Router>
-    
       );
     }
     

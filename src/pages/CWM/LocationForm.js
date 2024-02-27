@@ -1,26 +1,108 @@
-// LocationForm.js
-
-import React, { useState } from 'react';
-import { createLocation } from '../../services/api'; // Import the createLocation API function
+import React, { useState, useEffect } from 'react';
+import { createLocation, fetchUsers, fetchShopGroups, fetchAllElements } from '../../services/api'; // Import the createLocation API function
+import Select from 'react-select';
 import './LocationForm.css'; // Import the CSS file for styling
 
 function LocationForm({ showLocationForm, setShowLocationForm }) {
   // State to manage form input values
   const [locationData, setLocationData] = useState({
-    parentId: '',
+    parentId: null,
     name: '',
     description: '',
     externalLocationIdentifier: '',
-    locationManagerUserId: '',
-    locationShopGroupId: ''
+    locationManagerUserId: '', // Initialize locationManagerUserId state
+    locationShopGroupId: '' // Initialize locationShopGroupId state
   });
+  const [users, setUsers] = useState([]);
+  const [shopGroups, setShopGroups] = useState([]);
+  const [depotItems, setDepotItems] = useState([]);
+
+  useEffect(() => {
+    const fetchShopGroupsData = async () => {
+      try {
+        const data = await fetchShopGroups();
+        // Assuming fetchShopGroups() returns the data directly
+        setShopGroups(data);
+      } catch (error) {
+        console.error('Error fetching shop groups:', error.message);
+        setError('Error fetching shop groups. Please try again.');
+      }
+    };
+
+    fetchShopGroupsData(); // Call the function to fetch shop groups when the component mounts
+  }, []);
+
+  useEffect(() => {
+    const fetchUsersData = async () => {
+      try {
+        const response = await fetchUsers();
+        setUsers(response.payload);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+    fetchUsersData();
+  }, []);
+
+  useEffect(() => {
+    const fetchElements = async () => {
+      try {
+        const response = await fetchAllElements(20);
+        if (response.errorCode === 0) {
+          setDepotItems(response.payload);
+        } else {
+          throw new Error("Error fetching classes");
+        }
+      } catch (error) {
+        console.error("Error fetching class types:", error.message);
+      }
+    };
+
+    fetchElements(); // Call the function to fetch class types when the component mounts
+  }, []);
 
   // Function to handle input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    const selectedUser = users.find(user => user.uid === value);
+    if (name === 'locationManagerUserId') {
+      // If the input is for locationManagerUserId, set it to the user's UID for display
+      setLocationData((prevData) => ({
+        ...prevData,
+        locationManagerUserId: selectedUser.mail
+      }));
+    } else {
+      // For other inputs, update the locationData normally
+      setLocationData((prevData) => ({
+        ...prevData,
+        [name]: value.trim() === '' ? null : value // Set parentId to null if the trimmed value is empty
+      }));
+    }
+  };
+
+  // Function to handle depot item selection
+  const handleDepotItemSelectChange = (selectedOption) => {
+    if (selectedOption) {
+      const { domainId, itemId } = selectedOption; // Assuming selectedOption contains domainId and itemId properties
+      const externalLocationIdentifier = `${domainId}/${itemId}`;
+      setLocationData((prevData) => ({
+        ...prevData,
+        externalLocationIdentifier
+      }));
+    } else {
+      setLocationData((prevData) => ({
+        ...prevData,
+        externalLocationIdentifier: '' // Clear externalLocationIdentifier if no depot item is selected
+      }));
+    }
+  };
+
+
+  const handleShopGroupSelectChange = (event) => {
+    const { value } = event.target;
     setLocationData((prevData) => ({
       ...prevData,
-      [name]: value
+      locationShopGroupId: value
     }));
   };
 
@@ -64,7 +146,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
               name="parentId"
               value={locationData.parentId}
               onChange={handleInputChange}
-              required
+            // required
             />
           </div>
 
@@ -76,7 +158,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
               name="name"
               value={locationData.name}
               onChange={handleInputChange}
-              required
+            // required
             />
           </div>
 
@@ -92,36 +174,52 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="externalLocationIdentifier">External Location Identifier</label>
-            <input
-              type="text"
+            <label htmlFor="externalLocationIdentifier">Add DEPOT Item<span className="required">*</span></label>
+            <select
               id="externalLocationIdentifier"
               name="externalLocationIdentifier"
               value={locationData.externalLocationIdentifier}
-              onChange={handleInputChange}
-            />
+              onChange={handleDepotItemSelectChange}
+              className="select-input"
+            >
+              <option value="">Select Item</option>
+              {depotItems.map(item => (
+                <option key={item.id} value={`${item.domainId}/${item.itemId}`}>{item.name}</option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="locationManagerUserId">Location Manager User ID</label>
-            <input
-              type="text"
+            <label htmlFor="locationManagerUserId">Manager<span className="required">*</span></label>
+            <select
               id="locationManagerUserId"
               name="locationManagerUserId"
               value={locationData.locationManagerUserId}
               onChange={handleInputChange}
-            />
+              className="select-input" // Apply the select-input class here
+            >
+              <option value="">Select Manager</option>
+              {users.map(user => (
+                <option key={user.uid} value={user.uid}>{user.commonName}</option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="locationShopGroupId">Location Shop Group ID</label>
-            <input
-              type="text"
+            <label htmlFor="locationShopGroupId">Shop Group<span className="required">*</span></label>
+            <select
               id="locationShopGroupId"
               name="locationShopGroupId"
               value={locationData.locationShopGroupId}
-              onChange={handleInputChange}
-            />
+              onChange={handleShopGroupSelectChange}
+              className="select-input" // Apply the select-input class here
+              required
+            >
+              <option value="">Select Shop Group</option>
+              {shopGroups.map(group => (
+                <option key={group.id} value={group.id}>{group.name}</option>
+              ))}
+            </select>
           </div>
 
           <button type="submit" className="form-button">Create Location</button>

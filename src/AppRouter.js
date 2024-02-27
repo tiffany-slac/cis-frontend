@@ -9,6 +9,7 @@ import Settings from './pages/Settings/Settings';
 import Admin from './pages/admin/admin';
 import Inventory from './pages/Inventory/Inventory';
 import ClassDetails from './pages/admin/ClassDetails';
+import Elog from './pages/Elog/elog';
 
 function AppRouter() {
   return (
@@ -22,6 +23,7 @@ function AppRouter() {
           <Route path="/admin" component={Admin} />
           <Route path="/admin/:classId" component={ClassDetails} />
           <Route path="/cwm" component={Cwm} />
+          <Route path="/elog" component={Elog} />
           <Route path="/settings" component={Settings} />
         </Switch>
       </Layout>
