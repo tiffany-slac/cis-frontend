@@ -17,7 +17,7 @@ const ItemDetails = () => {
   const [elementPath, setElementPath] = useState(null);
   const [expandedRows, setExpandedRows] = useState([]);
   const [showLocationHistForm, setShowLocationHistForm] = useState(false);
-  const [isCardExpanded, setIsCardExpanded] = useState(true);
+  const [isCardExpanded, setIsCardExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedAttributes, setEditedAttributes] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
@@ -650,9 +650,9 @@ const ItemDetails = () => {
                   }}
                 >
                   Location
-                  <button className="add-button" onClick={handleButtonClick}>
+                  {/* <button className="add-button" onClick={handleButtonClick}>
                     +
-                  </button>
+                  </button> */}
                 </h3>
                 {/* <div className="card-header">
                   Location History{" "}

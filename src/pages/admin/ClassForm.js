@@ -96,7 +96,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
       setAttributes(updatedAttributes);
 
       // Log the attributes state
-      console.log("Attributes state:", updatedAttributes);
+      // console.log("Attributes state:", updatedAttributes);
     }
   };
 

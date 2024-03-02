@@ -6,6 +6,7 @@ import "./admin.css";
 function generalAdmin() {
     const history = useHistory();
     const [users, setUsers] = useState([]);
+    const [locations, setLocations] = useState([]);
 
     useEffect(() => {
         console.log("fetching users...");
@@ -21,8 +22,6 @@ function generalAdmin() {
         const fetchData = async () => {
             try {
                 const allClass = await fetchAllClass();
-                // console.log("ALL CLASSES: " + JSON.stringify(allClass));
-
             } catch (error) {
                 console.error("Error fetching class types:", error.message);
             }

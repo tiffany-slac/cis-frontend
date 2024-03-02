@@ -133,7 +133,7 @@ h1 {
 }
 .class-form {
   margin-top: 20px;
-  height: 70%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;

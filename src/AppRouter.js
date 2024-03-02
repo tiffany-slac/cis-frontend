@@ -9,6 +9,7 @@ import Settings from './pages/Settings/Settings';
 import Admin from './pages/admin/admin';
 import Inventory from './pages/Inventory/Inventory';
 import ClassDetails from './pages/admin/ClassDetails';
+import WorkDetails from './pages/CWM/WorkDetails';
 import Elog from './pages/Elog/elog';
 
 function AppRouter() {
@@ -18,6 +19,7 @@ function AppRouter() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/inventory/:id" component={ItemDetails} />
+          <Route path="/work/65e11b6834c0946614377af6" component={WorkDetails} />
           <Route path="/inventory" component={Inventory} />
           <Route path="/home" component={Home} />
           <Route path="/admin" component={Admin} />

@@ -1,10 +1,11 @@
 import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import LocationForm from './LocationForm.js';
+// import LocationForm from './LocationForm.js';
+import WorkForm from './WorkForm.js';
 import "./Cwm.css";
 
-const SubHeader = ({ showLocationForm, setShowLocationForm, searchInput, setSearchInput, handleSearch }) => {
+const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setShowWorkForm, searchInput, setSearchInput, handleSearch }) => {
     const handleItemClick = (formType) => {
         // Handle item click here (e.g., navigate to a specific form or perform an action)
         console.log(`Clicked ${formType}`);
@@ -12,14 +13,10 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, searchInput, setSear
 
     return (
         <div className="sticky-header">
-            {/* Header: WORK PLANS */}
-            {/* <div className="header-left">
-                <p>WORK PLANS</p>
-            </div> */}
 
             {/* Search Bar */}
             <div className="search-wrapper">
-                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                {/* <FontAwesomeIcon icon={faSearch} className="search-icon" /> */}
                 <input
                     type="text"
                     placeholder="Search..."
@@ -38,17 +35,17 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, searchInput, setSear
             <div className="new-class-button">
                 <button
                     onClick={() => {
-                        handleItemClick("Location");
-                        setShowLocationForm(true);
+                        handleItemClick("Work");
+                        setShowWorkForm(true);
                     }}
                     className="dropbtn"
                 >
-                    <span>+ Location</span>
+                    <span>+ CATER</span>
                 </button>
-                {showLocationForm && (
-                    <LocationForm
-                        showLocationForm={showLocationForm}
-                        setShowLocationForm={setShowLocationForm}
+                {showWorkForm && (
+                    <WorkForm
+                        showWorkForm={showWorkForm}
+                        setShowWorkForm={setShowWorkForm}
                     />
                 )}
             </div>

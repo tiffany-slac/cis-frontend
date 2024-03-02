@@ -1,21 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
-import { fetchShopGroups } from "../../services/api";
+import { fetchShopGroups, fetchLocations, fetchWork } from "../../services/api";
 import "./admin.css";
-import ShopGroupForm from "./ShopGroupForm.js"; // Import the ShopGroupForm component
+import ShopGroupForm from "./ShopGroupForm.js";
+import LocationForm from './../CWM/LocationForm.js';
 
-function CWMadmin() {
+
+function CWMadmin( ) {
   const [shopGroups, setShopGroups] = useState([]);
   const [error, setError] = useState(null);
-  const [showShopGroupForm, setShowShopGroupForm] = useState(false); // State to control the visibility of the form
+  const [showShopGroupForm, setShowShopGroupForm] = useState(false);
+  const [showLocationForm, setShowLocationForm] = useState(false);
   const history = useHistory();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [locations, setLocations] = useState([]);
+  const [work, setWork] = useState([]);
+
+  useEffect(() => {
+    console.log("fetching locations...");
+    const fetchAllLocations = async () => {
+      const response = await fetchLocations();
+      setLocations(response.payload);
+    };
+    fetchAllLocations();
+  }, []);
+
+  useEffect(() => {
+    console.log("fetching all work...");
+    const fetchAllWork = async () => {
+      const response = await fetchWork();
+      setWork(response.payload);
+    };
+    fetchAllWork();
+  }, []);
 
   useEffect(() => {
     const fetchShopGroupsData = async () => {
       try {
         const data = await fetchShopGroups();
-        // Assuming fetchShopGroups() returns the data directly
         setShopGroups(data);
       } catch (error) {
         console.error('Error fetching shop groups:', error.message);
@@ -23,17 +44,15 @@ function CWMadmin() {
       }
     };
 
-    fetchShopGroupsData(); // Call the function to fetch shop groups when the component mounts
+    fetchShopGroupsData();
   }, []);
 
-  // Handle row click to navigate to detail page
   const handleRowClick = (classId) => {
-    history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
+    history.push(`/admin/${classId}`);
   };
 
   return (
     <div className="cwm-admin">
-
       <h3 style={{ textAlign: 'center' }}>CWM Administrator</h3>
       <div className="card-display">
         <h2>Shop Groups</h2>
@@ -60,20 +79,54 @@ function CWMadmin() {
           </tbody>
         </table>
       </div>
-      {/* Button to toggle the visibility of the ShopGroupForm */}
       <button className="dropbtn" onClick={() => setShowShopGroupForm(!showShopGroupForm)}>
         {showShopGroupForm ? "Close Shop Group Form" : " + Shop Group"}
       </button>
-
-      {/* Render the ShopGroupForm conditionally */}
       {showShopGroupForm && (
         <ShopGroupForm
           showShopGroupForm={showShopGroupForm}
           setShowShopGroupForm={setShowShopGroupForm}
         />
       )}
+      <div className="card-display">
+        <h2>Locations</h2>
+        <table className="class-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {locations.map((location) => (
+              <tr
+                key={location.id}
+                onClick={() => handleRowClick(location.id)}
+                className="class-item"
+              >
+                <td>{location.id}</td>
+                <td>{location.name}</td>
+                <td>{location.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
+      <div className="new-class-button">
+        <button className="dropbtn" onClick={() => setShowLocationForm(!showLocationForm)}>
+          {showLocationForm ? "Close Location Form" : "+ Location"}
+        </button>
+        {showLocationForm && (
+          <LocationForm
+            showLocationForm={showLocationForm}
+            setShowLocationForm={setShowLocationForm}
+          />
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default CWMadmin;

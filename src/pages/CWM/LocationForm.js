@@ -17,6 +17,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
   const [shopGroups, setShopGroups] = useState([]);
   const [depotItems, setDepotItems] = useState([]);
 
+
   useEffect(() => {
     const fetchShopGroupsData = async () => {
       try {
@@ -69,7 +70,13 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
       // If the input is for locationManagerUserId, set it to the user's UID for display
       setLocationData((prevData) => ({
         ...prevData,
-        locationManagerUserId: selectedUser.mail
+        locationManagerUserId: value
+      }));
+    } else if (name === 'externalLocationIdentifier') {
+      // If the input is for externalLocationIdentifier, set it to the value directly
+      setLocationData((prevData) => ({
+        ...prevData,
+        externalLocationIdentifier: value
       }));
     } else {
       // For other inputs, update the locationData normally
@@ -79,24 +86,6 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
       }));
     }
   };
-
-  // Function to handle depot item selection
-  const handleDepotItemSelectChange = (selectedOption) => {
-    if (selectedOption) {
-      const { domainId, itemId } = selectedOption; // Assuming selectedOption contains domainId and itemId properties
-      const externalLocationIdentifier = `${domainId}/${itemId}`;
-      setLocationData((prevData) => ({
-        ...prevData,
-        externalLocationIdentifier
-      }));
-    } else {
-      setLocationData((prevData) => ({
-        ...prevData,
-        externalLocationIdentifier: '' // Clear externalLocationIdentifier if no depot item is selected
-      }));
-    }
-  };
-
 
   const handleShopGroupSelectChange = (event) => {
     const { value } = event.target;
@@ -110,22 +99,23 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await createLocation(locationData);
+      const locationDataWithExternalIdentifier = {
+        ...locationData,
+        externalLocationIdentifier: locationData.externalLocationIdentifier
+      };
+      await createLocation(locationDataWithExternalIdentifier);
       alert("Location created successfully!");
-      // Clear form after successful submission if needed
-      // setLocationData({
-      //   parentId: '',
-      //   name: '',
-      //   description: '',
-      //   externalLocationIdentifier: '',
-      //   locationManagerUserId: '',
-      //   locationShopGroupId: ''
-      // });
     } catch (error) {
       console.error('Error creating location:', error);
       alert("Error creating location. Please try again.");
     }
   };
+
+// Function to format the item name
+const formatItemName = (name) => {
+  // Split the name by '-' and capitalize the first letter of each word
+  return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
 
   // JSX for the component
   return (
@@ -151,7 +141,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Name<span className="required">*</span></label>
             <input
               type="text"
               id="name"
@@ -163,7 +153,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Description<span className="required">*</span></label>
             <input
               type="text"
               id="description"
@@ -174,17 +164,19 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="externalLocationIdentifier">Add DEPOT Item<span className="required">*</span></label>
+            <label htmlFor="externalLocationIdentifier">Add DEPOT Item</label>
             <select
               id="externalLocationIdentifier"
               name="externalLocationIdentifier"
               value={locationData.externalLocationIdentifier}
-              onChange={handleDepotItemSelectChange}
+              onChange={handleInputChange}
               className="select-input"
             >
               <option value="">Select Item</option>
               {depotItems.map(item => (
-                <option key={item.id} value={`${item.domainId}/${item.itemId}`}>{item.name}</option>
+                <option key={item.id} value={`${item.domainDTO.id}/${item.id}`}>
+                  {formatItemName(item.name)}
+                </option>
               ))}
             </select>
           </div>
@@ -200,7 +192,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
             >
               <option value="">Select Manager</option>
               {users.map(user => (
-                <option key={user.uid} value={user.uid}>{user.commonName}</option>
+                <option key={user.uid} value={user.mail}>{user.commonName + " " + user.surname}</option>
               ))}
             </select>
           </div>

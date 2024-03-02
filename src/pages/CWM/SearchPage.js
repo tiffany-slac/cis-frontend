@@ -1,6 +1,6 @@
 // Cwm.js
 import React, { useState, useEffect } from "react";
-import { fetchAllElements } from "../../services/api";
+import { fetchAllElements, fetchLocations, fetchWork, fetchAWork } from "../../services/api";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SubHeader from './SubHeader.js';
@@ -16,11 +16,54 @@ function formatItemName(name) {
 const SearchPage = () => {
   const [inventory, setInventory] = useState([]);
   const [showLocationForm, setShowLocationForm] = useState(false);
+  const [showWorkForm, setShowWorkForm] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [searchInput, setSearchInput] = useState(""); // State to store the search input
   const [currentPage, setCurrentPage] = useState(1); // New state for current page
   const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
+  const [locations, setLocations] = useState([]);
+  const [work, setWork] = useState([]);
+  const [awork, setAWork] = useState([]);
   const itemsPerPage = 5;
+
+  useEffect(() => {
+    console.log("fetching locations...");
+    const fetchAllLocations = async () => {
+        const response = await fetchLocations();
+        setLocations(response.payload);
+    };
+    fetchAllLocations();
+  }, []);
+
+  useEffect(() => {
+    console.log("fetching a work...");
+    const fetchOneWork = async () => {
+        const response = await fetchAWork('65e11b6834c0946614377af6');
+        setAWork(response.payload);
+        console.log(response.payload);
+    };
+    fetchOneWork();
+  }, []);
+
+
+  useEffect(() => {
+    console.log("fetching all work...");
+    const fetchAllWork = async () => {
+      try {
+        const response = await fetchWork();
+        if (response && response.payload) {
+          setWork(response.payload);
+          console.log("Work:", response.payload);
+        } else {
+          console.error("Failed to fetch work:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching work:", error.message);
+      }
+    };
+    fetchAllWork();
+  }, []);
+  
 
   const handleItemClick = (classId) => {
     // Handle item click here (e.g., navigate to a specific form or perform an action)
@@ -84,7 +127,7 @@ const SearchPage = () => {
 
   // Function to handle click on a card item and navigate to its detail page
   const handleCardClick = (id) => {
-    history.push(`/inventory/${id}`); // Navigate to detail page with the item _id
+    history.push(`/work/65e11b6834c0946614377af6`); // Navigate to detail page with the item _id
   };
 
   return (
@@ -94,6 +137,8 @@ const SearchPage = () => {
       <SubHeader
         showLocationForm={showLocationForm}
         setShowLocationForm={setShowLocationForm}
+        showWorkForm={showWorkForm} // Pass the showWorkForm state
+        setShowWorkForm={setShowWorkForm} // Pass the setShowWorkForm function
         searchInput={searchInput}
         setSearchInput={setSearchInput}
         handleSearch={handleSearch}
@@ -117,20 +162,18 @@ const SearchPage = () => {
         {/* Inventory Items */}
         <div className="assets-cards-container">
           <div className="assets-cards">
-            {inventory && inventory.length > 0 ? (
-              inventory.map((item) => (
+            {work && work.length > 0 ? (
+              work.map((item) => (
                 <div key={item.id} onClick={() => handleCardClick(item.id)}>
                   <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
                   <div className="cwm-card">
                     <h2>{formatItemName(item.name)}</h2>
                     <p>ID: {item.id}</p>
-                    <p>Class ID: {item.classId}</p>
-                    {/* Add other information here */}
                   </div>
                 </div>
               ))
             ) : (
-              <div>No inventory items available</div>
+              <div>No CATERs available</div>
             )}
           </div>
           {/* Load More Button */}
@@ -138,6 +181,32 @@ const SearchPage = () => {
             <button onClick={handleLoadMore}>Load More</button>
           </div>
         </div>
+
+        {/* Inventory Items */}
+        <div className="assets-cards-container">
+          <div className="assets-cards">
+            {locations && locations.length > 0 ? (
+              locations.map((item) => (
+                <div key={item.id} onClick={() => handleCardClick(item.id)}>
+                  <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
+                  <div className="cwm-card">
+                    <h2>{formatItemName(item.name)}</h2>
+                    <p>ID: {item.id}</p>
+                    {/* <p>Class ID: {item.classId}</p> */}
+                    {/* Add other information here */}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>No locations available</div>
+            )}
+          </div>
+          {/* Load More Button */}
+          <div className="load-more-button">
+            <button onClick={handleLoadMore}>Load More</button>
+          </div>
+        </div>
+
       </div>
     </div>
   );

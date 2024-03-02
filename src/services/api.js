@@ -20,6 +20,116 @@ export const setDomainId = async () => {
   }
 };
 
+/* ----------------------------------------- CORE WORK ----------------------------------------- */
+
+export const createWork = async (workData) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      "/api/cwm/v1/work",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(workData)
+      }
+    );
+
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } else {
+      const errorData = await response.json();
+      console.error("Error creating work:", errorData);
+      throw new Error("Error creating work. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error creating work:", error);
+    return { errorCode: -1, payload: [] }; // Return a default error response
+  }
+};
+
+export const createActivity = async () => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/${workId}/activity`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to create work");
+    }
+  } catch (error) {
+    throw new Error("Error creating work:", error.message);
+  }
+};
+
+export const fetchWork = async () => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work?limit=100`, // Adjust query parameters as needed
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+    if (response.status === 200) {
+      const responseData = await response.json();
+      console.log("Response Data: ", responseData);
+    }
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch work. Status: " + response.status);
+    }
+  } catch (error) {
+    console.error("Error fetching work:", error);
+    throw new Error("Error fetching work. See console for details.");
+  }
+};
+
+export const fetchAWork = async (workId) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/${workId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch work");
+    }
+  } catch (error) {
+    throw new Error("Error fetching work:", error.message);
+  }
+};
+
 /* ----------------------------------------- LOCATION ----------------------------------------- */
 
 export const fetchProfile = async () => {
@@ -142,6 +252,30 @@ export const createShopGroup = async (shopGroupData) => {
   }
 };
 
+export const fetchLocations = async () => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      "/api/cwm/v1/location",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch domain");
+    }
+  } catch (error) {
+    throw new Error("Error fetching domain:", error.message);
+  }
+};
 
 // Function to create a new location
 export const createLocation = async (locationData) => {
@@ -703,7 +837,7 @@ export const fetchDomain = async () => {
   try {
     const token = await extractJWT();
     const domain_id = await setDomainId();
-    // const token = await retrieveToken();
+
     const response = await fetch(
       `/api/cis/v1/inventory/domain/${domain_id}`,
       {

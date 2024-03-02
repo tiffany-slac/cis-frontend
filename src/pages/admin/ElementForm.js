@@ -285,6 +285,8 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     event.preventDefault();
     console.log("submitting");
 
+    const parentIdToSend = parentId || null;
+
     const attributesData = Object.entries(itemData.attributes).map(
       ([key, value]) => ({
         name: key,
@@ -300,7 +302,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
     const postData = {
       name: itemData.name,
       classId: classId,
-      parentId: itemData.parentId,
+      parentId: parentIdToSend,
       description: "DEPOT Item",
       tags: tags,
       attributes: [

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { createShopGroup, fetchUsers } from '../../services/api';
-import Select from 'react-select';
 import { MultiSelect } from 'react-multi-select-component';
 
 function ShopGroupForm({ showShopGroupForm, setShowShopGroupForm }) {

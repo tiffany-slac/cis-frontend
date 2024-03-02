@@ -24,6 +24,22 @@ const Inventory = () => {
   const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
   const itemsPerPage = 5; 
 
+  useEffect(() => {
+    // Fetch initial inventory items when the component mounts
+    const fetchInitialInventory = async () => {
+      try {
+        const initialData = await fetchAllElements(itemsPerPage, currentPage, lastItemId);
+
+        setInventory(initialData.payload);
+        setLastItemId(initialData.payload[initialData.payload.length - 1]?.id || null);
+      } catch (error) {
+        console.error("Error fetching initial inventory elements:", error);
+      }
+    };
+
+    fetchInitialInventory();
+  }, []); // Run only on mount
+
   const handleItemClick = (classId) => {
     // Handle item click here (e.g., navigate to a specific form or perform an action)
     console.log(`Clicked ${classId}`);
@@ -59,22 +75,6 @@ const Inventory = () => {
       console.error("Error fetching more inventory elements:", error);
     }
   };
-
-  useEffect(() => {
-    // Fetch initial inventory items when the component mounts
-    const fetchInitialInventory = async () => {
-      try {
-        const initialData = await fetchAllElements(itemsPerPage, currentPage, lastItemId);
-
-        setInventory(initialData.payload);
-        setLastItemId(initialData.payload[initialData.payload.length - 1]?.id || null);
-      } catch (error) {
-        console.error("Error fetching initial inventory elements:", error);
-      }
-    };
-
-    fetchInitialInventory();
-  }, []); // Run only on mount
 
   // Function to handle change in primary filter selection
   const handleFilterChange = (event) => {
@@ -113,10 +113,11 @@ const Inventory = () => {
           </button>
         </div>
       </div>
+
       {/* Search Bar */}
       <div className="search-bar">
         <div className="search-wrapper">
-          <FontAwesomeIcon icon={faSearch} className="search-icon" />
+          {/* <FontAwesomeIcon icon={faSearch} className="search-icon" /> */}
           {/* Search input field */}
           <input
             type="text"
@@ -170,6 +171,7 @@ const Inventory = () => {
           <button onClick={handleLoadMore}>Load More</button>
         </div>
       </div>
+
     </div>
   );
 };
