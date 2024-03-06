@@ -24,14 +24,14 @@ function CWMadmin( ) {
     fetchAllLocations();
   }, []);
 
-  useEffect(() => {
-    console.log("fetching all work...");
-    const fetchAllWork = async () => {
-      const response = await fetchWork();
-      setWork(response.payload);
-    };
-    fetchAllWork();
-  }, []);
+  // useEffect(() => {
+  //   console.log("fetching all work...");
+  //   const fetchAllWork = async () => {
+  //     const response = await fetchWork();
+  //     setWork(response.payload);
+  //   };
+  //   fetchAllWork();
+  // }, []);
 
   useEffect(() => {
     const fetchShopGroupsData = async () => {
@@ -79,6 +79,7 @@ function CWMadmin( ) {
           </tbody>
         </table>
       </div>
+      <div className="new-class-button">
       <button className="dropbtn" onClick={() => setShowShopGroupForm(!showShopGroupForm)}>
         {showShopGroupForm ? "Close Shop Group Form" : " + Shop Group"}
       </button>
@@ -88,6 +89,7 @@ function CWMadmin( ) {
           setShowShopGroupForm={setShowShopGroupForm}
         />
       )}
+      </div>
       <div className="card-display">
         <h2>Locations</h2>
         <table className="class-table">
@@ -113,7 +115,7 @@ function CWMadmin( ) {
           </tbody>
         </table>
       </div>
-      
+
       <div className="new-class-button">
         <button className="dropbtn" onClick={() => setShowLocationForm(!showLocationForm)}>
           {showLocationForm ? "Close Location Form" : "+ Location"}

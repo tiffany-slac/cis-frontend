@@ -11,27 +11,11 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
     description: '',
     externalLocationIdentifier: '',
     locationManagerUserId: '', // Initialize locationManagerUserId state
-    locationShopGroupId: '' // Initialize locationShopGroupId state
   });
   const [users, setUsers] = useState([]);
-  const [shopGroups, setShopGroups] = useState([]);
+  // const [shopGroups, setShopGroups] = useState([]);
   const [depotItems, setDepotItems] = useState([]);
 
-
-  useEffect(() => {
-    const fetchShopGroupsData = async () => {
-      try {
-        const data = await fetchShopGroups();
-        // Assuming fetchShopGroups() returns the data directly
-        setShopGroups(data);
-      } catch (error) {
-        console.error('Error fetching shop groups:', error.message);
-        setError('Error fetching shop groups. Please try again.');
-      }
-    };
-
-    fetchShopGroupsData(); // Call the function to fetch shop groups when the component mounts
-  }, []);
 
   useEffect(() => {
     const fetchUsersData = async () => {
@@ -105,6 +89,7 @@ function LocationForm({ showLocationForm, setShowLocationForm }) {
       };
       await createLocation(locationDataWithExternalIdentifier);
       alert("Location created successfully!");
+      window.location.reload(); // Reload the page
     } catch (error) {
       console.error('Error creating location:', error);
       alert("Error creating location. Please try again.");
@@ -193,23 +178,6 @@ const formatItemName = (name) => {
               <option value="">Select Manager</option>
               {users.map(user => (
                 <option key={user.uid} value={user.mail}>{user.commonName + " " + user.surname}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="locationShopGroupId">Shop Group<span className="required">*</span></label>
-            <select
-              id="locationShopGroupId"
-              name="locationShopGroupId"
-              value={locationData.locationShopGroupId}
-              onChange={handleShopGroupSelectChange}
-              className="select-input" // Apply the select-input class here
-              required
-            >
-              <option value="">Select Shop Group</option>
-              {shopGroups.map(group => (
-                <option key={group.id} value={group.id}>{group.name}</option>
               ))}
             </select>
           </div>
