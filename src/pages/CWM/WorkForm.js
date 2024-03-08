@@ -9,6 +9,7 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
         description: '',
         workTypeId: '',
         locationId: '',
+        shopGroupId: '',
         assignedTo: [],
     });
 
@@ -92,6 +93,18 @@ const handleInputChange = (e) => {
                             id="locationId"
                             name="locationId"
                             value={workData.locationId}
+                            onChange={handleInputChange}
+                            className="form-input"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="shopGroupId" className="form-label">Shop Group ID</label>
+                        <input
+                            type="text"
+                            id="shopGroupId"
+                            name="shopGroupId"
+                            value={workData.shopGroupId}
                             onChange={handleInputChange}
                             className="form-input"
                         />

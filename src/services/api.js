@@ -22,6 +22,135 @@ export const setDomainId = async () => {
 
 /* ----------------------------------------- CORE WORK ----------------------------------------- */
 
+export const fetchAllActivity = async () => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/activity?limit=100`, // Adjust query parameters as needed
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch domain");
+    }
+  } catch (error) {
+    throw new Error("Error fetching domain:", error.message);
+  }
+};
+
+export const fetchActivity = async (workId) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/${workId}/activity`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch work");
+    }
+  } catch (error) {
+    throw new Error("Error fetching work:", error.message);
+  }
+};
+
+export const createActivity = async (activityData) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/65e908f7708a4b739302ef55/activity`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(activityData)
+      }
+    );
+
+    if (response.status === 201) {
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } else {
+      const errorData = await response.json();
+      console.error("Error creating work:", errorData);
+      throw new Error("Error creating work. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error creating work:", error);
+    return { errorCode: -1, payload: [] }; // Return a default error response
+  }
+};
+
+
+export const fetchWork = async () => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work?limit=100`, // Adjust query parameters as needed
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch domain");
+    }
+  } catch (error) {
+    throw new Error("Error fetching domain:", error.message);
+  }
+};
+
+export const fetchAWork = async (workId) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/${workId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch work");
+    }
+  } catch (error) {
+    throw new Error("Error fetching work:", error.message);
+  }
+};
+
 export const createWork = async (workData) => {
   try {
     const token = await extractJWT();
@@ -53,80 +182,89 @@ export const createWork = async (workData) => {
   }
 };
 
-export const createActivity = async () => {
+export const fetchWorkType = async () => {
   try {
     const token = await extractJWT();
+
     const response = await fetch(
-      `/api/cwm/v1/work/${workId}/activity`,
+      '/api/cwm/v1/work/work-type',
       {
-        method: "POST",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Accept': 'application/json',
           "x-vouch-idp-accesstoken": token,
-        },
+        }
       }
     );
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error("Failed to create work");
-    }
-  } catch (error) {
-    throw new Error("Error creating work:", error.message);
-  }
-};
-
-export const fetchWork = async () => {
-  try {
-    const token = await extractJWT();
-    const response = await fetch(
-      `/api/cwm/v1/work?limit=100`, // Adjust query parameters as needed
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-vouch-idp-accesstoken": token,
-        },
-      }
-    );
     if (response.status === 200) {
-      const responseData = await response.json();
-      console.log("Response Data: ", responseData);
-    }
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch work. Status: " + response.status);
+      const data = await response.json();
+      return data.payload;
+    } else {
+      const errorData = await response.json();
+      console.error('Error fetching work type:', errorData);
+      throw new Error('Error fetching work type. Please try again.');
     }
   } catch (error) {
-    console.error("Error fetching work:", error);
-    throw new Error("Error fetching work. See console for details.");
+    console.error('Error fetching work type:', error);
+    throw new Error('Network error. Please check your connection.');
   }
 };
 
-export const fetchAWork = async (workId) => {
+export const fetchActivityType = async () => {
   try {
     const token = await extractJWT();
+
     const response = await fetch(
-      `/api/cwm/v1/work/${workId}`,
+      '/api/cwm/v1/work/activity-type',
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Accept': 'application/json',
           "x-vouch-idp-accesstoken": token,
-        },
+        }
       }
     );
 
-    if (response.ok) {
+    if (response.status === 200) {
       const data = await response.json();
-      return data;
+      return data.payload;
     } else {
-      throw new Error("Failed to fetch work");
+      const errorData = await response.json();
+      console.error('Error fetching activity type:', errorData);
+      throw new Error('Error fetching activity type. Please try again.');
     }
   } catch (error) {
-    throw new Error("Error fetching work:", error.message);
+    console.error('Error fetching activity type:', error);
+    throw new Error('Network error. Please check your connection.');
+  }
+};
+
+export const fetchActivitySubtype = async () => {
+  try {
+    const token = await extractJWT();
+
+    const response = await fetch(
+      '/api/cwm/v1/work/activity-type-subtype',
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          "x-vouch-idp-accesstoken": token,
+        }
+      }
+    );
+
+    if (response.status === 200) {
+      return data.payload;
+    } else {
+      const errorData = await response.json();
+      console.error('Error fetching activity subtype:', errorData);
+      throw new Error('Error fetching activity subtype. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error fetching activity subtype:', error);
+    throw new Error('Network error. Please check your connection.');
   }
 };
 

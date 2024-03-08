@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Profile from './pages/Profile/Profile';
 import Cwm from './pages/CWM/Cwm';
 import ItemDetails from './pages/ItemDetails/ItemDetails';
+import ActivityDetails from './pages/CWM/Activity/ActivityDetails';
 import Settings from './pages/Settings/Settings';
 import Admin from './pages/admin/admin';
 import Inventory from './pages/Inventory/Inventory';
@@ -19,7 +20,8 @@ function AppRouter() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/inventory/:id" component={ItemDetails} />
-          <Route path="/work/65e11b6834c0946614377af6" component={WorkDetails} />
+          <Route path="/work/:workId/:activityId" component={ActivityDetails} />
+          <Route path="/work/:workId" component={WorkDetails} />
           <Route path="/inventory" component={Inventory} />
           <Route path="/home" component={Home} />
           <Route path="/admin" component={Admin} />
@@ -34,3 +36,4 @@ function AppRouter() {
 }
 
 export default AppRouter;
+

@@ -369,6 +369,7 @@
 }
 
 .statusmenu {
+  background-color: white;
   width: 150px; /* Adjust the width as needed */
   /* border: 1px solid #ccc; */
   height: auto;

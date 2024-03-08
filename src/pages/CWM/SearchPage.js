@@ -23,52 +23,42 @@ const SearchPage = () => {
   const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
   const [locations, setLocations] = useState([]);
   const [work, setWork] = useState([]);
-  const [awork, setAWork] = useState([]);
   const itemsPerPage = 5;
+  const history = useHistory();
 
   useEffect(() => {
     console.log("fetching locations...");
     const fetchAllLocations = async () => {
-        const response = await fetchLocations();
-        setLocations(response.payload);
+      const response = await fetchLocations();
+      setLocations(response.payload);
+      console.log(response.payload);
     };
     fetchAllLocations();
   }, []);
 
   useEffect(() => {
-    console.log("fetching a work...");
-    const fetchOneWork = async () => {
-        const response = await fetchAWork('65e11b6834c0946614377af6');
-        setAWork(response.payload);
-        console.log(response.payload);
-    };
-    fetchOneWork();
-  }, []);
-
-
-  useEffect(() => {
-    console.log("fetching all work...");
-    const fetchAllWork = async () => {
+    const fetchData = async () => {
       try {
+        console.log("fetching all work...");
         const response = await fetchWork();
         if (response && response.payload) {
           setWork(response.payload);
           console.log("Work:", response.payload);
         } else {
-          console.error("Failed to fetch work:", response);
+          console.error("Error fetching work:", response.errorCode);
         }
       } catch (error) {
-        console.error("Error fetching work:", error.message);
+        console.error("Error fetching work:", error);
       }
     };
-    fetchAllWork();
+    fetchData();
   }, []);
-  
 
-  const handleItemClick = (classId) => {
-    // Handle item click here (e.g., navigate to a specific form or perform an action)
-    console.log(`Clicked ${classId}`);
+  const handleCardClick = (workId) => {
+    history.push(`/work/${workId}`); // Navigate to the work details page with the work ID
+    window.location.reload(); // Reload the page
   };
+
 
   // Function to handle search based on user input
   const handleSearch = async () => {
@@ -123,13 +113,6 @@ const SearchPage = () => {
     setSelectedFilter(selectedValue);
   };
 
-  const history = useHistory();
-
-  // Function to handle click on a card item and navigate to its detail page
-  const handleCardClick = (id) => {
-    history.push(`/work/65e11b6834c0946614377af6`); // Navigate to detail page with the item _id
-  };
-
   return (
     <div>
 
@@ -167,38 +150,13 @@ const SearchPage = () => {
                 <div key={item.id} onClick={() => handleCardClick(item.id)}>
                   <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
                   <div className="cwm-card">
-                    <h2>{formatItemName(item.name)}</h2>
-                    <p>ID: {item.id}</p>
+                    <h2>{formatItemName(item.title)}</h2>
+                    <p>ID: {item.description}</p>
                   </div>
                 </div>
               ))
             ) : (
               <div>No CATERs available</div>
-            )}
-          </div>
-          {/* Load More Button */}
-          <div className="load-more-button">
-            <button onClick={handleLoadMore}>Load More</button>
-          </div>
-        </div>
-
-        {/* Inventory Items */}
-        <div className="assets-cards-container">
-          <div className="assets-cards">
-            {locations && locations.length > 0 ? (
-              locations.map((item) => (
-                <div key={item.id} onClick={() => handleCardClick(item.id)}>
-                  <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
-                  <div className="cwm-card">
-                    <h2>{formatItemName(item.name)}</h2>
-                    <p>ID: {item.id}</p>
-                    {/* <p>Class ID: {item.classId}</p> */}
-                    {/* Add other information here */}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div>No locations available</div>
             )}
           </div>
           {/* Load More Button */}
