@@ -27,11 +27,9 @@ const SearchPage = () => {
   const history = useHistory();
 
   useEffect(() => {
-    console.log("fetching locations...");
     const fetchAllLocations = async () => {
       const response = await fetchLocations();
       setLocations(response.payload);
-      console.log(response.payload);
     };
     fetchAllLocations();
   }, []);
@@ -39,11 +37,9 @@ const SearchPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("fetching all work...");
         const response = await fetchWork();
         if (response && response.payload) {
           setWork(response.payload);
-          console.log("Work:", response.payload);
         } else {
           console.error("Error fetching work:", response.errorCode);
         }
@@ -151,7 +147,7 @@ const SearchPage = () => {
                   <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
                   <div className="cwm-card">
                     <h2>{formatItemName(item.title)}</h2>
-                    <p>ID: {item.description}</p>
+                    <p>{item.description}</p>
                   </div>
                 </div>
               ))

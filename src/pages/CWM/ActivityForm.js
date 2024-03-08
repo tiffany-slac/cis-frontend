@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
-import { createActivity } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { createActivity, fetchActivityType, fetchActivitySubtype } from '../../services/api';
 import { useParams } from 'react-router-dom';
 import './ActivityForm.css';
 
 function ActivityForm({ showActivityForm, setShowActivityForm }) {
     // State to manage form input values
-    const { workId } = useParams(); 
+    const { workId } = useParams();
     const [activityData, setactivityData] = useState({
         title: '',
         description: '',
         activityTypeId: '',
         activityTypeSubtype: '',
     });
+    const [activityTypes, setActivityTypes] = useState([]);
+    const [activitySubtypes, setActivitySubtypes] = useState([]);
+
+    useEffect(() => {
+        const fetchActivityData = async () => {
+            try {
+                const typeResponse = await fetchActivityType();
+                setActivityTypes(typeResponse || []);
+                console.log(typeResponse);
+
+                const subtypeResponse = await fetchActivitySubtype();
+                setActivitySubtypes(subtypeResponse || []);
+                console.log(subtypeResponse);
+            } catch (error) {
+                console.error('Error fetching activity data:', error);
+            }
+        };
+
+        fetchActivityData();
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -30,8 +50,10 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setactivityData
-({ ...activityData
-    , [name]: value });
+            ({
+                ...activityData
+                , [name]: value
+            });
     };
 
     return (
@@ -51,7 +73,7 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                             id="title"
                             name="title"
                             value={activityData
-                        .title}
+                                .title}
                             onChange={handleInputChange}
                             className="form-input"
                         />
@@ -64,36 +86,43 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                             id="description"
                             name="description"
                             value={activityData
-                        .description}
+                                .description}
                             onChange={handleInputChange}
                             className="form-input"
                         />
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="activityTypeId" className="form-label">Activity Type ID</label>
-                        <input
-                            type="text"
+                        <label htmlFor="activityTypeId" className="form-label">Activity Type</label>
+                        <select
                             id="activityTypeId"
                             name="activityTypeId"
-                            value={activityData
-                        .activityTypeId}
+                            value={activityData.activityTypeId}
                             onChange={handleInputChange}
-                            className="form-input"
-                        />
+                            className="form-select"
+                        >
+                            <option value="">Select Activity Type</option>
+                            {activityTypes.map(type => (
+                                <option key={type.id} value={type.id}>{type.title}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="activityTypeSubtype" className="form-label">Activity Type Subtype</label>
-                        <input
-                            type="text"
+                        <label htmlFor="activityTypeSubtype" className="form-label">Activity Subtype</label>
+                        <select
                             id="activityTypeSubtype"
                             name="activityTypeSubtype"
-                            value={activityData
-                        .activityTypeSubtype}
+                            value={activityData.activityTypeSubtype}
                             onChange={handleInputChange}
-                            className="form-input"
-                        />
+                            className="form-select"
+                        >
+                            <option value="">Select Activity Subtype</option>
+                            {activitySubtypes.map((subtype, index) => (
+                                <option key={index} value={subtype}>{subtype}</option>
+                            ))}
+                        </select>
+
                     </div>
 
                     <button type="submit" className="form-button">Create Work</button>

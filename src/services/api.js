@@ -71,11 +71,11 @@ export const fetchActivity = async (workId) => {
   }
 };
 
-export const createActivity = async (activityData) => {
+export const createActivity = async (workId, activityData) => {
   try {
     const token = await extractJWT();
     const response = await fetch(
-      `/api/cwm/v1/work/65e908f7708a4b739302ef55/activity`,
+      `/api/cwm/v1/work/${workId}/activity`,
       {
         method: "POST",
         headers: {
@@ -167,7 +167,7 @@ export const createWork = async (workData) => {
       }
     );
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       const data = await response.json();
       console.log(data);
       return data;
@@ -256,7 +256,8 @@ export const fetchActivitySubtype = async () => {
     );
 
     if (response.status === 200) {
-      return data.payload;
+      const responseData = await response.json();
+      return responseData.payload;
     } else {
       const errorData = await response.json();
       console.error('Error fetching activity subtype:', errorData);
@@ -264,7 +265,7 @@ export const fetchActivitySubtype = async () => {
     }
   } catch (error) {
     console.error('Error fetching activity subtype:', error);
-    throw new Error('Network error. Please check your connection.');
+    throw new Error('Network error. Please check your connection.', response.errorMessage);
   }
 };
 
@@ -317,7 +318,6 @@ export const fetchUsers = async (search) => {
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log(data);
       return data;
     } else {
       const errorData = await response.json();
@@ -1164,7 +1164,6 @@ export const fetchAllElements = async (limit = 10, page = 1, anchorId = null, se
 
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       return data;
     } else {
       // Log details before throwing the error

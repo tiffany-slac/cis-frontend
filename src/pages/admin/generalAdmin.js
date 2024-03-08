@@ -9,7 +9,6 @@ function generalAdmin() {
     const [locations, setLocations] = useState([]);
 
     useEffect(() => {
-        console.log("fetching users...");
         const fetchTheUsers = async () => {
             const response = await fetchUsers();
             setUsers(response.payload);

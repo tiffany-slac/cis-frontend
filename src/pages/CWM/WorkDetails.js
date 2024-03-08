@@ -7,7 +7,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import './WorkDetails.css';
 
 const WorkDetails = () => {
-    const { id } = useParams(); // Get the asset ID from the URL params
+    const { workId } = useParams(); // Get the asset ID from the URL params
     const [inventoryDetails, setInventoryDetails] = useState(null); // State to hold the asset details
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Jobs');
@@ -26,7 +26,7 @@ const WorkDetails = () => {
     useEffect(() => {
         const fetchWorkDetails = async () => {
             try {
-                const response = await fetchAWork('65e908f7708a4b739302ef55');
+                const response = await fetchAWork(workId);
                 setInventoryDetails(response.payload);
                 console.log(response.payload);
             } catch (error) {
@@ -36,12 +36,12 @@ const WorkDetails = () => {
             }
         };
         fetchWorkDetails();
-    }, [id]);
+    }, [workId]);
 
     useEffect(() => {
         const fetchActivities = async () => {
             try {
-                const response = await fetchActivity('65e908f7708a4b739302ef55');
+                const response = await fetchActivity(workId);
                 setActivities(response.payload);
                 console.log(response.payload);
             } catch (error) {
@@ -51,7 +51,7 @@ const WorkDetails = () => {
             }
         };
         fetchActivities();
-    }, [id]);
+    }, [workId]);
 
     const scrollToContent = (item) => {
         const contentElement = document.getElementById(item.toLowerCase());
@@ -85,7 +85,7 @@ const WorkDetails = () => {
                     {/* Asset Details */}
                     {inventoryDetails ? (
                         <div>
-                            <p>CATER ID: 157873 (TEC) </p>
+                            <p>CATER ID: {inventoryDetails.title} (TEC) </p>
                             <hr className="line" />
 
                             <div className="container">
@@ -94,8 +94,8 @@ const WorkDetails = () => {
                                     <p className="work-label">Description</p>
                                 </div>
                                 <div className="column right-column">
-                                    <p>Install PRV on vac valve panel in gun room.</p>
-                                    <p>Install PRV on vac valve panel in gun room. Install PRV on vac valve panel in gun room. Install PRV on vac valve panel in gun room.</p>
+                                    <p>{inventoryDetails.title}</p>
+                                    <p>{inventoryDetails.description}</p>
                                 </div>
                             </div>
                             {/* <p>ID: {inventoryDetails.id}</p> */}
@@ -110,11 +110,11 @@ const WorkDetails = () => {
                                         <p className="work-label">Shop</p>
                                     </div>
                                     <div className="column right-column">
-                                        <p>Hardware</p>
-                                        <p>HW Problem</p>
-                                        <p>Injector West</p>
-                                        <p>Owens, Alden R</p>
-                                        <p>CEFOI</p>
+                                        <p>{inventoryDetails.title}</p>
+                                        <p>{inventoryDetails.workType.title}</p>
+                                        <p>{inventoryDetails.location.name}</p>
+                                        <p>User1, User1 </p>
+                                        <p>{inventoryDetails.shopGroup.name}</p>
                                     </div>
                                 </div>
                             </div>
