@@ -8,90 +8,15 @@
     /* justify-content: space-between; */
 }
 
-.vertical-progress-bar {
-    /* background-color: #f5f5f5;  */
-    border-radius: 5px; /* Rounded borders */
-    /* display: flex; */
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.progress-item {
-    padding: 10px;
-    cursor: pointer;
-    position: relative; /* Required for positioning pseudo-elements */
-    transition: background-color 0.3s ease;
-    left: 30px;
-}
-
-.progress-circle {
-    content: ''; /* Required for pseudo-elements */
-    position: absolute; /* Position the circles */
-    left: -15px; /* Adjust distance from the progress item */
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%);
-    width: 10px; /* Circle width */
-    height: 10px; /* Circle height */
-    border-radius: 50%; /* Make it a circle */
-    background-color: #f5f5f5; /* Inactive color */
-    border: 1px solid #007bff; /* Circle border */
-}
-
-/* For filled circles */
-.progress-item.completed .progress-circle {
-    background-color: #007bff; /* Active color */
-}
-
-/* For active step */
-.progress-item.active .progress-circle {
-    background-color: #007bff; /* Active color */
-}
-
-/* For inactive circles */
-.progress-item.incomplete .progress-circle {
-    background-color: #f5f5f5; /* Inactive color */
-    border: 1px solid #007bff; /* Circle border */
-}
-
-.work-statusmenu {
-    background-color: white;
-    width: 10%;
-    /* width: 150px; */
-    /* Adjust the width as needed */
-    /* border: 1px solid #ccc; */
-    height: 100%;
-    /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); Adding shadow */
-    border-radius: 5px;
-    /* Rounded border */
-}
-
-.work-statusmenu ul {
-    list-style: none;
-    /* Remove bullet points */
-    padding: 0;
-}
-
-.work-statusmenu button {
-    border: none;
-    /* Remove button borders */
-    background: none;
-    /* Transparent background */
-    text-align: left;
-    /* Align text to the left */
-    padding: 10px 15px;
-    width: 100%;
-    /* Make buttons fill the menu */
-    cursor: pointer;
-}
-
-.work-details-container {
-    margin-left: 20px;
+.activity-details-container {
+    margin-left: 50px;
+    margin-right: 50px;
     display: flex;
     flex-direction: column;
-    width: 60%;
+    /* width: 70%; */
 }
 
-.work-details-container2 {
+.activity-details-container2 {
     margin-left: 20px;
     display: flex;
     width: 25%;

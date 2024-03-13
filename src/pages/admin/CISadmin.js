@@ -187,6 +187,18 @@ function CISadmin() {
 
       {/* Button to add a new class */}
       <div className="new-class-button">
+      <button className="dropbtn" onClick={() => setShowClassForm(!showClassForm)}>
+        {showClassForm ? "Close Class Form" : " + Class"}
+      </button>
+      {showClassForm && (
+        <ClassForm
+          showClassForm={showClassForm}
+          setShowClassForm={setShowClassForm}
+        />
+      )}
+</div>
+
+      {/* <div className="new-class-button">
         <button
           onClick={() => {
             handleItemClick("Class");
@@ -203,6 +215,13 @@ function CISadmin() {
           />
         )}
       </div>
+
+      {showClassForm && (
+            <ClassForm setShowClassForm={setShowClassForm} />
+          )} */}
+
+      {/* {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />} */}
+      
 
       {/* Card container for displaying statistics */}
       {/* <div className="card-container"> */}

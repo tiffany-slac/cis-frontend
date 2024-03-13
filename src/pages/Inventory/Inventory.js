@@ -8,13 +8,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import "./Inventory.css";
 
-// Function to capitalize the first letter and replace dashes with spaces in item names
-function formatItemName(name) {
-  const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-  const finalName = formattedName.replace(/-/g, ' ');
-  return finalName;
-}
-
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -22,7 +15,7 @@ const Inventory = () => {
   const [searchInput, setSearchInput] = useState(""); // State to store the search input
   const [currentPage, setCurrentPage] = useState(1); // New state for current page
   const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
-  const itemsPerPage = 5; 
+  const itemsPerPage = 5;
 
   useEffect(() => {
     // Fetch initial inventory items when the component mounts
@@ -51,9 +44,9 @@ const Inventory = () => {
       // Reset currentPage and lastItemId when initiating a new search
       setCurrentPage(1);
       setLastItemId(null);
-  
+
       const searchData = await fetchAllElements(5, 1, null, searchInput); // Assuming default values for limit, page, and anchorId
-  
+
       setInventory(searchData.payload);
       setLastItemId(searchData.payload[searchData.payload.length - 1]?.id || null);
     } catch (error) {
@@ -65,7 +58,7 @@ const Inventory = () => {
   const handleLoadMore = async () => {
     try {
       const nextPageData = await fetchAllElements(itemsPerPage, currentPage + 1, lastItemId);
-  
+
       if (nextPageData.payload.length > 0) {
         setInventory((prevInventory) => [...prevInventory, ...nextPageData.payload]);
         setCurrentPage((prevPage) => prevPage + 1);
@@ -89,9 +82,17 @@ const Inventory = () => {
     history.push(`/inventory/${id}`); // Navigate to detail page with the item _id
   };
 
+  // Function to capitalize the first letter and replace dashes with spaces in item names
+  function formatItemName(name) {
+    const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+    const finalName = formattedName.replace(/-/g, ' ');
+    return finalName;
+  }
+
   return (
     <div className="search-page">
       <br></br>
+      
       {/* New Item Form */}
       <div className="top-right">
         <div className="dropdown">
@@ -146,7 +147,7 @@ const Inventory = () => {
           </div>
         )}
       </div>
-      
+
       {/* Inventory Items */}
       <div className="assets-cards-container">
         <div className="assets-cards">
@@ -154,10 +155,10 @@ const Inventory = () => {
             inventory.map((item) => (
               <div key={item.id} onClick={() => handleCardClick(item.id)}>
                 <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
-                <div className="card">
-                  <h2>{formatItemName(item.name)}</h2>
+                <div className="inventory-card">
                   <p>ID: {item.id}</p>
-                  <p>Class ID: {item.classId}</p>
+                  <h2>{formatItemName(item.name)}</h2>
+                  <p>{item.id}</p>
                   {/* Add other information here */}
                 </div>
               </div>

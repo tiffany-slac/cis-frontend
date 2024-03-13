@@ -650,16 +650,7 @@ const ItemDetails = () => {
                   }}
                 >
                   Location
-                  {/* <button className="add-button" onClick={handleButtonClick}>
-                    +
-                  </button> */}
                 </h3>
-                {/* <div className="card-header">
-                  Location History{" "}
-                  <button className="add-button" onClick={handleButtonClick}>
-                    +
-                  </button>
-                </div> */}
                 <div className="card-body">
                   {loading ? (
                     <p>Loading...</p>

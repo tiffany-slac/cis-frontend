@@ -12,7 +12,7 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setSho
     };
 
     return (
-        <div className="sticky-header">
+        <div className="search-extension">
 
             {/* Search Bar */}
             <div className="search-wrapper">

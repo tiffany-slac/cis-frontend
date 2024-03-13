@@ -46,6 +46,31 @@ export const fetchAllActivity = async () => {
   }
 };
 
+export const fetchAActivity = async (workId, activityId) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/${workId}/activity/${activityId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch work");
+    }
+  } catch (error) {
+    throw new Error("Error fetching work:", error.message);
+  }
+};
+
 export const fetchActivity = async (workId) => {
   try {
     const token = await extractJWT();
@@ -101,6 +126,34 @@ export const createActivity = async (workId, activityData) => {
   }
 };
 
+export const updateWork = async (workId, workData) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/${workId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(workData)
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      console.log("Updated work - api.js");
+      return data;
+    } else {
+      throw new Error("Failed to update work");
+    }
+  } catch (error) {
+    throw new Error("Error updating work:", error.message);
+  }
+};
+
 
 export const fetchWork = async () => {
   try {
@@ -117,6 +170,7 @@ export const fetchWork = async () => {
     );
     if (response.ok) {
       const data = await response.json();
+      console.log(data)
       return data;
     } else {
       throw new Error("Failed to fetch domain");

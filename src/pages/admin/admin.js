@@ -15,11 +15,13 @@ function Admin() {
   return (
     <Router>
       <div>
+        <div className="admin-tab-extension">
         <div className="tab-bar">
           <NavLink to="/admin/generalAdmin">Admin</NavLink>
           <NavLink to="/admin/CISadmin">CIS</NavLink>
           <NavLink to="/admin/CWMadmin">CWM</NavLink>
           <NavLink to="/admin/ELOGadmin">ELOG</NavLink>
+        </div>
         </div>
         <Switch>
           <Route exact path="/">

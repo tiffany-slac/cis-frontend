@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createInventoryClass, fetchAllClass, fetchClass } from "../../services/api";
+import './ClassForm.css';
 
 function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   // State for managing form input values
@@ -165,7 +166,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
           </span>
 
           <div>
-            <h1 style={{ color: '#333333', fontWeight: 'normal', fontSize: '16px', }}>NEW OBJECT</h1>
+            <h1 style={{ color: '#333333', fontWeight: 'normal', fontSize: '16px', }}>NEW CLASS</h1>
             {/* <hr style={{ border: 'none', borderBottom: '1px solid #333333', margin: '10px 0' }} /> */}
           </div>
 

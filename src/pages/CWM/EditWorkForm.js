@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { createWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers } from '../../services/api';
+import { useParams } from 'react-router-dom';
+import { fetchAWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers, updateWork } from '../../services/api';
 import './WorkForm.css';
 
-function WorkForm({ showWorkForm, setShowWorkForm }) {
+function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
     // State to manage form input values
+    const { workId } = useParams();
     const [workData, setWorkData] = useState({
         title: '',
         description: '',
@@ -18,54 +20,80 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const fetchWorkTypes = async () => {
+        const fetchData = async () => {
             try {
+                const workResponse = await fetchAWork(workId);
+                const { title, description, workTypeId, locationId, shopGroupId, assignedTo } = workResponse.payload;
+                setWorkData({ title, description, workTypeId, locationId, shopGroupId, assignedTo });
+
                 const typesResponse = await fetchWorkType();
                 setWorkTypes(typesResponse || []);
-            } catch (error) {
-                console.error('Error fetching work types:', error);
-            }
-        };
 
-        const fetchWorkLocations = async () => {
-            try {
                 const locationsResponse = await fetchLocations();
                 setLocations(locationsResponse.payload || []);
-            } catch (error) {
-                console.error('Error fetching locations:', error);
-            }
-        };
 
-        const fetchWorkShopGroups = async () => {
-            try {
                 const shopGroupsResponse = await fetchShopGroups();
                 setShopGroups(shopGroupsResponse || []);
-            } catch (error) {
-                console.error('Error fetching shop groups:', error);
-            }
-        };
 
-        const fetchWorkUsers = async () => {
-            try {
                 const usersResponse = await fetchUsers();
                 setUsers(usersResponse.payload || []);
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching data:', error);
             }
         };
+        fetchData();
+    }, [workId]);
 
-        fetchWorkTypes();
-        fetchWorkLocations();
-        fetchWorkShopGroups();
-        fetchWorkUsers();
-    }, []);
+    // useEffect(() => {
+    //     const fetchWorkTypes = async () => {
+    //         try {
+    //             const typesResponse = await fetchWorkType();
+    //             setWorkTypes(typesResponse || []);
+    //         } catch (error) {
+    //             console.error('Error fetching work types:', error);
+    //         }
+    //     };
+
+    //     const fetchWorkLocations = async () => {
+    //         try {
+    //             const locationsResponse = await fetchLocations();
+    //             setLocations(locationsResponse.payload || []);
+    //         } catch (error) {
+    //             console.error('Error fetching locations:', error);
+    //         }
+    //     };
+
+    //     const fetchWorkShopGroups = async () => {
+    //         try {
+    //             const shopGroupsResponse = await fetchShopGroups();
+    //             setShopGroups(shopGroupsResponse || []);
+    //         } catch (error) {
+    //             console.error('Error fetching shop groups:', error);
+    //         }
+    //     };
+
+    //     const fetchWorkUsers = async () => {
+    //         try {
+    //             const usersResponse = await fetchUsers();
+    //             setUsers(usersResponse.payload || []);
+    //         } catch (error) {
+    //             console.error('Error fetching users:', error);
+    //         }
+    //     };
+
+    //     fetchWorkTypes();
+    //     fetchWorkLocations();
+    //     fetchWorkShopGroups();
+    //     fetchWorkUsers();
+    // }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await createWork(workData);
-            alert("Work created successfully!");
-            setShowWorkForm(false); // Close the form
+            console.log(workData);
+            await updateWork(workId, workData);
+            alert("Work updated successfully!");
+            setshowEditWorkForm(false); // Close the form
             window.location.reload(); // Reload the page
         } catch (error) {
             console.error('Error creating shop group:', error);
@@ -90,13 +118,13 @@ const handleInputChange = (e) => {
 
 
     return (
-        <div className={`modal ${showWorkForm ? "show" : "hide"}`}>
+        <div className={`modal ${showEditWorkForm ? "show" : "hide"}`}>
             <div className="form-content">
-                <span className="close" onClick={() => setShowWorkForm(false)}>
+                <span className="close" onClick={() => setshowEditWorkForm(false)}>
                     &times;
                 </span>
 
-                <h1 className="form-title">NEW WORK FORM</h1> {/* Title for the form */}
+                <h1 className="form-title">UPDATE WORK</h1> {/* Title for the form */}
 
                 <form onSubmit={handleSubmit} className="work-form">
                     <div className="form-group">
@@ -108,7 +136,7 @@ const handleInputChange = (e) => {
                             value={workData.title}
                             onChange={handleInputChange}
                             className="form-input"
-                            required
+                            
                         />
                     </div>
 
@@ -120,8 +148,8 @@ const handleInputChange = (e) => {
                             name="description"
                             value={workData.description}
                             onChange={handleInputChange}
-                            className="form-input"
-                            required
+                            className="form-textarea"
+                            
                         />
                     </div>
 
@@ -133,7 +161,7 @@ const handleInputChange = (e) => {
                             value={workData.workTypeId}
                             onChange={handleInputChange}
                             className="form-select"
-                            required
+    
                         >
                             <option value="">Select Work Type</option>
                             {workTypes.map(type => (
@@ -150,7 +178,7 @@ const handleInputChange = (e) => {
                             value={workData.locationId}
                             onChange={handleInputChange}
                             className="form-select"
-                            required
+                            
                         >
                             <option value="">Select Location</option>
                             {locations.map(location => (
@@ -194,7 +222,7 @@ const handleInputChange = (e) => {
 
                     </div>
 
-                    <button type="submit" className="form-button">Create Work</button>
+                    <button type="submit" className="form-button">Update Work</button>
                 </form>
 
             </div>
@@ -202,4 +230,4 @@ const handleInputChange = (e) => {
     );
 }
 
-export default WorkForm;
+export default EditWorkForm;

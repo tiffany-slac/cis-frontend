@@ -1,39 +1,24 @@
-// Cwm.js
 import React, { useState, useEffect } from "react";
-import { fetchAllElements, fetchLocations, fetchWork, fetchAWork } from "../../services/api";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTools, faCog, faPenClip } from '@fortawesome/free-solid-svg-icons';
+import { fetchWork } from "../../services/api";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SubHeader from './SubHeader.js';
-import "./Cwm.css";
-
-// Function to capitalize the first letter and replace dashes with spaces in item names
-function formatItemName(name) {
-  const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-  const finalName = formattedName.replace(/-/g, ' ');
-  return finalName;
-}
+import "./SearchPage.css";
 
 const SearchPage = () => {
-  const [inventory, setInventory] = useState([]);
   const [showLocationForm, setShowLocationForm] = useState(false);
   const [showWorkForm, setShowWorkForm] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [searchInput, setSearchInput] = useState(""); // State to store the search input
   const [currentPage, setCurrentPage] = useState(1); // New state for current page
   const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
-  const [locations, setLocations] = useState([]);
   const [work, setWork] = useState([]);
   const itemsPerPage = 5;
   const history = useHistory();
 
-  useEffect(() => {
-    const fetchAllLocations = async () => {
-      const response = await fetchLocations();
-      setLocations(response.payload);
-    };
-    fetchAllLocations();
-  }, []);
-
+  // Fetch all work when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,7 +40,6 @@ const SearchPage = () => {
     window.location.reload(); // Reload the page
   };
 
-
   // Function to handle search based on user input
   const handleSearch = async () => {
     try {
@@ -63,51 +47,42 @@ const SearchPage = () => {
       setCurrentPage(1);
       setLastItemId(null);
 
-      const searchData = await fetchAllElements(5, 1, null, searchInput); // Assuming default values for limit, page, and anchorId
+      const searchData = await fetchWork(5, 1, null, searchInput); // Assuming default values for limit, page, and anchorId
 
-      setInventory(searchData.payload);
+      setWork(searchData.payload);
       setLastItemId(searchData.payload[searchData.payload.length - 1]?.id || null);
     } catch (error) {
-      console.error("Error fetching inventory elements:", error);
+      console.error("Error fetching work:", error);
     }
   };
 
   // Function to load more inventory items
   const handleLoadMore = async () => {
     try {
-      const nextPageData = await fetchAllElements(itemsPerPage, currentPage + 1, lastItemId);
+      const nextPageData = await fetchWork(itemsPerPage, currentPage + 1, lastItemId);
 
       if (nextPageData.payload.length > 0) {
-        setInventory((prevInventory) => [...prevInventory, ...nextPageData.payload]);
+        setWork((prevWork) => [...prevWork, ...nextPageData.payload]);
         setCurrentPage((prevPage) => prevPage + 1);
         setLastItemId(nextPageData.payload[nextPageData.payload.length - 1].id);
       }
     } catch (error) {
-      console.error("Error fetching more inventory elements:", error);
+      console.error("Error fetching work:", error);
     }
   };
-
-  useEffect(() => {
-    // Fetch initial inventory items when the component mounts
-    const fetchInitialInventory = async () => {
-      try {
-        const initialData = await fetchAllElements(itemsPerPage, currentPage, lastItemId);
-
-        setInventory(initialData.payload);
-        setLastItemId(initialData.payload[initialData.payload.length - 1]?.id || null);
-      } catch (error) {
-        console.error("Error fetching initial inventory elements:", error);
-      }
-    };
-
-    fetchInitialInventory();
-  }, []); // Run only on mount
 
   // Function to handle change in primary filter selection
   const handleFilterChange = (event) => {
     const selectedValue = event.target.value;
     setSelectedFilter(selectedValue);
   };
+
+  // Function to capitalize the first letter and replace dashes with spaces in item names
+  function formatItemName(name) {
+    const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+    const finalName = formattedName.replace(/-/g, ' ');
+    return finalName;
+  }
 
   return (
     <div>
@@ -138,28 +113,71 @@ const SearchPage = () => {
           )}
         </div>
 
-        {/* Inventory Items */}
         <div className="assets-cards-container">
-          <div className="assets-cards">
-            {work && work.length > 0 ? (
-              work.map((item) => (
+          {work && work.length > 0 ? (
+            work.map((item) => {
+              // Calculate isNew for each item
+              const createdDate = new Date(item.createdDate);
+              const currentTime = new Date();
+              const timeDifference = currentTime - createdDate;
+              const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+              // Check if the time difference is less than 24 hours
+              const isNew = timeDifference < twentyFourHours;
+
+              return (
                 <div key={item.id} onClick={() => handleCardClick(item.id)}>
-                  <Link to={`/inventory/${item.id}`} style={{ textDecoration: 'none' }}></Link>
-                  <div className="cwm-card">
-                    <h2>{formatItemName(item.title)}</h2>
-                    <p>{item.description}</p>
-                  </div>
+                  <Link to={`/work/${item.id}`} style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
+                    <div className="work-cards">
+                      {/* Hardware Icon */}
+                      <div className="hardware-icon">
+                        {item.workType.title && item.workType.title.startsWith('sw') && <FontAwesomeIcon icon={faCog} className="software" />}
+                        {item.workType.title && item.workType.title.startsWith('hw') && <FontAwesomeIcon icon={faTools} className="hardware" />}
+                        {(!item.workType.title || !item.workType.title.startsWith('sw')) && (!item.workType.title || !item.workType.title.startsWith('hw')) && <FontAwesomeIcon icon={faPenClip} className="request" />}
+                      </div>
+
+                      {/* First Column */}
+                      <div className="first-column">
+                        {/* Colored Tags */}
+                        <div className="colored-tags">
+                          {item.statusHistory.length > 0 && <span className="tag">{item.statusHistory[0].status}</span>}
+                        </div>
+
+                        {/* Description */}
+                        <p className="description">{item.description}</p>
+
+                        {/* Additional Information */}
+                        <div className="additional-info">
+                          <p>
+                            {`# ${item.title}`} &bull; {`Created By: ${item.createdBy}`} &bull; {`Assigned To: ${item.assignedTo}`}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Second Column */}
+                      <div className="second-column">
+                        <div className="row">
+                          <p className="cwm-content"><span className="cwm-label">SHOP </span>{item.shopGroup.name}</p>
+                        </div>
+                        <div className="row">
+                          <p className="cwm-content"><span className="cwm-label">AREA </span>{item.location.name}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              ))
-            ) : (
-              <div>No CATERs available</div>
-            )}
-          </div>
+              );
+            })
+          ) : (
+            <div>No CATERs available</div>
+          )}
+
           {/* Load More Button */}
           <div className="load-more-button">
             <button onClick={handleLoadMore}>Load More</button>
           </div>
         </div>
+
 
       </div>
     </div>

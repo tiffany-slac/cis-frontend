@@ -6,7 +6,7 @@ import ShopGroupForm from "./ShopGroupForm.js";
 import LocationForm from './../CWM/LocationForm.js';
 
 
-function CWMadmin( ) {
+function CWMadmin() {
   const [shopGroups, setShopGroups] = useState([]);
   const [error, setError] = useState(null);
   const [showShopGroupForm, setShowShopGroupForm] = useState(false);
@@ -23,15 +23,6 @@ function CWMadmin( ) {
     };
     fetchAllLocations();
   }, []);
-
-  // useEffect(() => {
-  //   console.log("fetching all work...");
-  //   const fetchAllWork = async () => {
-  //     const response = await fetchWork();
-  //     setWork(response.payload);
-  //   };
-  //   fetchAllWork();
-  // }, []);
 
   useEffect(() => {
     const fetchShopGroupsData = async () => {
@@ -54,50 +45,15 @@ function CWMadmin( ) {
   return (
     <div className="cwm-admin">
       <h3 style={{ textAlign: 'center' }}>CWM Administrator</h3>
-      <div className="card-display">
-        <h2>Shop Groups</h2>
-        <table className="class-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shopGroups.map((classItem, index) => (
-              <tr
-                key={index}
-                onClick={() => handleRowClick(classItem.id)}
-                className="class-item"
-              >
-                <td>{classItem.id}</td>
-                <td>{classItem.name}</td>
-                <td>{classItem.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="new-class-button">
-      <button className="dropbtn" onClick={() => setShowShopGroupForm(!showShopGroupForm)}>
-        {showShopGroupForm ? "Close Shop Group Form" : " + Shop Group"}
-      </button>
-      {showShopGroupForm && (
-        <ShopGroupForm
-          showShopGroupForm={showShopGroupForm}
-          setShowShopGroupForm={setShowShopGroupForm}
-        />
-      )}
-      </div>
+
       <div className="card-display">
         <h2>Locations</h2>
         <table className="class-table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Name</th>
               <th>Description</th>
+              <th>Location Manager</th>
             </tr>
           </thead>
           <tbody>
@@ -107,9 +63,9 @@ function CWMadmin( ) {
                 onClick={() => handleRowClick(location.id)}
                 className="class-item"
               >
-                <td>{location.id}</td>
                 <td>{location.name}</td>
                 <td>{location.description}</td>
+                <td>{location.locationManagerUserId}</td>
               </tr>
             ))}
           </tbody>
@@ -127,6 +83,50 @@ function CWMadmin( ) {
           />
         )}
       </div>
+
+      <div className="card-display">
+        <h2>Shop Groups</h2>
+        <table className="class-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Users</th>
+            </tr>
+          </thead>
+          <tbody>
+            {shopGroups.map((shopGroupItem, index) => {
+              const userEmails = shopGroupItem.users.map(userItem => userItem.user.mail).join(", ");
+
+              return (
+                <tr
+                  key={index}
+                  onClick={() => handleRowClick(shopGroupItem.id)}
+                  className="class-item"
+                >
+                  <td>{shopGroupItem.name}</td>
+                  <td>{shopGroupItem.description}</td>
+                  <td>{userEmails}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+
+      <div className="new-class-button">
+        <button className="dropbtn" onClick={() => setShowShopGroupForm(!showShopGroupForm)}>
+          {showShopGroupForm ? "Close Shop Group Form" : " + Shop Group"}
+        </button>
+        {showShopGroupForm && (
+          <ShopGroupForm
+            showShopGroupForm={showShopGroupForm}
+            setShowShopGroupForm={setShowShopGroupForm}
+          />
+        )}
+      </div>
+
     </div>
   );
 }

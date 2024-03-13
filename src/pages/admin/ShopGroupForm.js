@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createShopGroup, fetchUsers } from '../../services/api';
+import Select from 'react-select';
 import { MultiSelect } from 'react-multi-select-component';
 
 function ShopGroupForm({ showShopGroupForm, setShowShopGroupForm }) {
@@ -12,10 +13,11 @@ function ShopGroupForm({ showShopGroupForm, setShowShopGroupForm }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   useEffect(() => {
-    console.log("fetching domain...");
+    console.log("fetching users...");
     const fetchTheUsers = async () => {
         const response = await fetchUsers();
         setUsers(response.payload);
+        console.log(response.payload);
     };
     fetchTheUsers(); // Call the function to fetch class types when the component mounts
 }, []);
@@ -29,17 +31,23 @@ function ShopGroupForm({ showShopGroupForm, setShowShopGroupForm }) {
   };
 
   const handleUserChange = (selectedOptions) => {
-    const selectedEmails = selectedOptions.map((option) => option.value);
+    const formattedUsers = selectedOptions.map((option) => ({
+      userId: option.value,
+      isLeader: false  // Assuming all users are not leaders initially
+    }));
     setShopGroupData((prevData) => ({
       ...prevData,
-      userEmails: selectedEmails
+      users: formattedUsers
     }));
     setSelectedUsers(selectedOptions);
   };
+  
+  
 
 const handleSubmit = async (event) => {
   event.preventDefault();
   try {
+    console.log(shopGroupData);
     await createShopGroup(shopGroupData);
     alert("Shop group created successfully!");
     setShowShopGroupForm(false); // Close the form

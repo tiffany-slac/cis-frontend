@@ -24,47 +24,6 @@ function ELOGadmin() {
   const [itemCount, setItemCount] = useState(0);
   const [expandedClasses, setExpandedClasses] = useState([]);
 
-  // Fetch and update the element counts when the component mounts
-  // useEffect(() => {
-  //   const fetchElementCounts = async () => {
-  //     try {
-  //       const elementsResponse = await fetchAllElements();
-  //       if (elementsResponse.payload) {
-  //         // Filter elements with class name "building"
-  //         const buildingElements = elementsResponse.payload.filter(
-  //           (element) => {
-  //             return element.classDTO && element.classDTO.name === "building";
-  //           }
-  //         );
-  //         // Count the number of building elements
-  //         const buildingCount = buildingElements.length;
-  //         setBuildingCount(buildingCount);
-  //         // Filter elements with class name "nickname"
-  //         const nicknameElements = elementsResponse.payload.filter(
-  //           (element) => {
-  //             return element.classDTO && element.classDTO.name === "nickname";
-  //           }
-  //         );
-  //         // Count the number of nickname elements
-  //         const nicknameCount = nicknameElements.length;
-  //         setNicknameCount(nicknameCount);
-  //         // Filter elements with class name "nickname"
-  //         const itemElements = elementsResponse.payload.filter((element) => {
-  //           return element.classDTO && element.classDTO.name === "depot";
-  //         });
-  //         // Count the number of nickname elements
-  //         const itemCount = itemElements.length;
-  //         setItemCount(itemCount);
-  //       } else {
-  //         console.error("Error in API response. No payload found.");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching element counts:", error.message);
-  //     }
-  //   };
-
-  //   fetchElementCounts();
-  // }, []);
 
   // Fetch domains when the component mounts
   useEffect(() => {
@@ -72,19 +31,6 @@ function ELOGadmin() {
     const fetchDomains = async () => {
       const response = await fetchAllDomain();
       setDomains(response.payload);
-    //   console.log("trying domain...");
-    //   try {
-    //     console.log("trying domain...");
-    //     const response = await fetchAllDomain();
-    //     console.log(response);
-    //     if (response.errorCode === 0) {
-    //       setDomains(response.payload);
-    //     } else {
-    //       throw new Error("Error fetching domains");
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching domain types:", error.message);
-    //   }
     };
 
     fetchDomains(); // Call the function to fetch class types when the component mounts
@@ -252,7 +198,7 @@ function ELOGadmin() {
       {/* Display domains in a table */}
       <div className="card-container">
         <div className="card-display">
-          <h2>Domains</h2>
+          <h2>In Progress...</h2>
           <table className="class-table">
             <thead>
               <tr>
@@ -276,59 +222,6 @@ function ELOGadmin() {
         </div>
         <br />
         <br />
-
-        {/* Display classes in a table */}
-        <div className="card-display">
-          <h2>Classes</h2>
-          <table className="class-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {classes.map((classItem, index) => (
-                <tr
-                  key={index}
-                  onClick={() => handleRowClick(classItem.id)}
-                  className="class-item"
-                >
-                  <td>{formatClassName(classItem.name)}</td>
-                  <td>{classItem.id}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <br />
-        <br />
-
-        {/* Display elements in a table */}
-        <div className="card-display">
-          <h2>Elements</h2>
-          <table className="class-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {elements.map((classItem, index) => (
-                <tr
-                  key={index}
-                  onClick={() => handleRowClick(classItem.id)}
-                  className="class-item"
-                >
-                  <td>{formatClassName(classItem.name)}</td>
-                  <td>{classItem.id}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <br /><br /><br /><br /><br />
       </div><br /><br />
     </div>
   );

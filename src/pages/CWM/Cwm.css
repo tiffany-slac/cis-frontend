@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
+  position: fixed;
   top: 95px;
   background-color: #fff;
   padding: 10px;
@@ -43,6 +43,22 @@
   cursor: pointer;
 }
 
+.search-extension {
+  position: sticky;
+  /* position: fixed;
+  background-color: white; */
+  width: 100%; 
+  /* border-bottom: 1px solid #ccc; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  top: 100px;
+  background-color: #fff;
+  /* padding: 10px; */
+  z-index: 97;
+  /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
 .new-class-button button {
   padding: 5px 10px;
   /* Adjust padding as needed */
@@ -77,9 +93,9 @@
   justify-content: center;
   align-items: center;
   top: 30px;
-  height: 100vh;
-  padding-left: 10px;
-  padding-right: 10px;
+  /* height: 100vh; */
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 /* Styling for the assets table and its elements */
@@ -122,17 +138,26 @@
 .tab-bar {
   position: fixed;
   top: 60px;
-  left: 0;
-  width: 100%;
+  left: 60px;
+  width: calc(100%-60px);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-bottom: 1px solid #ccc;
+  /* border-bottom: 1px solid #ccc; */
   background-color: white;
   z-index: 98;
   /* display: flex;
     border-bottom: 1px solid #ccc;
     background-color: white; */
+}
+
+.tab-extension {
+  position: fixed;
+  background-color: white;
+  width: 100%; 
+  padding-top: 39px;
+  border-bottom: 1px solid #ccc;
+  z-index: 98;
 }
 
 .cwm-tab {

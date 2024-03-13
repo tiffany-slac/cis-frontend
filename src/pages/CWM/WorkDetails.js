@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
 import { fetchAWork, fetchActivity } from "../../services/api";
 import ActivityForm from './ActivityForm';
+import EditWorkForm from './EditWorkForm';
 import Breadcrumb from '../../components/Breadcrumb';
+
 
 import './WorkDetails.css';
 
@@ -12,7 +14,10 @@ const WorkDetails = () => {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Jobs');
     const [showActivityForm, setShowActivityForm] = useState(false); // State to control the visibility of the activity form
+    const [showEditForm, setShowEditForm] = useState(false);
     const [activities, setActivities] = useState([]);
+    const [activeStep, setActiveStep] = useState(0); // Initialize activeStep state
+
 
     const breadcrumbItems = [
         { label: 'Home', link: '/' },
@@ -21,6 +26,7 @@ const WorkDetails = () => {
     ];
 
     const menuItems = ['Created', 'Opened', 'Approved', 'In Progress', 'Closed'];
+    const completedSteps = ['Created']; // Add completed steps here
 
     // Fetch element path data on component mount
     useEffect(() => {
@@ -61,18 +67,23 @@ const WorkDetails = () => {
         setActiveTab(item);
     };
 
+    const toggleEditForm = () => {
+        setShowEditForm(prevState => !prevState);
+    };
+
+
     return (
         <div className='work-content-container'>
-            <div className="statusmenu">
-                <ul>
-                    {menuItems.map(item => (
-                        <li key={item}>
-                            <button
-                                className={activeTab === item ? 'active' : ''}
-                                onClick={() => scrollToContent(item)}
-                            >
-                                {item}
-                            </button>
+            <div className="work-statusmenu">
+                <ul className="vertical-progress-bar">
+                    {menuItems.map((item, index) => (
+                        <li
+                            key={item}
+                            className={`progress-item ${activeTab === item ? 'active' : ''} ${completedSteps.includes(item) ? 'completed' : ''}`}
+                            onClick={() => scrollToContent(item)}
+                        >
+                            <span className="progress-circle"></span>
+                            {item}
                         </li>
                     ))}
                 </ul>
@@ -80,6 +91,13 @@ const WorkDetails = () => {
 
             <div className="work-details-container">
                 <Breadcrumb items={breadcrumbItems} style={{ marginLeft: '20px' }} />
+
+                <div className="edit-button-container">
+                    <button className="edit-button" onClick={toggleEditForm}>Edit</button>
+                </div>
+
+                {showEditForm && <EditWorkForm showEditWorkForm={showEditForm} setshowEditWorkForm={setShowEditForm} />}
+
 
                 <div className='work-card'>
                     {/* Asset Details */}
@@ -136,7 +154,7 @@ const WorkDetails = () => {
                             {activities.map(activity => (
                                 <tr key={activity._id}>
                                     <td>
-                                        <Link to={`/work/65e908f7708a4b739302ef55/${activity.id}`}>
+                                        <Link to={`/work/${workId}/${activity.id}`}>
                                             {activity.title}
                                         </Link>
                                     </td>

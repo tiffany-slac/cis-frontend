@@ -38,7 +38,6 @@ ul {
   height: 100vh;
   width: calc(100% - 250px);
   display: flex;
-  width: 100%;
   flex-direction: column;
   /* background: white; */
   background: rgba(245, 244, 244, 0.547); 
