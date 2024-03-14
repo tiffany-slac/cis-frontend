@@ -176,7 +176,6 @@ const handleInputChange = (e) => {
                                 </option>
                             ))}
                         </select>
-
                     </div>
 
                     <button type="submit" className="form-button">Update Work</button>

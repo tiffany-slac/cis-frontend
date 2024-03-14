@@ -191,9 +191,8 @@ const handleInputChange = (e) => {
                                 </option>
                             ))}
                         </select>
-
                     </div>
-
+                    
                     <button type="submit" className="form-button">Create Work</button>
                 </form>
 

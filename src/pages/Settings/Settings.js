@@ -5,7 +5,7 @@ import './settings.css';
 
 function Settings() {
   const [profile, setProfile] = useState(null);
-  const [activeTab, setActiveTab] = useState('history'); // State to manage active tab
+  const [activeTab, setActiveTab] = useState('history');
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);

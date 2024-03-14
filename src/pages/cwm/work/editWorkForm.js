@@ -176,7 +176,6 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
                                 </option>
                             ))}
                         </select>
-
                     </div>
 
                     <button type="submit" className="form-button">Update Work</button>
