@@ -1,4 +1,3 @@
-// calendarPage.js
 import React from "react";
 
 const CalendarPage = () => {

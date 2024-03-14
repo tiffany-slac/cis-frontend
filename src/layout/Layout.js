@@ -1,4 +1,5 @@
 // layout.js
+
 import React from 'react';
 import Sidebar from '../components/Sidebar/Sidebar';
 import Header from '../components/Header'; // Import your Header component

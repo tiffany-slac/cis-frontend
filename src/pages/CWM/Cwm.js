@@ -6,8 +6,7 @@ import CalendarPage from "./calendarPage.js";
 import "./cwm.css";
 
 function Cwm() {
-  // Hook from react-router-dom to get the current location
-  const location = useLocation(); 
+  const location = useLocation(); // Hook from react-router-dom to get the current location
 
   return (
     <Router>

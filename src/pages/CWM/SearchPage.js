@@ -8,7 +8,6 @@ import SubHeader from './subHeader.js';
 import "./searchPage.css";
 
 const SearchPage = () => {
-  const history = useHistory();
   const [showLocationForm, setShowLocationForm] = useState(false);
   const [showWorkForm, setShowWorkForm] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -17,6 +16,7 @@ const SearchPage = () => {
   const [lastItemId, setLastItemId] = useState(null); // New state to keep track of the last item's ID
   const [work, setWork] = useState([]);
   const itemsPerPage = 5;
+  const history = useHistory();
 
   // Fetch all work when the component mounts
   useEffect(() => {

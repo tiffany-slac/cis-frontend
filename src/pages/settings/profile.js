@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import profileImage from '../../assets/profile.jpg';
 import './profile.css';
 
+
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('tab1'); // State to manage active tab
 

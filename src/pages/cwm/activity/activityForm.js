@@ -122,6 +122,7 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                                 <option key={index} value={subtype}>{subtype}</option>
                             ))}
                         </select>
+
                     </div>
 
                     <button type="submit" className="form-button">Create Work</button>

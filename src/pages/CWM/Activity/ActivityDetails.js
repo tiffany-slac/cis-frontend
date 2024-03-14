@@ -134,8 +134,8 @@ const ActivityDetails = () => {
                     )}
                     <hr className="line" />
                 </div>
-
             </div>
+
         </div>
     );
 };

@@ -1,4 +1,3 @@
-// reportsPage.js
 import React from "react";
 
 const ReportsPage = () => {
