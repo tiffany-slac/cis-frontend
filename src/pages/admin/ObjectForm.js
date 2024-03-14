@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { fetchClass, fetchAllClass } from "../../../services/api";
+import { fetchClassTypes, fetchClass, fetchAllClass } from "../../services/api";
 
 function ObjectForm({ showObjectForm, setShowObjectForm }) {
   const [classTypes, setClassTypes] = useState([]);
   const [selectedClassType, setSelectedClassType] = useState("");
   const [classData, setClassData] = useState(null);
   const [formFields, setFormFields] = useState([]);
+  const [formData, setFormData] = useState({});
 
   const getClassIdByName = async (className) => {
     try {
@@ -22,25 +23,25 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
       throw new Error('Error fetching class by name:', error.message);
     }
   };
-
+  
 
   const handleClassTypeChange = async (e) => {
     const selectedType = e.target.value;
     setSelectedClassType(selectedType);
-
+  
     try {
       const classId = await getClassIdByName(selectedType); // Retrieve the ID based on the name
-
+  
       // Use the retrieved class ID (classId) for further actions (e.g., fetching class data)
       const classData = await fetchClass(classId);
       console.log('Fetched Class Data:', classData);
-
+  
       // Other handling with the class data...
     } catch (error) {
       console.error('Error handling form submission:', error);
     }
   };
-
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,8 +72,8 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
       setFormFields([]); // Reset form fields if no class data available
     }
   }, [classData]);
-
-
+  
+  
 
   const renderFormFields = () => {
     return formFields.map((field) => {
@@ -128,7 +129,7 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
               <option value="">Select Class Type</option>
               {classTypes.map((classType, index) => (
                 <option key={index} value={classType}>
-                  {classType}
+                    {classType}
                 </option>
               ))}
             </select>

@@ -1,6 +1,6 @@
 import React from 'react';
-import './app.css';
-import AppRouter from './appRouter';
+import './App.css';
+import AppRouter from './AppRouter';
 import Layout from './Layout';
 import Sidebar from './Sidebar'; // Import your Sidebar component here
 import Header from './Header'; // Import your Header component here

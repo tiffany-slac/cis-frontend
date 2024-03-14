@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { createInventoryClass, fetchAllClass, fetchClass } from "../../../services/api";
-import './classForm.css';
+import { createInventoryClass, fetchAllClass, fetchClass } from "../../services/api";
+import './ClassForm.css';
 
 function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   // State for managing form input values
@@ -10,6 +10,7 @@ function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   const [extendsClass, setExtendsClass] = useState("");
   const [permittedChildClass, setPermittedChildClass] = useState("");
   const [implementedByClass, setImplementedByClass] = useState("");
+  const [selectedClassName, setSelectedClassName] = useState("");
   const [classesName, setClassesName] = useState([]);
   const [extendsClassAttributes, setExtendsClassAttributes] = useState([]);
   const [selectedExtendsClass, setSelectedExtendsClass] = useState("");

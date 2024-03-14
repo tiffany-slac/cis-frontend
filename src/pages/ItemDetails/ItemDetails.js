@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
-import Breadcrumb from "../../components/breadcrumb";
-import LocationHistForm from "./locationHistForm";
+import Breadcrumb from "../../components/Breadcrumb";
+import LocationHistForm from "./LocationHistForm";
 import { fetchElement, fetchPath, updateElement, fetchClass } from "../../services/api";
-import "./itemDetails.css";
+import "./ItemDetails.css";
 
 const ItemDetails = () => {
   // Destructuring values from React Router

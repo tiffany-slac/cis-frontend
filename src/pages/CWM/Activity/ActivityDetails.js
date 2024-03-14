@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import Link from react-router-dom
-import { fetchAWork, fetchAActivity } from "../../../services/api";
-import EditWorkForm from './editActivityForm';
-import Breadcrumb from '../../../components/breadcrumb';
-import './activityDetails.css';
+import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { fetchAWork, fetchActivity, fetchAActivity } from "../../../services/api";
+import ActivityForm from './../ActivityForm';
+import EditWorkForm from './../EditWorkForm';
+import Breadcrumb from '../../../components/Breadcrumb';
+
+
+import './ActivityDetails.css';
 
 const ActivityDetails = () => {
     const { workId, activityId } = useParams(); // Get the asset ID from the URL params
     const [loading, setLoading] = useState(true);
+    const [showActivityForm, setShowActivityForm] = useState(false); // State to control the visibility of the activity form
     const [showEditForm, setShowEditForm] = useState(false);
+    const [activities, setActivities] = useState([]);
     const [work, setWork] = useState(null);
     const [oneActivity, setOneActivity] = useState([]);
 
@@ -135,6 +140,44 @@ const ActivityDetails = () => {
                     <hr className="line" />
                 </div>
             </div>
+            
+
+            {/* <div className="activity-details-container2">
+                <div className="attachments-activity-container">
+
+                    <div className='work-card'>
+                        <div className="attachments-section">
+                            {work && (
+                                <div>
+                                    <p>Project Details </p>
+                                    <hr className="line" />
+                                    <p>ID: {work.title}</p>
+                                    <p>Title: {work.description}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className='work-card'>
+                        <div className="attachments-section">
+                            <p id="attachments">Status: NEW</p>
+                        </div>
+                    </div>
+
+                    <div className='work-card'>
+                        <div className="attachments-section">
+                            <p id="attachments">Attachments</p>
+                            <div className="file-upload-container">
+                                <input type="file" id="file-input" multiple />
+                                <label htmlFor="file-input">Drag and drop files here or click to upload</label>
+                                <div className="uploaded-files">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> */}
 
         </div>
     );

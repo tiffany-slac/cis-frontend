@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
-import { fetchShopGroups, fetchLocations } from "../../../services/api.js";
-import "./../admin.css";
-import ShopGroupForm from "./shopGroupForm.js";
-import LocationForm from './locationForm.js';
+import { fetchShopGroups, fetchLocations, fetchWork } from "../../services/api";
+import "./admin.css";
+import ShopGroupForm from "./ShopGroupForm.js";
+import LocationForm from './../CWM/LocationForm.js';
 
 
 function CWMadmin() {
-  const history = useHistory();
   const [shopGroups, setShopGroups] = useState([]);
   const [error, setError] = useState(null);
   const [showShopGroupForm, setShowShopGroupForm] = useState(false);
   const [showLocationForm, setShowLocationForm] = useState(false);
+  const history = useHistory();
   const [locations, setLocations] = useState([]);
+  const [work, setWork] = useState([]);
 
   useEffect(() => {
     console.log("fetching locations...");

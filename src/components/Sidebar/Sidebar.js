@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation } from "react-router-dom";
 import { faHome, faNewspaper, faCog, faBox, faTicket, faLock } from "@fortawesome/free-solid-svg-icons";
-import "./sidebar.css";
+import "./Sidebar.css";
 
 function Sidebar() {
   // Use the current location to determine the active button

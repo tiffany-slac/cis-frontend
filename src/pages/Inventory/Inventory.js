@@ -1,12 +1,12 @@
 // Inventory.js
 import React, { useState, useEffect } from "react";
-import { fetchAllElements } from "../../services/api.js";
+import { fetchAllElements } from "../../services/api";
 import { useHistory } from "react-router-dom";
-import ElementForm from "./elementForm.js";
+import ElementForm from "../admin/ElementForm.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import "./inventory.css";
+import "./Inventory.css";
 
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);

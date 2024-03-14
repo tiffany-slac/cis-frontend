@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { createWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers } from '../../../services/api';
-import './workForm.css';
+import { createWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers } from '../../services/api';
+import './WorkForm.css';
 
 function WorkForm({ showWorkForm, setShowWorkForm }) {
     // State to manage form input values

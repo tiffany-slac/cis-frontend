@@ -1,6 +1,6 @@
 import React from 'react';
-import CardWidget from '../components/cardWidget';
-import SLACImage from '../assets/slacCampus.jpg';
+import CardWidget from '../components/CardWidget';
+import SLACImage from '../components/SLACcampus.jpg';
 
 function Home() {
   // Define a style object for the heading

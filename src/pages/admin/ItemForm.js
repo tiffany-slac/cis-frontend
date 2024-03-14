@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import {
   createInventoryElement,
   fetchElementNicknames,
-  fetchAllElements
-} from "../../../services/api";
+  fetchAllElements,
+  fetchAllClass,
+} from "../../services/api";
 
 function ItemForm({ showItemForm, setShowItemForm }) {
   const [slacId, setSlacId] = useState("");
   const [serial, setSerial] = useState("");
+  // const [location, setLocation] = useState("");
   const [chargeCode, setChargeCode] = useState("");
   const [parents, setParents] = useState([]);
   const [elementNames, setElementNames] = useState([]);
   const [classId, setClassId] = useState("");
   const [parentId, setParentId] = useState("");
+  // const [parents, setParents] = useState([]);
 
   useEffect(() => {
     const fetchFilteredNames = async () => {
@@ -45,15 +48,43 @@ function ItemForm({ showItemForm, setShowItemForm }) {
         console.error("Error fetching elements:", error.message);
       }
     };
-
+  
     fetchParents(); // Call the function to fetch elements when the component mounts
   }, []);
-
+  
   console.log(parents);
 
   const handleRowClick = (classId) => {
     history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
   };
+
+  // useEffect(() => {
+  //   const fetchItemClassId = async () => {
+  //     try {
+  //       const classResponse = await fetchAllClass();
+  //       if (classResponse.payload) {
+  //         // Find the class with name "nickname"
+  //         const itemClass = classResponse.payload.find(classItem => {
+  //           return classItem.name === "depot";
+  //         });
+
+  //         if (itemClass) {
+  //           // If the class is found, you can access its ID
+  //           setClassId(itemClass.id);
+  //         } else {
+  //           window.alert("Class 'Item' not found. Please create the class before creating elements.");
+  //           console.error("Class 'Item' not found.");
+  //         }
+  //       } else {
+  //         console.error("Error in API response. No payload found.");
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching class types:', error.message);
+  //     }
+  //   };
+
+  //   fetchItemClassId();
+  // }, []);
 
   const handleParentChange = (event) => {
     setParentId(event.target.value);
@@ -104,11 +135,11 @@ function ItemForm({ showItemForm, setShowItemForm }) {
           </span>
           <form className="class-form" onSubmit={handleSubmit}>
 
-            <label htmlFor="parents">Parent:</label>
+          <label htmlFor="parents">Parent:</label>
             <select
               id="parents"
               name="parents"
-              value={parentId}
+              value={parentId} 
               onChange={(event) => setParentId(event.target.value)}
             >
               <option value="">Select a parent</option>

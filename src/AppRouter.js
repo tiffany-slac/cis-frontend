@@ -1,17 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Layout from './layout/layout';
-import Home from './pages/home'; 
-import Profile from './pages/profile/profile';
-import Cwm from './pages/cwm/cwm';
-import ItemDetails from './pages/itemDetails/itemDetails';
-import ActivityDetails from './pages/cwm/activity/activityDetails';
-import Settings from './pages/settings/settings';
+import Layout from './layout/Layout';
+import Home from './pages/Home'; 
+import Profile from './pages/Profile/Profile';
+import Cwm from './pages/CWM/Cwm';
+import ItemDetails from './pages/ItemDetails/ItemDetails';
+import ActivityDetails from './pages/CWM/Activity/ActivityDetails';
+import Settings from './pages/Settings/Settings';
 import Admin from './pages/admin/admin';
-import Inventory from './pages/cis/inventory';
-import ClassDetails from './pages/admin/cisAdmin/classDetails';
-import WorkDetails from './pages/cwm/work/workDetails';
-import Elog from './pages/elog/elog';
+import Inventory from './pages/Inventory/Inventory';
+import ClassDetails from './pages/admin/ClassDetails';
+import WorkDetails from './pages/CWM/WorkDetails';
+import Elog from './pages/Elog/elog';
 
 function AppRouter() {
   return (

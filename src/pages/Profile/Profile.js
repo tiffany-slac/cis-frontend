@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import profileImage from '../../assets/profile.jpg';
-import './profile.css';
+import profileImage from '../../components/profile.jpg';
+import './Profile.css';
 
 
 const Profile = () => {

@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Switch, Route, Link, useLocation, Redirect } f
 import { useHistory } from 'react-router-dom';
 import { fetchUsers } from '../../services/api'
 import './admin.css';
-import CISadmin from "./cisAdmin/cisAdmin.js";
-import CWMadmin from "./cwmAdmin/cwmAdmin.js";
-import ELOGadmin from "./elogAdmin.js";
+import CISadmin from "./CISadmin.js";
+import CWMadmin from "./CWMadmin.js";
+import ELOGadmin from "./ELOGadmin.js";
 import GeneralAdmin from "./generalAdmin.js";
 import { GridRowModes, GridRowEditStopReasons } from '@mui/x-data-grid';
 
