@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createInventoryClass, fetchAllClass, fetchClass } from "../../services/api";
-import './ClassForm.css';
+import './classForm.css';
 
 function ClassForm({ showClassForm, setShowClassForm, classTypes }) {
   // State for managing form input values

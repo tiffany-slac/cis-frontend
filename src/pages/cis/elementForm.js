@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { fetchAllElements, createInventoryElement, fetchClass, fetchAllClass } from "../../services/api";
-import "./admin.css";
+import "../admin/admin.css";
 
 function ElementForm({ showElementForm, setShowElementForm }) {
   // State to manage form input values

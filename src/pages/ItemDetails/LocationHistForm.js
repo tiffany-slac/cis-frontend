@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createImplementation } from "../../services/api";
-import "./ItemDetails.css";
+import "./itemDetails.css";
 
 function LocationHistForm({ showLocationHistForm, setShowLocationHistForm, itemId }) {
   const [state, setState] = useState("");

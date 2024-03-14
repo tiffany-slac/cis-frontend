@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createLocation, fetchUsers, fetchShopGroups, fetchAllElements } from '../../services/api'; // Import the createLocation API function
-import Select from 'react-select';
-import './LocationForm.css'; // Import the CSS file for styling
+import './locationForm.css'; // Import the CSS file for styling
 
 function LocationForm({ showLocationForm, setShowLocationForm }) {
   // State to manage form input values

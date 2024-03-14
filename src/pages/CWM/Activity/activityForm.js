@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { createActivity, fetchActivityType, fetchActivitySubtype } from '../../services/api';
+import { createActivity, fetchActivityType, fetchActivitySubtype } from '../../../services/api';
 import { useParams } from 'react-router-dom';
-import './ActivityForm.css';
+import './activityForm.css';
 
 function ActivityForm({ showActivityForm, setShowActivityForm }) {
     // State to manage form input values

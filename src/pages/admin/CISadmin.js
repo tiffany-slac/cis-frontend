@@ -3,9 +3,9 @@ import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
 import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
-import ClassForm from "./ClassForm";
-import ItemForm from "./ItemForm";
-import ElementForm from "./ElementForm";
+import ClassForm from "./classForm";
+import ItemForm from "./itemForm";
+import ElementForm from "../cis/elementForm";
 import "./admin.css";
 
 function CISadmin() {

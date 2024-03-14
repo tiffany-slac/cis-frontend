@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '../components/Sidebar/Sidebar';
 import Header from '../components/Header'; // Import your Header component
-import '../App.css';
+import '../app.css';
 
 function Layout({ children }) {
   return (

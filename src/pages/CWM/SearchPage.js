@@ -4,8 +4,8 @@ import { faTools, faCog, faPenClip } from '@fortawesome/free-solid-svg-icons';
 import { fetchWork } from "../../services/api";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import SubHeader from './SubHeader.js';
-import "./SearchPage.css";
+import SubHeader from './subHeader.js';
+import "./searchPage.css";
 
 const SearchPage = () => {
   const [showLocationForm, setShowLocationForm] = useState(false);

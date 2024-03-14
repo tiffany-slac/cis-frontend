@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
 import { fetchAWork, fetchActivity, fetchAActivity } from "../../../services/api";
-import ActivityForm from './../ActivityForm';
-import EditWorkForm from './../EditWorkForm';
+import ActivityForm from './activityForm';
+import EditWorkForm from '../work/editWorkForm';
 import Breadcrumb from '../../../components/Breadcrumb';
-
-
-import './ActivityDetails.css';
+import './activityDetails.css';
 
 const ActivityDetails = () => {
     const { workId, activityId } = useParams(); // Get the asset ID from the URL params

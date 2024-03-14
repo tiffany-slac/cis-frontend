@@ -1,9 +1,9 @@
 import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-// import LocationForm from './LocationForm.js';
-import WorkForm from './WorkForm.js';
-import "./Cwm.css";
+// import LocationForm from './locationForm.js';
+import WorkForm from './work/workForm.js';
+import "./cwm.css";
 
 const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setShowWorkForm, searchInput, setSearchInput, handleSearch }) => {
     const handleItemClick = (formType) => {
