@@ -1,27 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
-import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
-import ClassForm from "./ClassForm";
-import ItemForm from "./ItemForm";
-import ElementForm from "./ElementForm";
 import "./admin.css";
 
 function ELOGadmin() {
   const history = useHistory();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showItemForm, setShowItemForm] = useState(false);
-  const [showClassForm, setShowClassForm] = useState(false);
-  const [showElementForm, setShowElementForm] = useState(false);
-  const [classTypes, setClassTypes] = useState([]);
   const [domains, setDomains] = useState([]);
   const [classes, setClasses] = useState([]);
   const [classDetails, setClassDetails] = useState([]);
   const [elements, setElements] = useState([]);
-  const [nicknameCount, setNicknameCount] = useState(0);
-  const [buildingCount, setBuildingCount] = useState(0);
-  const [itemCount, setItemCount] = useState(0);
   const [expandedClasses, setExpandedClasses] = useState([]);
 
 
@@ -84,14 +72,8 @@ function ELOGadmin() {
       try {
         const allClass = await fetchAllClass();
         console.log("ALL CLASSES: " + JSON.stringify(allClass));
-        // const path = await fetchPath();
-        // console.log("A PATH: " + JSON.stringify(path));
-        // const aclass = await fetchClass('65b14eabda7e78564e80beeb');
-        // console.log("ONE CLASS: " + JSON.stringify(aclass));
         const element = await fetchAllElements();
         console.log("ALL ELEMENTS: " + JSON.stringify(element));
-        // const aelement = await fetchElement('659f37c68a79764e92f1d0d8');
-        // console.log("ONE ELEMENT: " + JSON.stringify(aelement));
       } catch (error) {
         console.error("Error fetching class types:", error.message);
       }
@@ -112,7 +94,7 @@ function ELOGadmin() {
       history.push('/admin');
     }
   };
-  
+
   const handleTabChange = (tab) => {
     history.push(`/${tab.toLowerCase()}`);
   };

@@ -1,10 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link, useLocation } from "react-router-dom";
-import SearchPage from "./SearchPage";
-import ReportsPage from "./ReportsPage";
-import CalendarPage from "./CalendarPage.js";
-import SubHeader from './SubHeader.js';
-import "./Cwm.css";
+import SearchPage from "./searchPage.js";
+import ReportsPage from "./reportsPage.js";
+import CalendarPage from "./calendarPage.js";
+import "./cwm.css";
 
 function Cwm() {
   const location = useLocation(); // Hook from react-router-dom to get the current location

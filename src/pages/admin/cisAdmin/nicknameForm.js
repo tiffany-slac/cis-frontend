@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { createInventoryElement, fetchAllClass } from "../../services/api";
+import { createInventoryElement, fetchAllClass } from "../../../services/api";
 
 function NicknameForm({ showNicknameForm, setShowNicknameForm }) {
   const [itemName, setItemName] = useState("");
-  //   const [classDescription, setClassDescription] = useState("");
   const [maker, setMaker] = useState('');
   const [model, setModel] = useState('');
   const [cueCategory, setCueCategory] = useState('');
   const [revision, setRevision] = useState('');
-  // const [parentId, setParentId] = useState('');
   const [attributes, setAttributes] = useState([]);
   const [classId, setClassId] = useState('');
 

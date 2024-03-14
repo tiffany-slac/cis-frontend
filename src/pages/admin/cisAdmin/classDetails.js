@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Breadcrumb from '../../components/Breadcrumb';
+import Breadcrumb from '../../../components/breadcrumb';
 
 const ClassDetails = () => {
   const { id } = useParams(); // Get the asset ID from the URL params

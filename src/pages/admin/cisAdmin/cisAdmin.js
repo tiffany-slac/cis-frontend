@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
-import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
-import ClassForm from "./ClassForm";
-import ItemForm from "./ItemForm";
-import ElementForm from "./ElementForm";
-import "./admin.css";
+import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../../services/api";
+import ClassForm from "./classForm";
+import "./../admin.css";
 
 function CISadmin() {
   const history = useHistory();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showItemForm, setShowItemForm] = useState(false);
   const [showClassForm, setShowClassForm] = useState(false);
-  const [showElementForm, setShowElementForm] = useState(false);
-  const [classTypes, setClassTypes] = useState([]);
   const [domains, setDomains] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [classDetails, setClassDetails] = useState([]);
   const [elements, setElements] = useState([]);
-  const [nicknameCount, setNicknameCount] = useState(0);
-  const [buildingCount, setBuildingCount] = useState(0);
-  const [itemCount, setItemCount] = useState(0);
   const [expandedClasses, setExpandedClasses] = useState([]);
 
   useEffect(() => {
@@ -69,11 +58,6 @@ function CISadmin() {
 
     fetchElements(); // Call the function to fetch class types when the component mounts
   }, []);
-
-  // Log class details when classDetails state changes
-  // useEffect(() => {
-  //   console.log("Class Details:", classDetails);
-  // }, [classDetails]);
 
   // Fetch data for testing purposes
   useEffect(() => {
@@ -183,108 +167,20 @@ function CISadmin() {
 
   return (
     <div className="cis-admin">
-      <h3 style={{ textAlign: 'center' }}>CIS Administrator</h3> 
+      <h3 style={{ textAlign: 'center' }}>CIS Administrator</h3>
 
       {/* Button to add a new class */}
       <div className="new-class-button">
-      <button className="dropbtn" onClick={() => setShowClassForm(!showClassForm)}>
-        {showClassForm ? "Close Class Form" : " + Class"}
-      </button>
-      {showClassForm && (
-        <ClassForm
-          showClassForm={showClassForm}
-          setShowClassForm={setShowClassForm}
-        />
-      )}
-</div>
-
-      {/* <div className="new-class-button">
-        <button
-          onClick={() => {
-            handleItemClick("Class");
-            setShowClassForm(true);
-          }}
-          className="dropbtn"
-        >
-          <span>+</span> New Class
+        <button className="dropbtn" onClick={() => setShowClassForm(!showClassForm)}>
+          {showClassForm ? "Close Class Form" : " + Class"}
         </button>
         {showClassForm && (
           <ClassForm
+            showClassForm={showClassForm}
             setShowClassForm={setShowClassForm}
-            classTypes={classTypes}
           />
         )}
       </div>
-
-      {showClassForm && (
-            <ClassForm setShowClassForm={setShowClassForm} />
-          )} */}
-
-      {/* {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />} */}
-      
-
-      {/* Card container for displaying statistics */}
-      {/* <div className="card-container"> */}
-
-        {/* Card for total classes */}
-        {/* <div className="admin-card">
-          <div className="card-content">
-            <div>
-              <h2>{buildingCount}</h2>
-              <p>Total classes</p>
-            </div>
-            <div className="card-icon">
-              <FontAwesomeIcon icon={faBox} title="Home" />
-            </div>
-          </div>
-          <div className="card-action">
-            <span className="card-add">+</span>
-          </div>
-        </div> */}
-
-        {/* Card for total locations */}
-        {/* <div className="admin-card">
-          <div className="card-content">
-            <div>
-              <h2>{nicknameCount}</h2>
-              <p>Total Locations</p>
-            </div>
-            <div className="card-icon">
-              <FontAwesomeIcon icon={faObjectGroup} title="Home" />
-            </div>
-          </div>
-          <div
-            className="card-action"
-            onClick={() => setShowElementForm(!showElementForm)}
-          >
-            <span className="card-add">+</span>
-          </div>
-          {showElementForm && (
-            <ElementForm setShowElementForm={setShowElementForm} />
-          )}
-        </div>
-
-        {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />} */}
-
-        {/* Card for authorized users */}
-        {/* <div className="admin-card">
-          <div className="card-content">
-            <div>
-              <h2>{itemCount}</h2>
-              <p>Authorized Users</p>
-            </div>
-            <div className="card-icon">
-              <FontAwesomeIcon icon={faSquarePollVertical} title="Home" />
-            </div>
-          </div>
-          <div
-            className="card-action"
-            onClick={() => setShowClassForm(!showClassForm)}
-          >
-            <span className="card-add">+</span>
-          </div>
-        </div>
-      </div> */}
 
       {/* Display categories in a table */}
       <div className="categories-display">

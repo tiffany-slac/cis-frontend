@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
-import { fetchAWork, fetchActivity } from "../../services/api";
-import ActivityForm from './ActivityForm';
-import EditWorkForm from './EditWorkForm';
-import Breadcrumb from '../../components/Breadcrumb';
-
-
-import './WorkDetails.css';
+import { fetchAWork, fetchActivity } from "../../../services/api";
+import ActivityForm from '../activity/activityForm';
+import EditWorkForm from './editWorkForm';
+import Breadcrumb from '../../../components/breadcrumb';
+import './workDetails.css';
 
 const WorkDetails = () => {
     const { workId } = useParams(); // Get the asset ID from the URL params
@@ -122,7 +120,7 @@ const WorkDetails = () => {
                                 <div className="container">
                                     <div className="column left-column">
                                         <p className="work-label">Type</p>
-                                        <p className="work-label">Subtype</p>
+                                        <p className="work-label">Work Type</p>
                                         <p className="work-label">Area</p>
                                         <p className="work-label">Area Manager</p>
                                         <p className="work-label">Shop</p>

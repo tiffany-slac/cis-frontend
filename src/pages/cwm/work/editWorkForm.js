@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchAWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers, updateWork } from '../../services/api';
-import './WorkForm.css';
+import { fetchAWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers, updateWork } from '../../../services/api';
+import './workForm.css';
 
 function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
     // State to manage form input values
@@ -44,49 +44,6 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
         fetchData();
     }, [workId]);
 
-    // useEffect(() => {
-    //     const fetchWorkTypes = async () => {
-    //         try {
-    //             const typesResponse = await fetchWorkType();
-    //             setWorkTypes(typesResponse || []);
-    //         } catch (error) {
-    //             console.error('Error fetching work types:', error);
-    //         }
-    //     };
-
-    //     const fetchWorkLocations = async () => {
-    //         try {
-    //             const locationsResponse = await fetchLocations();
-    //             setLocations(locationsResponse.payload || []);
-    //         } catch (error) {
-    //             console.error('Error fetching locations:', error);
-    //         }
-    //     };
-
-    //     const fetchWorkShopGroups = async () => {
-    //         try {
-    //             const shopGroupsResponse = await fetchShopGroups();
-    //             setShopGroups(shopGroupsResponse || []);
-    //         } catch (error) {
-    //             console.error('Error fetching shop groups:', error);
-    //         }
-    //     };
-
-    //     const fetchWorkUsers = async () => {
-    //         try {
-    //             const usersResponse = await fetchUsers();
-    //             setUsers(usersResponse.payload || []);
-    //         } catch (error) {
-    //             console.error('Error fetching users:', error);
-    //         }
-    //     };
-
-    //     fetchWorkTypes();
-    //     fetchWorkLocations();
-    //     fetchWorkShopGroups();
-    //     fetchWorkUsers();
-    // }, []);
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -101,20 +58,20 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
         }
     };
 
-// Function to handle input changes
-const handleInputChange = (e) => {
-    const { name, value, type } = e.target;
+    // Function to handle input changes
+    const handleInputChange = (e) => {
+        const { name, value, type } = e.target;
 
-    // Check if the input field is a select element with multiple options
-    if (type === 'select-multiple') {
-        // Get an array of selected option values
-        const selectedValues = Array.from(e.target.selectedOptions).map(option => option.value);
-        setWorkData({ ...workData, [name]: selectedValues });
-    } else {
-        // For other input types, simply update the value in the state
-        setWorkData({ ...workData, [name]: value });
-    }
-};
+        // Check if the input field is a select element with multiple options
+        if (type === 'select-multiple') {
+            // Get an array of selected option values
+            const selectedValues = Array.from(e.target.selectedOptions).map(option => option.value);
+            setWorkData({ ...workData, [name]: selectedValues });
+        } else {
+            // For other input types, simply update the value in the state
+            setWorkData({ ...workData, [name]: value });
+        }
+    };
 
 
     return (
@@ -136,7 +93,7 @@ const handleInputChange = (e) => {
                             value={workData.title}
                             onChange={handleInputChange}
                             className="form-input"
-                            
+
                         />
                     </div>
 
@@ -149,7 +106,7 @@ const handleInputChange = (e) => {
                             value={workData.description}
                             onChange={handleInputChange}
                             className="form-textarea"
-                            
+
                         />
                     </div>
 
@@ -161,7 +118,7 @@ const handleInputChange = (e) => {
                             value={workData.workTypeId}
                             onChange={handleInputChange}
                             className="form-select"
-    
+
                         >
                             <option value="">Select Work Type</option>
                             {workTypes.map(type => (
@@ -178,7 +135,7 @@ const handleInputChange = (e) => {
                             value={workData.locationId}
                             onChange={handleInputChange}
                             className="form-select"
-                            
+
                         >
                             <option value="">Select Location</option>
                             {locations.map(location => (
