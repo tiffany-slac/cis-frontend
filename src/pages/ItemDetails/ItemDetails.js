@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
-import Breadcrumb from "../../components/Breadcrumb";
+import Breadcrumb from "../../components/breadcrumb";
 import LocationHistForm from "./locationHistForm";
 import { fetchElement, fetchPath, updateElement, fetchClass } from "../../services/api";
 import "./itemDetails.css";
