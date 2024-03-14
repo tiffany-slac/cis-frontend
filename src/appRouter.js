@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Layout from './layout/layout';
-import Home from './pages/home'; 
-import Profile from './pages/profile/profile';
+import Home from './pages/dashboard/home'; 
+import Profile from './pages/settings/profile';
 import Cwm from './pages/cwm/cwm';
-import ItemDetails from './pages/itemDetails/itemDetails';
+import ItemDetails from './pages/cis/itemDetails';
 import ActivityDetails from './pages/cwm/activity/activityDetails';
 import Settings from './pages/settings/settings';
 import Admin from './pages/admin/admin';

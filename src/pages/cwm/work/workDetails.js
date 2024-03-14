@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'; // Import Link from react-ro
 import { fetchAWork, fetchActivity } from "../../../services/api";
 import ActivityForm from '../activity/activityForm';
 import EditWorkForm from './editWorkForm';
-import Breadcrumb from '../../../components/breadcrumb';
+import Breadcrumb from '../../../components/Breadcrumb';
 import './workDetails.css';
 
 const WorkDetails = () => {

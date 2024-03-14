@@ -1,3 +1,5 @@
+// elogAdmin.js
+
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
