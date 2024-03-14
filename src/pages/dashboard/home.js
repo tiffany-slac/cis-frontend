@@ -1,5 +1,5 @@
 import React from 'react';
-import CardWidget from '../../components/CardWidget/CardWidget';
+import CardWidget from '../../components/CardWidget';
 
 function Home() {
   
