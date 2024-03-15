@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
 import { fetchAWork, fetchActivity, fetchAActivity } from "../../../services/api";
-import ActivityForm from './activityForm';
-import EditWorkForm from '../work/editWorkForm';
+import EditActivityForm from './editActivityForm';
 import Breadcrumb from '../../../components/Breadcrumb';
 import './activityDetails.css';
 
@@ -10,7 +9,7 @@ const ActivityDetails = () => {
     const { workId, activityId } = useParams(); // Get the asset ID from the URL params
     const [loading, setLoading] = useState(true);
     const [showActivityForm, setShowActivityForm] = useState(false); // State to control the visibility of the activity form
-    const [showEditForm, setShowEditForm] = useState(false);
+    const [showEditActivityForm, setshowEditActivityForm] = useState(false);
     const [activities, setActivities] = useState([]);
     const [work, setWork] = useState(null);
     const [oneActivity, setOneActivity] = useState([]);
@@ -54,12 +53,12 @@ const ActivityDetails = () => {
     }, [workId, activityId]);
 
     const toggleEditForm = () => {
-        setShowEditForm(prevState => !prevState);
+        setshowEditActivityForm(prevState => !prevState);
     };
 
 
     return (
-        <div className='work-content-container'>
+        <div className='activity-content-container'>
 
             <div className="activity-details-container">
                 <Breadcrumb items={breadcrumbItems} style={{ marginLeft: '20px' }} />
@@ -68,7 +67,17 @@ const ActivityDetails = () => {
                     <button className="edit-button" onClick={toggleEditForm}>Edit</button>
                 </div>
 
-                {showEditForm && <EditWorkForm showEditWorkForm={showEditForm} setshowEditWorkForm={setShowEditForm} />}
+                {showEditActivityForm && <EditActivityForm showEditActivityForm={showEditActivityForm} setshowEditActivityForm={setshowEditActivityForm} />}
+
+                {oneActivity && ( // Conditionally render EditActivityForm
+                <EditActivityForm
+                    showEditActivityForm={showEditActivityForm}
+                    setshowEditActivityForm={setshowEditActivityForm}
+                    workId={workId}
+                    activityId={activityId}
+                    activityData={oneActivity} // Pass the fetched activity data
+                />
+            )}
 
                 <div className='work-card'>
                     {/* Asset Details */}

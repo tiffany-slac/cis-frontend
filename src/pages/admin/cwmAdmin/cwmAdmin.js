@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
-import { fetchShopGroups, fetchLocations, fetchWork } from "../../services/api";
-import "./admin.css";
+import { fetchShopGroups, fetchLocations, fetchWork } from "../../../services/api.js";
+import "../admin.css";
 import ShopGroupForm from "./shopGroupForm.js";
-import LocationForm from './../cwm/locationForm.js';
+import LocationForm from '../../cwm/locationForm.js';
 
 
 function CWMadmin() {

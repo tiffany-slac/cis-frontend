@@ -44,49 +44,6 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
         fetchData();
     }, [workId]);
 
-    // useEffect(() => {
-    //     const fetchWorkTypes = async () => {
-    //         try {
-    //             const typesResponse = await fetchWorkType();
-    //             setWorkTypes(typesResponse || []);
-    //         } catch (error) {
-    //             console.error('Error fetching work types:', error);
-    //         }
-    //     };
-
-    //     const fetchWorkLocations = async () => {
-    //         try {
-    //             const locationsResponse = await fetchLocations();
-    //             setLocations(locationsResponse.payload || []);
-    //         } catch (error) {
-    //             console.error('Error fetching locations:', error);
-    //         }
-    //     };
-
-    //     const fetchWorkShopGroups = async () => {
-    //         try {
-    //             const shopGroupsResponse = await fetchShopGroups();
-    //             setShopGroups(shopGroupsResponse || []);
-    //         } catch (error) {
-    //             console.error('Error fetching shop groups:', error);
-    //         }
-    //     };
-
-    //     const fetchWorkUsers = async () => {
-    //         try {
-    //             const usersResponse = await fetchUsers();
-    //             setUsers(usersResponse.payload || []);
-    //         } catch (error) {
-    //             console.error('Error fetching users:', error);
-    //         }
-    //     };
-
-    //     fetchWorkTypes();
-    //     fetchWorkLocations();
-    //     fetchWorkShopGroups();
-    //     fetchWorkUsers();
-    // }, []);
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {

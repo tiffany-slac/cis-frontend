@@ -126,6 +126,34 @@ export const createActivity = async (workId, activityData) => {
   }
 };
 
+export const updateActivity = async (workId, activityId, activityData) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/work/${workId}/activity/${activityId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+        body: JSON.stringify(activityData)
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      console.log("Updated work - api.js");
+      return data;
+    } else {
+      throw new Error("Failed to update work");
+    }
+  } catch (error) {
+    throw new Error("Error updating work:", error.message);
+  }
+};
+
 export const updateWork = async (workId, workData) => {
   try {
     const token = await extractJWT();

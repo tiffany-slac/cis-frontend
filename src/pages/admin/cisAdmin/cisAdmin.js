@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
+import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../../services/api";
 import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
 import ClassForm from "./classForm";
-import ItemForm from "./itemForm";
-import ElementForm from "../cis/elementForm";
-import "./admin.css";
+import ItemForm from "../itemForm";
+import ElementForm from "../../cis/elementForm";
+import "../admin.css";
 
 function CISadmin() {
   const history = useHistory();

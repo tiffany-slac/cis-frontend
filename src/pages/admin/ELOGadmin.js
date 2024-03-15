@@ -3,25 +3,15 @@ import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
 import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
-import ClassForm from "./classForm";
-import ItemForm from "./itemForm";
-import ElementForm from "../cis/elementForm";
 import "./admin.css";
 
 function ELOGadmin() {
   const history = useHistory();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showItemForm, setShowItemForm] = useState(false);
-  const [showClassForm, setShowClassForm] = useState(false);
-  const [showElementForm, setShowElementForm] = useState(false);
-  const [classTypes, setClassTypes] = useState([]);
   const [domains, setDomains] = useState([]);
   const [classes, setClasses] = useState([]);
   const [classDetails, setClassDetails] = useState([]);
   const [elements, setElements] = useState([]);
-  const [nicknameCount, setNicknameCount] = useState(0);
-  const [buildingCount, setBuildingCount] = useState(0);
-  const [itemCount, setItemCount] = useState(0);
   const [expandedClasses, setExpandedClasses] = useState([]);
 
 
