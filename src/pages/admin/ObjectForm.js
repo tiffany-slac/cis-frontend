@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { fetchClassTypes, fetchClass, fetchAllClass } from "../../services/api";
+import { fetchClass, fetchAllClass } from "../../services/api";
 
 function ObjectForm({ showObjectForm, setShowObjectForm }) {
   const [classTypes, setClassTypes] = useState([]);
   const [selectedClassType, setSelectedClassType] = useState("");
   const [classData, setClassData] = useState(null);
   const [formFields, setFormFields] = useState([]);
-  const [formData, setFormData] = useState({});
 
   const getClassIdByName = async (className) => {
     try {
@@ -24,7 +23,6 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
     }
   };
   
-
   const handleClassTypeChange = async (e) => {
     const selectedType = e.target.value;
     setSelectedClassType(selectedType);
@@ -42,7 +40,6 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
     }
   };
   
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -73,8 +70,6 @@ function ObjectForm({ showObjectForm, setShowObjectForm }) {
     }
   }, [classData]);
   
-  
-
   const renderFormFields = () => {
     return formFields.map((field) => {
       return (

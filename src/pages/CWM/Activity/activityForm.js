@@ -56,18 +56,67 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
             });
     };
 
+    // Define descriptions with their labels and corresponding keys
+    const swDescriptions = [
+        { key: 'testPlanDescription', label: 'Test Plan Description' },
+        { key: 'backoutPlanDescription', label: 'Backout Plan Description' },
+        { key: 'systemRequiredDescription', label: 'System Required Description' },
+        { key: 'systemEffectedDescription', label: 'System Effected Description' },
+        { key: 'riskBenefitDescription', label: 'Risk Benefit Description' },
+        { key: 'dependenciesDescription', label: 'Dependencies Description' },
+    ];
+
+    // Render descriptions based on activityTypeId
+    const renderSwDescriptions = () => {
+        if (activityData.activityTypeId !== '65e9067f84ed927a7cbc0e66') return null;
+
+        return swDescriptions.map(({ key, label }) => (
+            <div key={key} className="form-group">
+                <label htmlFor={key} className="form-label">
+                    {label}<span className="required">*</span>
+                </label>
+                <textarea
+                    id={key}
+                    name={key}
+                    value={activityData[key]}
+                    onChange={handleInputChange}
+                    className="form-textarea"
+                    required
+                />
+            </div>
+        ));
+    };
+
     return (
         <div className={`modal ${showActivityForm ? "show" : "hide"}`}>
-            <div className="form-content">
+            <div className="activityform-content">
                 <span className="close" onClick={() => setShowActivityForm(false)}>
                     &times;
                 </span>
 
-                <h1 className="form-title">NEW ACTIVITY FORM</h1>
+                <p className="activityform-title">Task</p>
+                <hr className="line" /><br></br>
 
                 <form onSubmit={handleSubmit} className="work-form">
+
                     <div className="form-group">
-                        <label htmlFor="title" className="form-label">Title</label>
+                        <label className="form-label">Activity Type<span className="required">*</span></label>
+                        <div className="button-group">
+                            {activityTypes.map(type => (
+                                <button
+                                    key={type.id}
+                                    type="button" // Add type="button" to prevent form submission
+                                    className={`activity-type-button ${activityData.activityTypeId === type.id ? 'selected' : ''}`}
+                                    onClick={() => setactivityData({ ...activityData, activityTypeId: type.id })}
+                                >
+                                    {type.title}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="title" className="form-label">Title<span className="required">*</span></label>
                         <input
                             type="text"
                             id="title"
@@ -80,7 +129,7 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="description" className="form-label">Description</label>
+                        <label htmlFor="description" className="form-label">Description<span className="required">*</span></label>
                         <input
                             type="text"
                             id="description"
@@ -90,22 +139,6 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                             onChange={handleInputChange}
                             className="form-input"
                         />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="activityTypeId" className="form-label">Activity Type</label>
-                        <select
-                            id="activityTypeId"
-                            name="activityTypeId"
-                            value={activityData.activityTypeId}
-                            onChange={handleInputChange}
-                            className="form-select"
-                        >
-                            <option value="">Select Activity Type</option>
-                            {activityTypes.map(type => (
-                                <option key={type.id} value={type.id}>{type.title}</option>
-                            ))}
-                        </select>
                     </div>
 
                     <div className="form-group">
@@ -122,10 +155,11 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                                 <option key={index} value={subtype}>{subtype}</option>
                             ))}
                         </select>
-
                     </div>
 
-                    <button type="submit" className="form-button">Create Work</button>
+                    {renderSwDescriptions()}
+
+                    <button type="submit" className="activityform-button">Create Task</button>
                 </form>
             </div>
         </div>

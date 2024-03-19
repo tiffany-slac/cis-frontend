@@ -40,7 +40,7 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setSho
                     }}
                     className="dropbtn"
                 >
-                    <span>+ CATER</span>
+                    <span>+ Problem Ticket</span>
                 </button>
                 {showWorkForm && (
                     <WorkForm

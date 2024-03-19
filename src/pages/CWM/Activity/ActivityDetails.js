@@ -70,14 +70,40 @@ const ActivityDetails = () => {
                 {showEditActivityForm && <EditActivityForm showEditActivityForm={showEditActivityForm} setshowEditActivityForm={setshowEditActivityForm} />}
 
                 {oneActivity && ( // Conditionally render EditActivityForm
-                <EditActivityForm
-                    showEditActivityForm={showEditActivityForm}
-                    setshowEditActivityForm={setshowEditActivityForm}
-                    workId={workId}
-                    activityId={activityId}
-                    activityData={oneActivity} // Pass the fetched activity data
-                />
-            )}
+                    <EditActivityForm
+                        showEditActivityForm={showEditActivityForm}
+                        setshowEditActivityForm={setshowEditActivityForm}
+                        workId={workId}
+                        activityId={activityId}
+                        activityData={oneActivity} // Pass the fetched activity data
+                    />
+                )}
+
+                <div className='work-card'>
+                    {/* Asset Details */}
+                    {work && (
+                        <div>
+                            <p>Work Summary </p>
+                            <hr className="line" />
+                            <div>
+                                <div className="container">
+                                    <div className="column left-column">
+                                        <p className="work-label">Status</p>
+                                        <p className="work-label">Assigned To</p>
+                                        <p className="work-label">Work Type</p>
+                                        <p className="work-label">Scheduling Priority</p>
+                                    </div>
+                                    <div className="column right-column">
+                                        <p>{work.title}</p>
+                                        <p>{work.workType.title}</p>
+                                        <p>{work.location.name}</p>
+                                        <p>{work.shopGroup.name}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 <div className='work-card'>
                     {/* Asset Details */}
@@ -147,7 +173,7 @@ const ActivityDetails = () => {
                     <hr className="line" />
                 </div>
             </div>
-            
+
 
             {/* <div className="activity-details-container2">
                 <div className="attachments-activity-container">

@@ -138,7 +138,6 @@ function CISadmin() {
               {formatClassName(parentClass.name)}
             </td>
             <td>{parentClass.id}</td>
-            {/* <td>{parentClass.extendsClass && parentClass.extendsClass.length > 0 ? parentClass.extendsClass.join(', ') : 'None'}</td> */}
           </tr>
         );
       }
@@ -183,108 +182,20 @@ function CISadmin() {
 
   return (
     <div className="cis-admin">
-      <h3 style={{ textAlign: 'center' }}>CIS Administrator</h3> 
+      <h3 style={{ textAlign: 'center' }}>CIS Administrator</h3>
 
       {/* Button to add a new class */}
       <div className="new-class-button">
-      <button className="dropbtn" onClick={() => setShowClassForm(!showClassForm)}>
-        {showClassForm ? "Close Class Form" : " + Class"}
-      </button>
-      {showClassForm && (
-        <ClassForm
-          showClassForm={showClassForm}
-          setShowClassForm={setShowClassForm}
-        />
-      )}
-</div>
-
-      {/* <div className="new-class-button">
-        <button
-          onClick={() => {
-            handleItemClick("Class");
-            setShowClassForm(true);
-          }}
-          className="dropbtn"
-        >
-          <span>+</span> New Class
+        <button className="dropbtn" onClick={() => setShowClassForm(!showClassForm)}>
+          {showClassForm ? "Close Class Form" : " + Class"}
         </button>
         {showClassForm && (
           <ClassForm
+            showClassForm={showClassForm}
             setShowClassForm={setShowClassForm}
-            classTypes={classTypes}
           />
         )}
       </div>
-
-      {showClassForm && (
-            <ClassForm setShowClassForm={setShowClassForm} />
-          )} */}
-
-      {/* {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />} */}
-      
-
-      {/* Card container for displaying statistics */}
-      {/* <div className="card-container"> */}
-
-        {/* Card for total classes */}
-        {/* <div className="admin-card">
-          <div className="card-content">
-            <div>
-              <h2>{buildingCount}</h2>
-              <p>Total classes</p>
-            </div>
-            <div className="card-icon">
-              <FontAwesomeIcon icon={faBox} title="Home" />
-            </div>
-          </div>
-          <div className="card-action">
-            <span className="card-add">+</span>
-          </div>
-        </div> */}
-
-        {/* Card for total locations */}
-        {/* <div className="admin-card">
-          <div className="card-content">
-            <div>
-              <h2>{nicknameCount}</h2>
-              <p>Total Locations</p>
-            </div>
-            <div className="card-icon">
-              <FontAwesomeIcon icon={faObjectGroup} title="Home" />
-            </div>
-          </div>
-          <div
-            className="card-action"
-            onClick={() => setShowElementForm(!showElementForm)}
-          >
-            <span className="card-add">+</span>
-          </div>
-          {showElementForm && (
-            <ElementForm setShowElementForm={setShowElementForm} />
-          )}
-        </div>
-
-        {showItemForm && <ItemForm setShowItemForm={setShowItemForm} />} */}
-
-        {/* Card for authorized users */}
-        {/* <div className="admin-card">
-          <div className="card-content">
-            <div>
-              <h2>{itemCount}</h2>
-              <p>Authorized Users</p>
-            </div>
-            <div className="card-icon">
-              <FontAwesomeIcon icon={faSquarePollVertical} title="Home" />
-            </div>
-          </div>
-          <div
-            className="card-action"
-            onClick={() => setShowClassForm(!showClassForm)}
-          >
-            <span className="card-add">+</span>
-          </div>
-        </div>
-      </div> */}
 
       {/* Display categories in a table */}
       <div className="categories-display">
@@ -381,8 +292,7 @@ function CISadmin() {
               ))}
             </tbody>
           </table>
-        </div>
-        <br /><br /><br /><br /><br />
+        </div><br /><br /><br /><br /><br />
       </div><br /><br />
     </div>
   );

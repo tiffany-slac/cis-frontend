@@ -1,3 +1,84 @@
+.activityform-title {
+    color: black;
+}
+
+.activityform-content {
+    position: fixed;
+    bottom: 0; /* Align to the bottom */
+    right: 0; /* Align to the right */
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%; /* Adjust the width as needed */
+    height: 90%;
+    border-radius: 5px;
+    transform: translate(0, 0); /* No transformation needed */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    z-index: 97;
+    overflow-y: auto;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between; /* Distribute buttons evenly */
+    width: 100%; /* Take up 100% width of the container */
+}
+
+.activity-type-button {
+    flex: 1; /* Make buttons evenly spaced */
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    text-transform: capitalize; 
+}
+
+.activity-type-button.selected {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.category-label {
+    color: grey;
+    font-size: 14px;
+}
+
+.form-textarea {
+    width: 100%;
+    min-height: 4em; /* Minimum height for 4 lines */
+    resize: none; /* Disable resizing */
+    border: 1px solid #ccc; /* Add border */
+    padding: 8px; /* Add padding */
+    font-size: 16px; /* Set font size */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+    word-wrap: break-word; /* Allow long words to be broken and wrap onto the next line */
+    overflow-y: auto; /* Add scrollbar when content overflows vertically */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    max-width: 100%; /* Set maximum width */
+    flex: 1; /* Allow textarea to grow */
+}
+
+.activityform-button {
+    display: block;
+    margin: 0 auto; /* Center the button horizontally */
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.activityform-button:hover {
+    background-color: #0056b3;
+}
+
+
 /* .modal {
     display: none; 
     position: fixed;

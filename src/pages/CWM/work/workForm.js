@@ -73,20 +73,20 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
         }
     };
 
-// Function to handle input changes
-const handleInputChange = (e) => {
-    const { name, value, type } = e.target;
+    // Function to handle input changes
+    const handleInputChange = (e) => {
+        const { name, value, type } = e.target;
 
-    // Check if the input field is a select element with multiple options
-    if (type === 'select-multiple') {
-        // Get an array of selected option values
-        const selectedValues = Array.from(e.target.selectedOptions).map(option => option.value);
-        setWorkData({ ...workData, [name]: selectedValues });
-    } else {
-        // For other input types, simply update the value in the state
-        setWorkData({ ...workData, [name]: value });
-    }
-};
+        // Check if the input field is a select element with multiple options
+        if (type === 'select-multiple') {
+            // Get an array of selected option values
+            const selectedValues = Array.from(e.target.selectedOptions).map(option => option.value);
+            setWorkData({ ...workData, [name]: selectedValues });
+        } else {
+            // For other input types, simply update the value in the state
+            setWorkData({ ...workData, [name]: value });
+        }
+    };
 
 
     return (
@@ -96,7 +96,9 @@ const handleInputChange = (e) => {
                     &times;
                 </span>
 
-                <h1 className="form-title">NEW WORK FORM</h1> {/* Title for the form */}
+                <h1 className="workform-title">New Problem Ticket</h1> {/* Title for the form */}
+                <p className="form-subtitle">Please provide the details of the problem</p>
+                <hr className="line" /><br></br>
 
                 <form onSubmit={handleSubmit} className="work-form">
                     <div className="form-group">
@@ -115,12 +117,12 @@ const handleInputChange = (e) => {
                     <div className="form-group">
                         <label htmlFor="description" className="form-label">Description<span className="required">*</span></label>
                         <input
-                            type="text"
+                            // type="text"
                             id="description"
                             name="description"
                             value={workData.description}
                             onChange={handleInputChange}
-                            className="form-input"
+                            className="workform-textarea"
                             required
                         />
                     </div>
@@ -175,7 +177,7 @@ const handleInputChange = (e) => {
                         </select>
                     </div>
 
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label htmlFor="assignedTo" className="form-label">Assign To</label>
                         <select
                             id="assignedTo"
@@ -191,8 +193,7 @@ const handleInputChange = (e) => {
                                 </option>
                             ))}
                         </select>
-
-                    </div>
+                    </div> */}
 
                     <button type="submit" className="form-button">Create Work</button>
                 </form>

@@ -37,6 +37,8 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
 
                 const usersResponse = await fetchUsers();
                 setUsers(usersResponse.payload || []);
+
+                console.log(workData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -81,11 +83,11 @@ const handleInputChange = (e) => {
                     &times;
                 </span>
 
-                <h1 className="form-title">UPDATE WORK</h1> {/* Title for the form */}
+                <h1 className="form-title">Edit Work</h1> {/* Title for the form */}
 
                 <form onSubmit={handleSubmit} className="work-form">
                     <div className="form-group">
-                        <label htmlFor="title" className="form-label">Title<span className="required">*</span></label>
+                        <label htmlFor="title" className="form-label">Title</label>
                         <input
                             type="text"
                             id="title"
@@ -98,7 +100,7 @@ const handleInputChange = (e) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="description" className="form-label">Description<span className="required">*</span></label>
+                        <label htmlFor="description" className="form-label">Description</label>
                         <input
                             type="text"
                             id="description"
@@ -111,7 +113,7 @@ const handleInputChange = (e) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="workTypeId" className="form-label">Work Type<span className="required">*</span></label>
+                        <label htmlFor="workTypeId" className="form-label">Work Type</label>
                         <select
                             id="workTypeId"
                             name="workTypeId"
@@ -128,7 +130,7 @@ const handleInputChange = (e) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="locationId" className="form-label">Location<span className="required">*</span></label>
+                        <label htmlFor="locationId" className="form-label">Location</label>
                         <select
                             id="locationId"
                             name="locationId"

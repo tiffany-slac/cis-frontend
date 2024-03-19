@@ -6,14 +6,41 @@ import { faHome, faNewspaper, faCog, faBox, faTicket, faLock } from "@fortawesom
 import "./Sidebar.css";
 
 function Sidebar() {
-  // Use the current location to determine the active button
-  const location = useLocation();
-  // State to manage the collapsed/expanded state of the sidebar
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  // State to keep track of the active button
+  const location = useLocation(); // Use the current location to determine the active button
+  const [isCollapsed, setIsCollapsed] = useState(true); // State to manage the collapsed/expanded state of the sidebar
   const [activeButton, setActiveButton] = useState(
     localStorage.getItem("activeButton") || location.pathname
-  );
+  ); // State to keep track of the active button
+
+  const buttons = [
+    { path: "/home", icon: faHome, label: "Home" },
+    { path: "/inventory", icon: faBox, label: "Inventory" },
+    { path: "/cwm", icon: faTicket, label: "CWM" },
+    { path: "/elog", icon: faNewspaper, label: "eLogs" },
+    { path: "/admin/generalAdmin", icon: faLock, label: "Admin" },
+    { path: "/settings", icon: faCog, label: "Settings" },
+  ];
+  
+  const renderButtons = () => {
+    return buttons.map((button, index) => (
+      <div key={index}>
+        <Link to={button.path}>
+          <button
+            onClick={() => handleClick(button.label.toLowerCase(), button.path)}
+            className={`icon-button ${
+              activeButton === button.path ? "active-button" : ""
+            }`}
+          >
+            <div className="button-label">
+              <FontAwesomeIcon icon={button.icon} className="icon" title={button.label} />
+              <div className="small-label">{button.label}</div>
+              <span className="label">{button.label}</span>
+            </div>
+          </button>
+        </Link>
+      </div>
+    ));
+  };
 
   // Handle button clicks and update the active button
   const handleClick = (buttonName, path) => {
@@ -42,127 +69,8 @@ function Sidebar() {
   return (
     <div className={`Sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <ul>
-        {/* Sidebar buttons with links */}
-
         <br></br>
-
-        <div>
-          <Link to="/home">
-            <button
-              onClick={() => handleClick("home", "/home")}
-              className={`icon-button ${
-                activeButton === "/home" ? "active-button" : ""
-              }`}
-            >
-              <div className="button-label">
-                <FontAwesomeIcon icon={faHome} className="icon" title="Home" />
-                <div className="small-label">Home</div>
-              </div>
-              <span className="label">Home</span>
-            </button>
-          </Link>
-        </div>
-
-        <div>
-          <Link to="/inventory">
-            <button
-              onClick={() => handleClick("inventory", "/inventory")}
-              className={`icon-button ${
-                activeButton === "/inventory" ? "active-button" : ""
-              }`}
-            >
-              <div className="button-label">
-                <FontAwesomeIcon
-                  icon={faBox}
-                  className="icon"
-                  title="Inventory"
-                />
-                <span className="small-label">Inventory</span>
-                <span className="label">Inventory</span>
-              </div>
-            </button>
-          </Link>
-        </div>
-
-        <div>
-          <Link to="/cwm">
-            <button
-              onClick={() => handleClick("cwm", "/cwm")}
-              className={`icon-button ${
-                activeButton === "/cwm" ? "active-button" : ""
-              }`}
-            >
-              <div className="button-label">
-                <FontAwesomeIcon
-                  icon={faTicket}
-                  className="icon"
-                  title="CWM"
-                />
-                <div className="small-label">CWM</div>
-                <span className="label">CWM</span>
-              </div>
-            </button>
-          </Link>
-        </div>
-
-        <div>
-          <Link to="/elog">
-            <button
-              onClick={() => handleClick("elog", "/elog")}
-              className={`icon-button ${
-                activeButton === "/elog" ? "active-button" : ""
-              }`}
-            >
-              <div className="button-label">
-                <FontAwesomeIcon
-                  icon={faNewspaper}
-                  className="icon"
-                  title="User"
-                />
-                <div className="small-label">eLogs</div>
-                <span className="label">User</span>
-              </div>
-            </button>
-          </Link>
-        </div>
-
-        <div>
-          <Link to="/admin/generalAdmin">
-            <button
-              onClick={() => handleClick("admin", "/admin/generalAdmin")}
-              className={`icon-button ${
-                activeButton === "/admin/generalAdmin" ? "active-button" : ""
-              }`}
-            >
-              <div className="button-label">
-                <FontAwesomeIcon icon={faLock} className="icon" title="Admin" />
-                <div className="small-label">Admin</div>
-                <span className="label">Admin</span>
-              </div>
-            </button>
-          </Link>
-        </div>
-
-        <div>
-          <Link to="/settings">
-            <button
-              onClick={() => handleClick("settings", "/settings")}
-              className={`icon-button ${
-                activeButton === "/settings" ? "active-button" : ""
-              }`}
-            >
-              <div className="button-label">
-                <FontAwesomeIcon
-                  icon={faCog}
-                  className="icon"
-                  title="Settings"
-                />
-                <span className="small-label">Settings</span>
-                <span className="label">Settings</span>
-              </div>
-            </button>
-          </Link>
-        </div>
+        {renderButtons()}
       </ul>
     </div>
   );

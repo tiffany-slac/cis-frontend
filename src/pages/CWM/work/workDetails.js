@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
-import { fetchAWork, fetchActivity } from "../../../services/api";
+import { fetchAWork, fetchActivity, fetchAActivity } from "../../../services/api";
 import ActivityForm from '../activity/activityForm';
 import EditWorkForm from './editWorkForm';
 import Breadcrumb from '../../../components/Breadcrumb';
 import './workDetails.css';
+import '../activity/activityForm.css';
 
 const WorkDetails = () => {
-    const { workId } = useParams(); // Get the asset ID from the URL params
+    const { workId, activityId } = useParams(); // Get the asset ID from the URL params
     const [inventoryDetails, setInventoryDetails] = useState(null); // State to hold the asset details
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Jobs');
@@ -15,12 +16,18 @@ const WorkDetails = () => {
     const [showEditForm, setShowEditForm] = useState(false);
     const [activities, setActivities] = useState([]);
     const [activeStep, setActiveStep] = useState(0); // Initialize activeStep state
+    const [showJobDetails, setShowJobDetails] = useState(false);
+    const [selectedActivity, setSelectedActivity] = useState(null);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const sidebarRef = useRef(null); // Ref for the sidebar panel
 
+    const [showEditActivityForm, setshowEditActivityForm] = useState(false);
+    const [oneActivity, setOneActivity] = useState([]);
 
     const breadcrumbItems = [
         { label: 'Home', link: '/' },
         { label: 'Work', link: '/cwm' },
-        { label: 'Work Details', link: '/work/65e908f7708a4b739302ef55' },
+        { label: 'Work Details', link: `/work/${workId}` },
     ];
 
     const menuItems = ['Created', 'Opened', 'Approved', 'In Progress', 'Closed'];
@@ -57,6 +64,42 @@ const WorkDetails = () => {
         fetchActivities();
     }, [workId]);
 
+    useEffect(() => {
+        const fetchOneActivity = async () => {
+            try {
+                const response = await fetchAActivity(workId, activityId);
+                setOneActivity(response.payload);
+                console.log(response.payload);
+            } catch (error) {
+                console.error("Error fetching activity:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchOneActivity();
+    }, [workId, activityId]);
+
+    const toggleEditActivityForm = () => {
+        setshowEditActivityForm(prevState => !prevState);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                // Click occurred outside of the sidebar panel, close it
+                setShowJobDetails(false);
+            }
+        };
+
+        // Add event listener to listen for clicks on the document
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Cleanup function to remove the event listener when the component unmounts
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const scrollToContent = (item) => {
         const contentElement = document.getElementById(item.toLowerCase());
         if (contentElement) {
@@ -69,10 +112,14 @@ const WorkDetails = () => {
         setShowEditForm(prevState => !prevState);
     };
 
+    const handleActivityClick = (activity) => {
+        setSelectedActivity(activity);
+        setShowJobDetails(true);
+    };
 
     return (
         <div className='work-content-container'>
-            <div className="work-statusmenu">
+            {/* <div className="work-statusmenu">
                 <ul className="vertical-progress-bar">
                     {menuItems.map((item, index) => (
                         <li
@@ -85,9 +132,9 @@ const WorkDetails = () => {
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
 
-            <div className="work-details-container">
+            <div className={`work-details-container ${showJobDetails ? 'small-width' : ''}`}>
                 <Breadcrumb items={breadcrumbItems} style={{ marginLeft: '20px' }} />
 
                 <div className="edit-button-container">
@@ -145,10 +192,22 @@ const WorkDetails = () => {
                             <tr>
                                 <th>Job</th>
                                 <th>Description</th>
+                                <th>Type</th>
                                 <th>Subtype</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {activities.map(activity => (
+                                <tr key={activity._id} onClick={() => handleActivityClick(activity)}>
+                                    <td>{activity.title}</td>
+                                    <td>{activity.description}</td>
+                                    <td>{activity.activityType.title}</td>
+                                    <td>{activity.activityTypeSubtype}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+
+                        {/* <tbody>
                             {activities.map(activity => (
                                 <tr key={activity._id}>
                                     <td>
@@ -160,8 +219,84 @@ const WorkDetails = () => {
                                     <td>{activity.activityTypeSubtype}</td>
                                 </tr>
                             ))}
-                        </tbody>
+                        </tbody> */}
                     </table><br />
+
+                    {showJobDetails && (
+                        <div ref={sidebarRef} className={`sidebar-panel ${showJobDetails ? 'open' : ''}`}>
+                            {/* Display job details here */}
+                            <h1>Job Details</h1>
+                            {selectedActivity && (
+                                <>
+                                    <div className='activity-card'>
+                                        {/* Asset Details */}
+                                        {inventoryDetails && (
+                                            <div>
+                                                <p>Activity Summary </p>
+                                                <hr className="line" />
+                                                <div>
+                                                    <div className="container">
+                                                        <div className="column left-column">
+                                                            <p className="work-label">Status</p>
+                                                            <p className="work-label">Title</p>
+                                                            <p className="work-label">Description</p>                                                        </div>
+                                                        <div className="column right-column">
+                                                            <p>{selectedActivity.currentStatus.status}</p>
+                                                            <p>{selectedActivity.title}</p>
+                                                            <p>{selectedActivity.description}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className='activity-card'>
+                                        {/* Asset Details */}
+                                        {inventoryDetails && (
+                                            <div>
+                                                <p>Work Release Conditions </p>
+                                                <hr className="line" />
+
+                                                <div className="container">
+                                                    <div className="column left-column">
+                                                        <p className="work-label">Title</p>
+                                                        <p className="work-label">Description</p>
+                                                    </div>
+                                                    <div className="column right-column">
+                                                        <p>{inventoryDetails.title}</p>
+                                                        <p>{inventoryDetails.description}</p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <hr className="line" />
+                                                    <div className="container">
+                                                        <div className="column left-column">
+                                                            <p className="work-label">Test Plan</p>
+                                                            <p className="work-label">Backout Plan</p>
+                                                            <p className="work-label">System Required</p>
+                                                            <p className="work-label">Risk Benefit</p>
+                                                            <p className="work-label">Dependencies</p>
+                                                        </div>
+                                                        <div className="column right-column">
+                                                            <p>{inventoryDetails.title}</p>
+                                                            <p>{inventoryDetails.workType.title}</p>
+                                                            <p>{inventoryDetails.location.name}</p>
+                                                            <p>User1, User1 </p>
+                                                            <p>{inventoryDetails.shopGroup.name}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        <hr className="line" />
+                                    </div>
+
+                                </>
+                            )}
+                        </div>
+                    )}
+
 
                     <div className="new-class-button">
                         <button className="dropbtn" onClick={() => setShowActivityForm(!showActivityForm)}>
