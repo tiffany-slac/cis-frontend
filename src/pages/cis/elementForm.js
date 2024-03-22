@@ -350,6 +350,9 @@ function ElementForm({ showElementForm, setShowElementForm }) {
           <span className="close" onClick={() => setShowElementForm(false)}>
             &times;
           </span>
+          <p>New Inventory Item</p>
+          <hr className="line" />
+          <br></br>
           <form className="class-form" onSubmit={handleSubmit}>
             <label htmlFor="classesName">Select Manufacturer:</label>
             <select
@@ -398,7 +401,7 @@ function ElementForm({ showElementForm, setShowElementForm }) {
             )}
 
             {dynamicForm}
-            <input type="submit" value="Create Element" />
+            <input type="submit" value="Create Item" />
             <br />
             <br />
           </form>

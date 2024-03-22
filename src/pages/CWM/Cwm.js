@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link, useLocation } from "react-router-dom";
-import SearchPage from "./searchPage";
-import ReportsPage from "./reportsPage";
+import SearchPage from "./searchPage.js";
+import ReportsPage from "./reportsPage.js";
 import CalendarPage from "./calendarPage.js";
 import SubHeader from './subHeader.js';
 import "./cwm.css";

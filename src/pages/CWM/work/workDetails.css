@@ -1,6 +1,7 @@
 .work-content-container {
     display: flex;
     height: 100%;
+    width: 100%;
 }
 
 .centered-container {
@@ -98,9 +99,9 @@
 
 .work-details-container2 {
     margin-left: 20px;
-    /* margin-right: 20px; */
+    margin-right: 20px;
     display: flex;
-    width: 30%;
+    /* width: 30%;*/
 }
 
 .work-card {
@@ -116,6 +117,7 @@
 
 .edit-button-container {
     position: absolute;
+    flex-direction: column;
     top: 70px;
     right: 20px;
 }

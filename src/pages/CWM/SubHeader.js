@@ -7,8 +7,7 @@ import "./cwm.css";
 
 const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setShowWorkForm, searchInput, setSearchInput, handleSearch }) => {
     const handleItemClick = (formType) => {
-        // Handle item click here (e.g., navigate to a specific form or perform an action)
-        console.log(`Clicked ${formType}`);
+
     };
 
     return (
@@ -16,7 +15,6 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setSho
 
             {/* Search Bar */}
             <div className="search-wrapper">
-                {/* <FontAwesomeIcon icon={faSearch} className="search-icon" /> */}
                 <input
                     type="text"
                     placeholder="Search..."
@@ -28,19 +26,19 @@ const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setSho
                         }
                     }}
                 />
-                <button onClick={handleSearch}>Search</button>
+                <button onClick={handleSearch}><FontAwesomeIcon icon={faSearch} /></button>
             </div>
 
             {/* New Location Button */}
-            <div className="new-class-button">
+            <div className="new-problem-button">
                 <button
                     onClick={() => {
                         handleItemClick("Work");
                         setShowWorkForm(true);
                     }}
-                    className="dropbtn"
+                    className="problembtn"
                 >
-                    <span>+ Problem Ticket</span>
+                    <span>+ NEW</span>
                 </button>
                 {showWorkForm && (
                     <WorkForm

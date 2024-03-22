@@ -94,44 +94,43 @@ const Inventory = () => {
       <br></br>
       
       {/* New Item Form */}
-      <div className="top-right">
-        <div className="dropdown">
-          <div className="item-form-wrapper">
-            {showElementForm && (
-              <div className={`item-form ${showElementForm ? "slide-in" : ""}`}>
-                <ElementForm
-                  showElementForm={showElementForm}
-                  setShowElementForm={setShowElementForm}
-                />
-              </div>
-            )}
+      <div className="search-bar-new-item-container">
+        {/* Search Bar */}
+        <div className="search-bar">
+          <div className="search-wrapper">
+            {/* Search input field */}
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchInput} // Set the value of the input field
+              onChange={(e) => setSearchInput(e.target.value)} // Handle input change
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
+            />
+            <button onClick={handleSearch}><FontAwesomeIcon icon={faSearch} /></button>
           </div>
-          <button
-            onClick={() => setShowElementForm(!showElementForm)}
-            className="dropbtn"
-          >
-            <span>+</span> New
-          </button>
         </div>
-      </div>
 
-      {/* Search Bar */}
-      <div className="search-bar">
-        <div className="search-wrapper">
-          {/* <FontAwesomeIcon icon={faSearch} className="search-icon" /> */}
-          {/* Search input field */}
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchInput} // Set the value of the input field
-            onChange={(e) => setSearchInput(e.target.value)} // Handle input change
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch();
-              }
-            }}
-          />
-          <button onClick={handleSearch}>Search</button>
+        {/* New Item Button */}
+        <div className="new-item-button">
+          <div className="dropdown">
+            <div className="item-form-wrapper">
+              {showElementForm && (
+                <div className={`item-form ${showElementForm ? "slide-in" : ""}`}>
+                  <ElementForm
+                    showElementForm={showElementForm}
+                    setShowElementForm={setShowElementForm}
+                  />
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => setShowElementForm(!showElementForm)}
+              className="inventorybtn">+ New</button>
+          </div>
         </div>
       </div>
 

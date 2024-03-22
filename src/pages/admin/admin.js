@@ -5,7 +5,7 @@ import { fetchUsers } from '../../services/api'
 import './admin.css';
 import CISadmin from "./cisAdmin/cisAdmin.js";
 import CWMadmin from "./cwmAdmin/cwmAdmin.js";
-import ELOGadmin from "./elogAdmin.js";
+import ELOGadmin from "./ELOGadmin.js";
 import GeneralAdmin from "./generalAdmin.js";
 import { GridRowModes, GridRowEditStopReasons } from '@mui/x-data-grid';
 

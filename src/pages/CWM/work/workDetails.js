@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { useParams, Link, useHistory } from 'react-router-dom'; // Import Link from react-router-dom
 import { fetchAWork, fetchActivity, fetchAActivity } from "../../../services/api";
 import ActivityForm from '../activity/activityForm';
 import EditWorkForm from './editWorkForm';
 import Breadcrumb from '../../../components/Breadcrumb';
+import EditActivityForm from '../activity/editActivityForm';
 import './workDetails.css';
 import '../activity/activityForm.css';
 
 const WorkDetails = () => {
     const { workId, activityId } = useParams(); // Get the asset ID from the URL params
-    const [inventoryDetails, setInventoryDetails] = useState(null); // State to hold the asset details
+    const [workDetails, setWorkDetails] = useState(null); // State to hold the asset details
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Jobs');
     const [showActivityForm, setShowActivityForm] = useState(false); // State to control the visibility of the activity form
@@ -20,9 +21,9 @@ const WorkDetails = () => {
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const sidebarRef = useRef(null); // Ref for the sidebar panel
-
-    const [showEditActivityForm, setshowEditActivityForm] = useState(false);
+    const [showEditActivityForm, setShowEditActivityForm] = useState(false);
     const [oneActivity, setOneActivity] = useState([]);
+    const history = useHistory();
 
     const breadcrumbItems = [
         { label: 'Home', link: '/' },
@@ -38,8 +39,7 @@ const WorkDetails = () => {
         const fetchWorkDetails = async () => {
             try {
                 const response = await fetchAWork(workId);
-                setInventoryDetails(response.payload);
-                console.log(response.payload);
+                setWorkDetails(response.payload);
             } catch (error) {
                 console.error("Error fetching work details:", error);
             } finally {
@@ -54,7 +54,6 @@ const WorkDetails = () => {
             try {
                 const response = await fetchActivity(workId);
                 setActivities(response.payload);
-                console.log(response.payload);
             } catch (error) {
                 console.error("Error fetching activities:", error);
             } finally {
@@ -64,20 +63,19 @@ const WorkDetails = () => {
         fetchActivities();
     }, [workId]);
 
-    useEffect(() => {
-        const fetchOneActivity = async () => {
-            try {
-                const response = await fetchAActivity(workId, activityId);
-                setOneActivity(response.payload);
-                console.log(response.payload);
-            } catch (error) {
-                console.error("Error fetching activity:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchOneActivity();
-    }, [workId, activityId]);
+    // useEffect(() => {
+    //     const fetchOneActivity = async () => {
+    //         try {
+    //             const response = await fetchAActivity(workId, activityId);
+    //             setOneActivity(response.payload);
+    //         } catch (error) {
+    //             console.error("Error fetching activity:", error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+    //     fetchOneActivity();
+    // }, [workId, activityId]);
 
     const toggleEditActivityForm = () => {
         setshowEditActivityForm(prevState => !prevState);
@@ -112,9 +110,14 @@ const WorkDetails = () => {
         setShowEditForm(prevState => !prevState);
     };
 
+    const toggleEditSidebarForm = () => {
+        setShowEditActivityForm(prevState => !prevState);
+    };
+
     const handleActivityClick = (activity) => {
         setSelectedActivity(activity);
         setShowJobDetails(true);
+        history.push(`/work/${workId}/${activity.id}`);
     };
 
     return (
@@ -143,12 +146,11 @@ const WorkDetails = () => {
 
                 {showEditForm && <EditWorkForm showEditWorkForm={showEditForm} setshowEditWorkForm={setShowEditForm} />}
 
-
                 <div className='work-card'>
                     {/* Asset Details */}
-                    {inventoryDetails ? (
+                    {workDetails ? (
                         <div>
-                            <p>CATER ID: {inventoryDetails.title} (TEC) </p>
+                            <p>CATER ID: {workDetails.title} (TEC) </p>
                             <hr className="line" />
 
                             <div className="container">
@@ -157,11 +159,11 @@ const WorkDetails = () => {
                                     <p className="work-label">Description</p>
                                 </div>
                                 <div className="column right-column">
-                                    <p>{inventoryDetails.title}</p>
-                                    <p>{inventoryDetails.description}</p>
+                                    <p>{workDetails.title}</p>
+                                    <p>{workDetails.description}</p>
                                 </div>
                             </div>
-                            {/* <p>ID: {inventoryDetails.id}</p> */}
+                            {/* <p>ID: {workDetails.id}</p> */}
                             <div>
                                 <hr className="line" />
                                 <div className="container">
@@ -173,11 +175,11 @@ const WorkDetails = () => {
                                         <p className="work-label">Shop</p>
                                     </div>
                                     <div className="column right-column">
-                                        <p>{inventoryDetails.title}</p>
-                                        <p>{inventoryDetails.workType.title}</p>
-                                        <p>{inventoryDetails.location.name}</p>
+                                        <p>{workDetails.title}</p>
+                                        <p>{workDetails.workType.title}</p>
+                                        <p>{workDetails.location.name}</p>
                                         <p>User1, User1 </p>
-                                        <p>{inventoryDetails.shopGroup.name}</p>
+                                        <p>{workDetails.shopGroup.name}</p>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +200,7 @@ const WorkDetails = () => {
                         </thead>
                         <tbody>
                             {activities.map(activity => (
-                                <tr key={activity._id} onClick={() => handleActivityClick(activity)}>
+                                <tr key={activity.id} onClick={() => handleActivityClick(activity)}>
                                     <td>{activity.title}</td>
                                     <td>{activity.description}</td>
                                     <td>{activity.activityType.title}</td>
@@ -206,20 +208,6 @@ const WorkDetails = () => {
                                 </tr>
                             ))}
                         </tbody>
-
-                        {/* <tbody>
-                            {activities.map(activity => (
-                                <tr key={activity._id}>
-                                    <td>
-                                        <Link to={`/work/${workId}/${activity.id}`}>
-                                            {activity.title}
-                                        </Link>
-                                    </td>
-                                    <td>{activity.description}</td>
-                                    <td>{activity.activityTypeSubtype}</td>
-                                </tr>
-                            ))}
-                        </tbody> */}
                     </table><br />
 
                     {showJobDetails && (
@@ -229,8 +217,23 @@ const WorkDetails = () => {
                             {selectedActivity && (
                                 <>
                                     <div className='activity-card'>
+                                        <div className="edit-button-container">
+                                            <button className="edit-button" onClick={toggleEditSidebarForm}>Edit</button>
+                                        </div>
+
+                                        {showEditActivityForm && <EditActivityForm showEditActivityForm={showEditActivityForm} setShowEditActivityForm={setShowEditActivityForm} />}
+
+                                        {oneActivity && ( // Conditionally render EditActivityForm
+                                            <EditActivityForm
+                                                showEditActivityForm={showEditActivityForm}
+                                                setShowEditActivityForm={setShowEditActivityForm}
+                                                workId={workId}
+                                                activityId={activityId}
+                                                activityData={oneActivity} // Pass the fetched activity data
+                                            />
+                                        )}
                                         {/* Asset Details */}
-                                        {inventoryDetails && (
+                                        {workDetails && (
                                             <div>
                                                 <p>Activity Summary </p>
                                                 <hr className="line" />
@@ -253,7 +256,7 @@ const WorkDetails = () => {
 
                                     <div className='activity-card'>
                                         {/* Asset Details */}
-                                        {inventoryDetails && (
+                                        {selectedActivity && (
                                             <div>
                                                 <p>Work Release Conditions </p>
                                                 <hr className="line" />
@@ -264,8 +267,8 @@ const WorkDetails = () => {
                                                         <p className="work-label">Description</p>
                                                     </div>
                                                     <div className="column right-column">
-                                                        <p>{inventoryDetails.title}</p>
-                                                        <p>{inventoryDetails.description}</p>
+                                                        <p>{selectedActivity.title}</p>
+                                                        <p>{selectedActivity.description}</p>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -279,11 +282,11 @@ const WorkDetails = () => {
                                                             <p className="work-label">Dependencies</p>
                                                         </div>
                                                         <div className="column right-column">
-                                                            <p>{inventoryDetails.title}</p>
-                                                            <p>{inventoryDetails.workType.title}</p>
-                                                            <p>{inventoryDetails.location.name}</p>
-                                                            <p>User1, User1 </p>
-                                                            <p>{inventoryDetails.shopGroup.name}</p>
+                                                            <p>{selectedActivity.testPlanDescription}</p>
+                                                            <p>{selectedActivity.backoutPlanDescription}</p>
+                                                            <p>{selectedActivity.systemRequiredDescription}</p>
+                                                            <p>{selectedActivity.riskBenefitDescription}</p>
+                                                            <p>{selectedActivity.dependenciesDescription}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -319,9 +322,12 @@ const WorkDetails = () => {
 
                     <div className='work-card'>
                         <div className="attachments-section">
-                            <p id="attachments">Status: NEW</p>
+                            {selectedActivity && (
+                                <p id="attachments">Status: {selectedActivity.currentStatus.status}</p>
+                            )}
                         </div>
                     </div>
+
 
                     <div className='work-card'>
                         <div className="attachments-section">

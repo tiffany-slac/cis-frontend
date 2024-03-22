@@ -60,20 +60,20 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
         }
     };
 
-// Function to handle input changes
-const handleInputChange = (e) => {
-    const { name, value, type } = e.target;
+    // Function to handle input changes
+    const handleInputChange = (e) => {
+        const { name, value, type } = e.target;
 
-    // Check if the input field is a select element with multiple options
-    if (type === 'select-multiple') {
-        // Get an array of selected option values
-        const selectedValues = Array.from(e.target.selectedOptions).map(option => option.value);
-        setWorkData({ ...workData, [name]: selectedValues });
-    } else {
-        // For other input types, simply update the value in the state
-        setWorkData({ ...workData, [name]: value });
-    }
-};
+        // Check if the input field is a select element with multiple options
+        if (type === 'select-multiple') {
+            // Get an array of selected option values
+            const selectedValues = Array.from(e.target.selectedOptions).map(option => option.value);
+            setWorkData({ ...workData, [name]: selectedValues });
+        } else {
+            // For other input types, simply update the value in the state
+            setWorkData({ ...workData, [name]: value });
+        }
+    };
 
 
     return (
@@ -95,7 +95,7 @@ const handleInputChange = (e) => {
                             value={workData.title}
                             onChange={handleInputChange}
                             className="form-input"
-                            
+
                         />
                     </div>
 
@@ -108,7 +108,7 @@ const handleInputChange = (e) => {
                             value={workData.description}
                             onChange={handleInputChange}
                             className="form-textarea"
-                            
+
                         />
                     </div>
 
@@ -120,11 +120,18 @@ const handleInputChange = (e) => {
                             value={workData.workTypeId}
                             onChange={handleInputChange}
                             className="form-select"
-    
+
                         >
-                            <option value="">Select Work Type</option>
+                            {/* Render the default option */}
+
                             {workTypes.map(type => (
-                                <option key={type.id} value={type.id}>{type.title}</option>
+                                <option
+                                    key={type.id}
+                                    value={type.id}
+                                    selected={type.title === workData.workTypeTitle} // Set selected attribute based on condition
+                                >
+                                    {type.title}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -137,11 +144,16 @@ const handleInputChange = (e) => {
                             value={workData.locationId}
                             onChange={handleInputChange}
                             className="form-select"
-                            
+
                         >
-                            <option value="">Select Location</option>
                             {locations.map(location => (
-                                <option key={location.id} value={location.id}>{location.name}</option>
+                                <option
+                                    key={location.id}
+                                    value={location.id}
+                                    selected={location.id === workData.locationId} // Set selected attribute based on condition
+                                >
+                                    {location.name}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -155,9 +167,14 @@ const handleInputChange = (e) => {
                             onChange={handleInputChange}
                             className="form-select"
                         >
-                            <option value="">Select Shop Group</option>
                             {shopGroups.map(group => (
-                                <option key={group.id} value={group.id}>{group.name}</option>
+                                <option
+                                    key={group.id}
+                                    value={group.id}
+                                    selected={group.id === workData.shopGroupId} // Set selected attribute based on condition
+                                >
+                                    {group.name}
+                                </option>
                             ))}
                         </select>
                     </div>

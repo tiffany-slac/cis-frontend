@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation } from "react-router-dom";
-import { faHome, faNewspaper, faCog, faBox, faTicket, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faNewspaper, faCog, faBox, faTicket, faLock, faClock } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
 function Sidebar() {
@@ -15,8 +15,9 @@ function Sidebar() {
   const buttons = [
     { path: "/home", icon: faHome, label: "Home" },
     { path: "/inventory", icon: faBox, label: "Inventory" },
-    { path: "/cwm", icon: faTicket, label: "CWM" },
+    { path: "/cwm", icon: faTicket, label: "Tickets" },
     { path: "/elog", icon: faNewspaper, label: "eLogs" },
+    { path: "/815", icon: faClock, label: "8:15" },
     { path: "/admin/generalAdmin", icon: faLock, label: "Admin" },
     { path: "/settings", icon: faCog, label: "Settings" },
   ];

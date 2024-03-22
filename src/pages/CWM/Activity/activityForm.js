@@ -20,11 +20,9 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
             try {
                 const typeResponse = await fetchActivityType();
                 setActivityTypes(typeResponse || []);
-                console.log(typeResponse);
 
                 const subtypeResponse = await fetchActivitySubtype();
                 setActivitySubtypes(subtypeResponse || []);
-                console.log(subtypeResponse);
             } catch (error) {
                 console.error('Error fetching activity data:', error);
             }
@@ -94,7 +92,7 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                     &times;
                 </span>
 
-                <p className="activityform-title">Task</p>
+                <p className="activityform-title">New Task</p>
                 <hr className="line" /><br></br>
 
                 <form onSubmit={handleSubmit} className="work-form">

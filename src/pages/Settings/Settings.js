@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchProfile } from "../../services/api.js"
 import profileImage from '../../assets/profile.jpg';
-import './settings.css';
+import './Settings.css';
 
 function Settings() {
   const [profile, setProfile] = useState(null);

@@ -64,9 +64,8 @@
 .modal-content {
   background-color: #fefefe;
   padding: 20px;
-  top: 67px;
-  border: 1px solid #888;
-  height: 88vh;
+  top: 65px;
+  height: 90vh;
   border-radius: 5px;
   position: relative;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -76,13 +75,12 @@
 /* Styling for a card element */
 .inventory-card {
   border-radius: 8px;
-  margin: 20px;
+  margin: 20px 0px 20px 0px;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 10px 10px 10px 20px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  width: calc(100% - 40px);
 }
 
 /* Styling for the search page */
@@ -90,16 +88,20 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.search-bar-new-item-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Styling for the search bar */
 .search-bar {
   display: flex;
   align-items: center;
-  width: 100%;
-  padding: 10px 10px 20px 10px; /* Adjust padding as needed */
 }
 
 /* Styling for the filter dropdown in the search bar */
@@ -110,36 +112,33 @@
 
 /* Styling for the input field in the search bar */
 .search-bar input[type="text"] {
-  padding: 8px 30px 8px 40px; /* Adjust the padding to fit the icons */
+  padding: 8px 30px 8px 20px; /* Adjust the padding to fit the icons */
   border: 1px solid #ccc;
   border-radius: 10px 0px 0px 10px;
   font-size: 14px;
   color: #333;
   outline: none;
   transition: border-color 0.3s ease-in-out;
-}
-
-/* Styling for the search icon */
-.search-icon {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 18px;
-}
-
-/* Positioning for the search icon */
-.search-icon.left {
-  left: 10px;
+  margin-left: 0;
 }
 
 /* Styling for the search button */
 .search-bar button {
   padding: 10px 10px 9px 9px;
-  background-color: #007bff; /* Example color */
+  background-color: rgba(144, 21, 21, 0.8); /* Example color */
   color: white;
   border: none;
   border-radius: 0px 10px 10px 0px;
+  cursor: pointer;
+}
+
+.inventorybtn {
+  background-color: rgba(144, 21, 21, 0.8);
+  color: white;
+  padding: 10px 9px;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
 }
 

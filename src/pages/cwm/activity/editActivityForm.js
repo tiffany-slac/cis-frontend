@@ -3,7 +3,7 @@ import { fetchActivityType, fetchActivitySubtype, fetchAActivity, updateActivity
 import { useParams } from 'react-router-dom';
 import './activityForm.css';
 
-function EditActivityForm({ showEditActivityForm, setshowEditActivityForm }) {
+function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
     // State to manage form input values
     const { workId, activityId } = useParams();
     const [activityData, setactivityData] = useState({
@@ -23,12 +23,11 @@ function EditActivityForm({ showEditActivityForm, setshowEditActivityForm }) {
                 const { title, description, activityType, activityTypeSubtype } = workResponse.payload;
                 const activityTypeId = activityType ? activityType.title : ''; // Grab activityType title
                 setactivityData({ title, description, activityTypeId, activityTypeSubtype });
-                console.log(activityData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-    
+
         fetchData();
     }, [workId, activityId]);
 
@@ -38,11 +37,9 @@ function EditActivityForm({ showEditActivityForm, setshowEditActivityForm }) {
             try {
                 const typeResponse = await fetchActivityType();
                 setActivityTypes(typeResponse || []);
-                console.log(typeResponse);
 
                 const subtypeResponse = await fetchActivitySubtype();
                 setActivitySubtypes(subtypeResponse || []);
-                console.log(subtypeResponse);
             } catch (error) {
                 console.error('Error fetching activity data:', error);
             }
@@ -55,12 +52,13 @@ function EditActivityForm({ showEditActivityForm, setshowEditActivityForm }) {
         event.preventDefault();
         try {
             await updateActivity(workId, activityId, activityData);
+            console.log(activityData);
             alert("Activity updated successfully!");
-            setshowEditActivityForm(false); // Close the form
+            setShowEditActivityForm(false); // Close the form
             window.location.reload(); // Reload the page
         } catch (error) {
-            console.error('Error creating activity:', error);
-            alert("Error creating activity. Please try again.");
+            console.error('Error updating activity:', error);
+            alert("Error updating activity. Please try again.");
         }
     };
 
@@ -77,7 +75,7 @@ function EditActivityForm({ showEditActivityForm, setshowEditActivityForm }) {
     return (
         <div className={`modal ${showEditActivityForm ? "show" : "hide"}`}>
             <div className="form-content">
-                <span className="close" onClick={() => setshowEditActivityForm(false)}>
+                <span className="close" onClick={() => setShowEditActivityForm(false)}>
                     &times;
                 </span>
 
@@ -117,13 +115,14 @@ function EditActivityForm({ showEditActivityForm, setshowEditActivityForm }) {
                             onChange={handleInputChange}
                             className="form-select"
                         >
-                            <option value="">Select Activity Type</option>
+                            {/* Render the default option */}
                             {activityTypes.map(type => (
                                 <option key={type.id} value={type.id}>
                                     {type.title}
                                 </option>
                             ))}
                         </select>
+
                     </div>
 
                     <div className="form-group">

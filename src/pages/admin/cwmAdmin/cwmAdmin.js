@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
 import { fetchShopGroups, fetchLocations } from "../../../services/api.js";
 import ShopGroupForm from "./shopGroupForm.js";
-import LocationForm from '../../cwm/locationForm.js';
+import LocationForm from '../../CWM/locationForm.js';
 import "../admin.css";
 
 

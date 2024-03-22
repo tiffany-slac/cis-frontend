@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTools, faCog, faPenClip } from '@fortawesome/free-solid-svg-icons';
-import { fetchWork } from "../../services/api";
+import { fetchWork } from "../../services/api.js";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SubHeader from './subHeader.js';
@@ -37,7 +37,7 @@ const SearchPage = () => {
 
   const handleCardClick = (workId) => {
     history.push(`/work/${workId}`); // Navigate to the work details page with the work ID
-    window.location.reload(); // Reload the page
+    window.location.reload();
   };
 
   // Function to handle search based on user input
@@ -130,11 +130,11 @@ const SearchPage = () => {
                   <Link to={`/work/${item.id}`} style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
                     <div className="work-cards">
                       {/* Hardware Icon */}
-                      <div className="hardware-icon">
+                      {/* <div className="hardware-icon">
                         {item.workType.title && item.workType.title.startsWith('sw') && <FontAwesomeIcon icon={faCog} className="software" />}
                         {item.workType.title && item.workType.title.startsWith('hw') && <FontAwesomeIcon icon={faTools} className="hardware" />}
                         {(!item.workType.title || !item.workType.title.startsWith('sw')) && (!item.workType.title || !item.workType.title.startsWith('hw')) && <FontAwesomeIcon icon={faPenClip} className="request" />}
-                      </div>
+                      </div> */}
 
                       {/* First Column */}
                       <div className="first-column">
@@ -175,7 +175,7 @@ const SearchPage = () => {
           {/* Load More Button */}
           <div className="load-more-button">
             <button onClick={handleLoadMore}>Load More</button>
-          </div>
+          </div><br></br><br></br>
         </div>
 
 
