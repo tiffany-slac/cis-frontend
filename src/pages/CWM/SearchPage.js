@@ -140,8 +140,18 @@ const SearchPage = () => {
                       <div className="first-column">
                         {/* Colored Tags */}
                         <div className="colored-tags">
-                          {item.statusHistory.length > 0 && <span className="tag">{item.statusHistory[0].status}</span>}
+                          {item.currentStatus.status && <span className="colored-tag">{item.currentStatus.status}</span>}
+                          {item.workType.title && item.workType.title.startsWith('So') && (
+                            <span className="colored-tag blue">{item.workType.title}</span>
+                          )}
+                          {item.workType.title && item.workType.title.startsWith('Ha') && (
+                            <span className="colored-tag brown">{item.workType.title}</span>
+                          )}
+                          {(!item.workType.title || !item.workType.title.startsWith('So')) && (!item.workType.title || !item.workType.title.startsWith('Ha')) && (
+                            <span className="colored-tag purple">{item.workType.title || 'Unknown'}</span>
+                          )}
                         </div>
+
 
                         {/* Description */}
                         <p className="description">{item.description}</p>
@@ -149,7 +159,7 @@ const SearchPage = () => {
                         {/* Additional Information */}
                         <div className="additional-info">
                           <p>
-                            {`# ${item.title}`} &bull; {`Created By: ${item.createdBy}`} &bull; {`Assigned To: ${item.assignedTo}`}
+                            {`# ${item.workNumber}`} &bull; {`Created By: ${item.createdBy}`} &bull; {`Assigned To: ${item.assignedTo}`}
                           </p>
                         </div>
                       </div>

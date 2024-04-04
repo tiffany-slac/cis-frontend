@@ -63,6 +63,7 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            console.log(workData);
             await createWork(workData);
             alert("Work created successfully!");
             setShowWorkForm(false); // Close the form
@@ -101,6 +102,24 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
                 <hr className="line" /><br></br>
 
                 <form onSubmit={handleSubmit} className="work-form">
+
+                    <div className="form-group">
+                        <label htmlFor="workTypeId" className="form-label">Type<span className="required">*</span></label>
+                        <select
+                            id="workTypeId"
+                            name="workTypeId"
+                            value={workData.workTypeId}
+                            onChange={handleInputChange}
+                            className="form-select"
+                            required
+                        >
+                            <option value="">Select Work Type</option>
+                            {workTypes.map(type => (
+                                <option key={type.id} value={type.id}>{type.title}</option>
+                            ))}
+                        </select>
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="title" className="form-label">Title<span className="required">*</span></label>
                         <input
@@ -128,23 +147,6 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="workTypeId" className="form-label">Work Type<span className="required">*</span></label>
-                        <select
-                            id="workTypeId"
-                            name="workTypeId"
-                            value={workData.workTypeId}
-                            onChange={handleInputChange}
-                            className="form-select"
-                            required
-                        >
-                            <option value="">Select Work Type</option>
-                            {workTypes.map(type => (
-                                <option key={type.id} value={type.id}>{type.title}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="form-group">
                         <label htmlFor="locationId" className="form-label">Location<span className="required">*</span></label>
                         <select
                             id="locationId"
@@ -162,7 +164,7 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="shopGroupId" className="form-label">Shop Group</label>
+                        <label htmlFor="shopGroupId" className="form-label">Shop Group<span className="required">*</span></label>
                         <select
                             id="shopGroupId"
                             name="shopGroupId"

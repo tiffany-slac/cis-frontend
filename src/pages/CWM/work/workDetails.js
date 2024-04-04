@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useHistory } from 'react-router-dom'; // Import Link from react-router-dom
 import { fetchAWork, fetchActivity, fetchAActivity } from "../../../services/api";
-import ActivityForm from '../activity/activityForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell, faUser, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import ActivityForm from '../Activity/activityForm';
 import EditWorkForm from './editWorkForm';
 import Breadcrumb from '../../../components/Breadcrumb';
-import EditActivityForm from '../activity/editActivityForm';
+import EditActivityForm from '../Activity/editActivityForm';
+import '../Activity/activityForm.css';
 import './workDetails.css';
-import '../activity/activityForm.css';
 
 const WorkDetails = () => {
     const { workId, activityId } = useParams(); // Get the asset ID from the URL params
@@ -16,23 +18,17 @@ const WorkDetails = () => {
     const [showActivityForm, setShowActivityForm] = useState(false); // State to control the visibility of the activity form
     const [showEditForm, setShowEditForm] = useState(false);
     const [activities, setActivities] = useState([]);
-    const [activeStep, setActiveStep] = useState(0); // Initialize activeStep state
     const [showJobDetails, setShowJobDetails] = useState(false);
     const [selectedActivity, setSelectedActivity] = useState(null);
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const sidebarRef = useRef(null); // Ref for the sidebar panel
     const [showEditActivityForm, setShowEditActivityForm] = useState(false);
-    const [oneActivity, setOneActivity] = useState([]);
+    const sidebarRef = useRef(null); // Ref for the sidebar panel
     const history = useHistory();
 
     const breadcrumbItems = [
         { label: 'Home', link: '/' },
-        { label: 'Work', link: '/cwm' },
-        { label: 'Work Details', link: `/work/${workId}` },
+        { label: 'Issues', link: '/cwm' },
+        { label: 'Issue Details', link: `/work/${workId}` },
     ];
-
-    const menuItems = ['Created', 'Opened', 'Approved', 'In Progress', 'Closed'];
-    const completedSteps = ['Created']; // Add completed steps here
 
     // Fetch element path data on component mount
     useEffect(() => {
@@ -40,6 +36,7 @@ const WorkDetails = () => {
             try {
                 const response = await fetchAWork(workId);
                 setWorkDetails(response.payload);
+                console.log("WorkDetails", workDetails);
             } catch (error) {
                 console.error("Error fetching work details:", error);
             } finally {
@@ -54,6 +51,7 @@ const WorkDetails = () => {
             try {
                 const response = await fetchActivity(workId);
                 setActivities(response.payload);
+                console.log("Activities", activities);
             } catch (error) {
                 console.error("Error fetching activities:", error);
             } finally {
@@ -63,35 +61,14 @@ const WorkDetails = () => {
         fetchActivities();
     }, [workId]);
 
-    // useEffect(() => {
-    //     const fetchOneActivity = async () => {
-    //         try {
-    //             const response = await fetchAActivity(workId, activityId);
-    //             setOneActivity(response.payload);
-    //         } catch (error) {
-    //             console.error("Error fetching activity:", error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchOneActivity();
-    // }, [workId, activityId]);
-
-    const toggleEditActivityForm = () => {
-        setshowEditActivityForm(prevState => !prevState);
-    };
-
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-                // Click occurred outside of the sidebar panel, close it
-                setShowJobDetails(false);
+                setShowJobDetails(false); // Click occurred outside of the sidebar panel, close it
             }
         };
-
         // Add event listener to listen for clicks on the document
         document.addEventListener('mousedown', handleClickOutside);
-
         // Cleanup function to remove the event listener when the component unmounts
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -114,29 +91,32 @@ const WorkDetails = () => {
         setShowEditActivityForm(prevState => !prevState);
     };
 
-    const handleActivityClick = (activity) => {
-        setSelectedActivity(activity);
-        setShowJobDetails(true);
-        history.push(`/work/${workId}/${activity.id}`);
+    const handleActivityClick = async (activity) => {
+        try {
+            // Fetch details of the selected activity
+            const response = await fetchAActivity(workId, activity.id);
+            // Set the details of the selected activity
+            setSelectedActivity(response.payload);
+            // Show the job details sidebar
+            setShowJobDetails(true);
+            // Push the activity ID to the URL
+            history.push(`/work/${workId}/${activity.id}`);
+        } catch (error) {
+            console.error("Error fetching activity:", error);
+        }
     };
+
+    // Utility function to convert camelCase to Capitalized words
+    const convertCamelCaseToNormalCase = (camelCaseString) => {
+        // Replace capital letters with space followed by the letter
+        const normalizedString = camelCaseString.replace(/([A-Z])/g, ' $1');
+        // Capitalize the first letter and return
+        return normalizedString.charAt(0).toUpperCase() + normalizedString.slice(1);
+    };
+
 
     return (
         <div className='work-content-container'>
-            {/* <div className="work-statusmenu">
-                <ul className="vertical-progress-bar">
-                    {menuItems.map((item, index) => (
-                        <li
-                            key={item}
-                            className={`progress-item ${activeTab === item ? 'active' : ''} ${completedSteps.includes(item) ? 'completed' : ''}`}
-                            onClick={() => scrollToContent(item)}
-                        >
-                            <span className="progress-circle"></span>
-                            {item}
-                        </li>
-                    ))}
-                </ul>
-            </div> */}
-
             <div className={`work-details-container ${showJobDetails ? 'small-width' : ''}`}>
                 <Breadcrumb items={breadcrumbItems} style={{ marginLeft: '20px' }} />
 
@@ -150,7 +130,8 @@ const WorkDetails = () => {
                     {/* Asset Details */}
                     {workDetails ? (
                         <div>
-                            <p>CATER ID: {workDetails.title} (TEC) </p>
+                            <p>CATER ID: {workDetails.workNumber} (TEC) </p>
+                            <span className="tag">{workDetails.workType.title}</span>
                             <hr className="line" />
 
                             <div className="container">
@@ -161,26 +142,6 @@ const WorkDetails = () => {
                                 <div className="column right-column">
                                     <p>{workDetails.title}</p>
                                     <p>{workDetails.description}</p>
-                                </div>
-                            </div>
-                            {/* <p>ID: {workDetails.id}</p> */}
-                            <div>
-                                <hr className="line" />
-                                <div className="container">
-                                    <div className="column left-column">
-                                        <p className="work-label">Type</p>
-                                        <p className="work-label">Subtype</p>
-                                        <p className="work-label">Area</p>
-                                        <p className="work-label">Area Manager</p>
-                                        <p className="work-label">Shop</p>
-                                    </div>
-                                    <div className="column right-column">
-                                        <p>{workDetails.title}</p>
-                                        <p>{workDetails.workType.title}</p>
-                                        <p>{workDetails.location.name}</p>
-                                        <p>User1, User1 </p>
-                                        <p>{workDetails.shopGroup.name}</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -211,87 +172,59 @@ const WorkDetails = () => {
                     </table><br />
 
                     {showJobDetails && (
+                        // 
                         <div ref={sidebarRef} className={`sidebar-panel ${showJobDetails ? 'open' : ''}`}>
                             {/* Display job details here */}
-                            <h1>Job Details</h1>
+                            <h1 style={{ fontSize: '18px' }}>Job Details</h1>
                             {selectedActivity && (
                                 <>
-                                    <div className='activity-card'>
-                                        <div className="edit-button-container">
-                                            <button className="edit-button" onClick={toggleEditSidebarForm}>Edit</button>
-                                        </div>
 
-                                        {showEditActivityForm && <EditActivityForm showEditActivityForm={showEditActivityForm} setShowEditActivityForm={setShowEditActivityForm} />}
-
-                                        {oneActivity && ( // Conditionally render EditActivityForm
-                                            <EditActivityForm
-                                                showEditActivityForm={showEditActivityForm}
-                                                setShowEditActivityForm={setShowEditActivityForm}
-                                                workId={workId}
-                                                activityId={activityId}
-                                                activityData={oneActivity} // Pass the fetched activity data
-                                            />
-                                        )}
-                                        {/* Asset Details */}
-                                        {workDetails && (
-                                            <div>
-                                                <p>Activity Summary </p>
-                                                <hr className="line" />
-                                                <div>
-                                                    <div className="container">
-                                                        <div className="column left-column">
-                                                            <p className="work-label">Status</p>
-                                                            <p className="work-label">Title</p>
-                                                            <p className="work-label">Description</p>                                                        </div>
-                                                        <div className="column right-column">
-                                                            <p>{selectedActivity.currentStatus.status}</p>
-                                                            <p>{selectedActivity.title}</p>
-                                                            <p>{selectedActivity.description}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
+                                    <div className="edit-button-container">
+                                        <button className="edit-button" onClick={toggleEditSidebarForm}>Edit</button>
                                     </div>
 
-                                    <div className='activity-card'>
-                                        {/* Asset Details */}
-                                        {selectedActivity && (
-                                            <div>
-                                                <p>Work Release Conditions </p>
-                                                <hr className="line" />
+                                    {showEditActivityForm && <EditActivityForm showEditActivityForm={showEditActivityForm} setShowEditActivityForm={setShowEditActivityForm} />}
 
-                                                <div className="container">
-                                                    <div className="column left-column">
-                                                        <p className="work-label">Title</p>
-                                                        <p className="work-label">Description</p>
-                                                    </div>
-                                                    <div className="column right-column">
-                                                        <p>{selectedActivity.title}</p>
-                                                        <p>{selectedActivity.description}</p>
-                                                    </div>
+                                    <div className='activity-card'>
+                                        <div>
+                                            <p>Task Details </p>
+                                            {/* <div>
+                                                <pre>{JSON.stringify(selectedActivity, null, 2)}</pre>
+                                            </div> */}
+                                            <hr className="line" />
+
+                                            <div className="container">
+                                                <div className="column left-column">
+                                                    <p className="work-label">Status</p>
+                                                    <p className="work-label">Title</p>
+                                                    <p className="work-label">Description</p>
                                                 </div>
-                                                <div>
-                                                    <hr className="line" />
-                                                    <div className="container">
-                                                        <div className="column left-column">
-                                                            <p className="work-label">Test Plan</p>
-                                                            <p className="work-label">Backout Plan</p>
-                                                            <p className="work-label">System Required</p>
-                                                            <p className="work-label">Risk Benefit</p>
-                                                            <p className="work-label">Dependencies</p>
-                                                        </div>
-                                                        <div className="column right-column">
-                                                            <p>{selectedActivity.testPlanDescription}</p>
-                                                            <p>{selectedActivity.backoutPlanDescription}</p>
-                                                            <p>{selectedActivity.systemRequiredDescription}</p>
-                                                            <p>{selectedActivity.riskBenefitDescription}</p>
-                                                            <p>{selectedActivity.dependenciesDescription}</p>
-                                                        </div>
-                                                    </div>
+                                                <div className="column right-column">
+                                                    <p>{selectedActivity.currentStatus.status}</p>
+                                                    <p>{selectedActivity.title}</p>
+                                                    <p>{selectedActivity.description}</p>
                                                 </div>
                                             </div>
-                                        )}
+                                            <div>
+                                                <hr className="line" />
+                                                <div className="container">
+                                                    <div className="column left-column">
+                                                        {selectedActivity.customFields && selectedActivity.customFields.map(field => (
+                                                            <p key={field.id} className="work-label">{convertCamelCaseToNormalCase(field.name)}</p>
+                                                        ))}
+                                                    </div>
+                                                    <div className="column right-column">
+                                                        {selectedActivity.customFields && selectedActivity.customFields.map(field => (
+                                                            <p key={field.id}>
+                                                                {field.value && field.value.value}
+                                                            </p>
+                                                        ))}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <hr className="line" />
                                     </div>
 
@@ -312,6 +245,19 @@ const WorkDetails = () => {
                             />
                         )}
                     </div>
+                    <hr className="line" />
+                    {workDetails && (
+                        <div className="notes-container">
+                            <div className="column">
+                                <p>Created By: {workDetails.createdBy}</p>
+                                <p>Created Date: {workDetails.createdDate}</p>
+                            </div>
+                            <div className="column">
+                                <p>Modified By: {workDetails.lastModifiedBy}</p>
+                                <p>Modified Date: {workDetails.lastModifiedDate}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -322,19 +268,44 @@ const WorkDetails = () => {
 
                     <div className='work-card'>
                         <div className="attachments-section">
-                            {selectedActivity && (
-                                <p id="attachments">Status: {selectedActivity.currentStatus.status}</p>
+                            {workDetails && (
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    {/* First column with dark grey text */}
+                                    <div style={{ color: 'darkgrey', marginRight: '10px' }}>
+                                        <p id="attachments">
+                                            <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faBell} style={{ color: 'maroon' }} /></span>
+                                            <span>Status</span>
+                                        </p>
+                                        <p id="location">
+                                            <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faMapMarkerAlt} style={{ color: 'gold' }} /></span>
+                                            <span>Area</span>
+                                        </p>
+                                        {workDetails.assignedTo && workDetails.assignedTo.length > 0 ? (
+                                            <p id="assigned-to">
+                                                <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faUser} /></span>
+                                                <span>Assigned To</span>
+                                            </p>
+                                        ) : (
+                                            <p id="assigned-to">
+                                                <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faUser} /></span>
+                                                <span>Assigned To</span>
+                                            </p>
+                                        )}
+                                    </div>
+                                    {/* Second column */}
+                                    <div>
+                                        <p id="attachments">{workDetails.currentStatus.status}</p>
+                                        {workDetails.location && (
+                                            <p id="location">{workDetails.location.name} - {workDetails.location.locationManagerUserId}</p>
+                                        )}
+                                        {workDetails.assignedTo && workDetails.assignedTo.length > 0 ? (
+                                            <p id="assigned-to">{workDetails.assignedTo[0]}</p>
+                                        ) : (
+                                            <p id="assigned-to">Unassigned</p>
+                                        )}
+                                    </div>
+                                </div>
                             )}
-                        </div>
-                    </div>
-
-
-                    <div className='work-card'>
-                        <div className="attachments-section">
-                            <p id="attachments">Solution</p>
-                            <hr className="line" />
-                            <p>Title:</p>
-                            <p>Description: </p>
                         </div>
                     </div>
 
@@ -348,6 +319,15 @@ const WorkDetails = () => {
                                     {/* Display uploaded files here */}
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className='work-card'>
+                        <div className="attachments-section">
+                            <p id="attachments">Emails Sent</p>
+                            <hr className="line" />
+                            <p>Title:</p>
+                            <p>Description: </p>
                         </div>
                     </div>
 

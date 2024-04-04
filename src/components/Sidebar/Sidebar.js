@@ -15,7 +15,7 @@ function Sidebar() {
   const buttons = [
     { path: "/home", icon: faHome, label: "Home" },
     { path: "/inventory", icon: faBox, label: "Inventory" },
-    { path: "/cwm", icon: faTicket, label: "Tickets" },
+    { path: "/cwm", icon: faTicket, label: "Issues" },
     { path: "/elog", icon: faNewspaper, label: "eLogs" },
     { path: "/815", icon: faClock, label: "8:15" },
     { path: "/admin/generalAdmin", icon: faLock, label: "Admin" },

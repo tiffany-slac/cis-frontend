@@ -22,6 +22,59 @@ export const setDomainId = async () => {
 
 /* ----------------------------------------- CORE WORK ----------------------------------------- */
 
+export const fetchLovValuesForField = async (domainType, subtypeId, fieldName) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/lov/${domainType}/${subtypeId}/${fieldName}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch LOV values for field");
+    }
+  } catch (error) {
+    throw new Error("Error fetching LOV values for field:", error.message);
+  }
+};
+
+
+export const fetchLovValues = async (domainType, subtypeId) => {
+  try {
+    const token = await extractJWT();
+    const response = await fetch(
+      `/api/cwm/v1/lov/${domainType}/${subtypeId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vouch-idp-accesstoken": token,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("api lov values data", data)
+      return data;
+    } else {
+      throw new Error("Failed to fetch LOV values");
+    }
+  } catch (error) {
+    throw new Error("Error fetching LOV values:", error.message);
+  }
+};
+
+
 export const fetchAllActivity = async () => {
   try {
     const token = await extractJWT();
@@ -121,7 +174,7 @@ export const createActivity = async (workId, activityData) => {
       throw new Error("Error creating work. Please try again.");
     }
   } catch (error) {
-    console.error("Error creating work:", error);
+    console.error("Error creating work:", error, errorData);
     return { errorCode: -1, payload: [] }; // Return a default error response
   }
 };
@@ -518,7 +571,6 @@ export const createLocation = async (locationData) => {
     if (response.status === 201) {
       const data = await response.json();
       console.log("Location created successfully:", data);
-      alert("Location created successfully!");
     } else {
       const errorData = await response.json();
       console.error("Error creating location:", errorData);

@@ -4,7 +4,7 @@ import Layout from './layout/Layout';
 import Home from './pages/Home'; 
 import Cwm from './pages/CWM/cwm';
 import ItemDetails from './pages/cis/itemDetails/itemDetails';
-import ActivityDetails from './pages/CWM/activity/activityDetails';
+import ActivityDetails from './pages/CWM/Activity/activityDetails';
 import Settings from './pages/Settings/Settings';
 import Admin from './pages/admin/admin';
 import Inventory from './pages/cis/inventory';

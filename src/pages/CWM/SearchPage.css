@@ -25,7 +25,8 @@
 }
 
 .first-column {
-    margin-left: 20px;;
+    margin-left: 20px;
+    ;
     width: 85%;
     padding: 5px;
     overflow: hidden;
@@ -62,11 +63,7 @@
     width: 60%;
 }
 
-.colored-tags {
-    margin-bottom: 5px;
-}
-
-.tag {
+.colored-tag {
     background-color: #28a745;
     color: #fff;
     padding: 2px 5px;
@@ -75,6 +72,22 @@
     font-size: 10px;
     margin-bottom: 0;
 }
+
+.brown {
+    background-color: brown;
+    color: white;
+}
+
+.blue {
+    background-color: darkcyan;
+    color: white;
+}
+
+.purple {
+    background-color: purple;
+    color: white;
+}
+
 
 .additional-info p {
     margin: 5px 0;
@@ -93,6 +106,6 @@
     /* Hide overflowing content */
     text-overflow: ellipsis;
     /* Display ellipsis for overflow */
-    margin-top: 0;
+    margin-top: 10px;
     margin-bottom: 5px;
 }
