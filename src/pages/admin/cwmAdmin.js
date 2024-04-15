@@ -7,36 +7,31 @@ import "./admin.css";
 
 
 function CWMadmin() {
-  const [shopGroups, setShopGroups] = useState([]);
-  const [error, setError] = useState(null);
-  const [showShopGroupForm, setShowShopGroupForm] = useState(false);
-  const [showLocationForm, setShowLocationForm] = useState(false);
   const history = useHistory();
   const [locations, setLocations] = useState([]);
+  const [shopGroups, setShopGroups] = useState([]);
+  const [showShopGroupForm, setShowShopGroupForm] = useState(false);
+  const [showLocationForm, setShowLocationForm] = useState(false);
 
-  // Fetch locations data when the component mounts
+  // Fetch shop groups and locations data when the component mounts
   useEffect(() => {
-    console.log("fetching locations...");
-    const fetchAllLocations = async () => {
-      const response = await fetchLocations();
-      setLocations(response.payload);
-    };
-    fetchAllLocations();
-  }, []);
-
-  // Fetch shop groups data when the component mounts
-  useEffect(() => {
-    const fetchShopGroupsData = async () => {
+    const fetchData = async () => {
       try {
-        const data = await fetchShopGroups();
-        setShopGroups(data);
+        const shopGroupsData = await fetchShopGroups();
+        setShopGroups(shopGroupsData);
       } catch (error) {
         console.error('Error fetching shop groups:', error.message);
-        setError('Error fetching shop groups. Please try again.');
+      }
+
+      try {
+        const locationsData = await fetchLocations();
+        setLocations(locationsData.payload);
+      } catch (error) {
+        console.error('Error fetching locations:', error.message);
       }
     };
 
-    fetchShopGroupsData();
+    fetchData();
   }, []);
 
   // Handle click event on table row, navigate to the specific class page
@@ -81,13 +76,7 @@ function CWMadmin() {
         <button className="dropbtn" onClick={() => setShowLocationForm(!showLocationForm)}>
           {showLocationForm ? "Close Location Form" : "+ Location"}
         </button>
-        {/* Render location form when showLocationForm is true */}
-        {showLocationForm && (
-          <LocationForm
-            showLocationForm={showLocationForm}
-            setShowLocationForm={setShowLocationForm}
-          />
-        )}
+        {showLocationForm && <LocationForm showLocationForm={showLocationForm} setShowLocationForm={setShowLocationForm} />}
       </div>
 
       {/* Display shop groups */}
@@ -103,21 +92,13 @@ function CWMadmin() {
           </thead>
           <tbody>
             {/* Map over shop groups data and render rows */}
-            {shopGroups.map((shopGroupItem, index) => {
-              const userEmails = shopGroupItem.users.map(userItem => userItem.user.mail).join(", ");
-
-              return (
-                <tr
-                  key={index}
-                  onClick={() => handleRowClick(shopGroupItem.id)}
-                  className="class-item"
-                >
-                  <td>{shopGroupItem.name}</td>
-                  <td>{shopGroupItem.description}</td>
-                  <td>{userEmails}</td>
-                </tr>
-              );
-            })}
+            {shopGroups.map(shopGroup => (
+              <tr key={shopGroup.id} onClick={() => handleRowClick(shopGroup.id)} className="class-item">
+                <td>{shopGroup.name}</td>
+                <td>{shopGroup.description}</td>
+                <td>{shopGroup.users.map(user => user.user.mail).join(", ")}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -128,14 +109,8 @@ function CWMadmin() {
           {showShopGroupForm ? "Close Shop Group Form" : " + Shop Group"}
         </button>
         {/* Render shop group form when showShopGroupForm is true */}
-        {showShopGroupForm && (
-          <ShopGroupForm
-            showShopGroupForm={showShopGroupForm}
-            setShowShopGroupForm={setShowShopGroupForm}
-          />
-        )}
+        {showShopGroupForm && <ShopGroupForm showShopGroupForm={showShopGroupForm} setShowShopGroupForm={setShowShopGroupForm} />}
       </div>
-
     </div>
   );
 }

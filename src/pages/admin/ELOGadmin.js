@@ -15,93 +15,14 @@ function ELOGadmin() {
 
   // Fetch domains when the component mounts
   useEffect(() => {
-    console.log("fetching domain...");
-    const fetchDomains = async () => {
-      const response = await fetchAllDomain();
-      setDomains(response.payload);
-    };
-
-    fetchDomains(); // Call the function to fetch class types when the component mounts
-  }, []);
-
-  // Fetch classes when the component mounts
-  useEffect(() => {
-    console.log("fetching classes...");
-    const fetchClasses = async () => {
-      try {
-        const response = await fetchAllClass();
-        if (response.errorCode === 0) {
-          setClasses(response.payload);
-        } else {
-          throw new Error("Error fetching classes");
-        }
-      } catch (error) {
-        console.error("Error fetching class types:", error.message);
-      }
-    };
-
-    fetchClasses(); // Call the function to fetch class types when the component mounts
-  }, []);
-
-  // Fetch elements when the component mounts
-  useEffect(() => {
-    const fetchElements = async () => {
-      try {
-        const response = await fetchAllElements(20);
-        if (response.errorCode === 0) {
-          setElements(response.payload);
-        } else {
-          throw new Error("Error fetching classes");
-        }
-      } catch (error) {
-        console.error("Error fetching class types:", error.message);
-      }
-    };
-
-    fetchElements(); // Call the function to fetch class types when the component mounts
-  }, []);
-
-  // Log class details when classDetails state changes
-  useEffect(() => {
-    console.log("Class Details:", classDetails);
-  }, [classDetails]);
-
-  // Fetch data for testing purposes
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const allClass = await fetchAllClass();
-        console.log("ALL CLASSES: " + JSON.stringify(allClass));
-        const element = await fetchAllElements();
-        console.log("ALL ELEMENTS: " + JSON.stringify(element));
-      } catch (error) {
-        console.error("Error fetching class types:", error.message);
-      }
-    };
-
-    fetchData(); // Call the function to fetch class types when the component mounts
+    fetchAllDomain().then(response => setDomains(response.payload));
+    fetchAllClass().then(response => setClasses(response.payload));
+    fetchAllElements().then(response => setElements(response.payload));
   }, []);
 
   // Handle row click to navigate to detail page
   const handleRowClick = (classId) => {
     history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
-  };
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-    if (!showDropdown) {
-      // Redirect to the admin page when the dropdown is toggled to show
-      history.push('/admin');
-    }
-  };
-
-  const handleTabChange = (tab) => {
-    history.push(`/${tab.toLowerCase()}`);
-  };
-
-  const handleItemClick = (formType) => {
-    // Handle item click here (e.g., navigate to a specific form or perform an action)
-    console.log(`Clicked ${formType}`);
   };
 
   // Render class hierarchy
@@ -169,8 +90,7 @@ function ELOGadmin() {
 
   // Format class name for display
   const formatClassName = (name) => {
-    const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
-    return capitalized.replace(/-/g, ' ');
+    return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
   };
 
   return (

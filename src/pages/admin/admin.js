@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useLocation, Redirect } from "react-router-dom";
-import './admin.css';
+import GeneralAdmin from "./generalAdmin.js";
 import CISadmin from "./cisAdmin.js";
 import CWMadmin from "./cwmAdmin.js";
 import ELOGadmin from "./elogAdmin.js";
-import GeneralAdmin from "./generalAdmin.js";
+import './admin.css';
 
 function Admin() {
-  const location = useLocation();
 
   return (
     <Router>

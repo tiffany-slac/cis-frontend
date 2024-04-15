@@ -6,26 +6,10 @@ import "./admin.css";
 function generalAdmin() {
     const history = useHistory();
     const [users, setUsers] = useState([]);
-    const [locations, setLocations] = useState([]);
 
     useEffect(() => {
-        const fetchTheUsers = async () => {
-            const response = await fetchUsers();
-            setUsers(response.payload);
-        };
-        fetchTheUsers(); // Call the function to fetch class types when the component mounts
-    }, []);
-
-    // Fetch data for testing purposes
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const allClass = await fetchAllClass();
-            } catch (error) {
-                console.error("Error fetching class types:", error.message);
-            }
-        };
-        fetchData(); // Call the function to fetch class types when the component mounts
+        fetchUsers().then(response => setUsers(response.payload));
+        fetchAllClass().catch(error => console.error("Error fetching class types:", error.message));
     }, []);
 
     // Handle row click to navigate to detail page

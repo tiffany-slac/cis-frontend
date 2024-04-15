@@ -5,7 +5,7 @@ import Home from './pages/dashboard/home';
 import Cwm from './pages/cwm/cwm';
 import ItemDetails from './pages/cis/itemDetails';
 import ActivityDetails from './pages/cwm/activityDetails';
-import Settings from './pages/settings/Settings';
+import Settings from './pages/settings/settings';
 import Admin from './pages/admin/admin';
 import Inventory from './pages/cis/inventory';
 import ClassDetails from './pages/admin/classDetail';

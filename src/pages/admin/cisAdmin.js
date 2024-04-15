@@ -1,113 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
-import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
 import ClassForm from "./classForm";
-import ElementForm from "../cis/elementForm";
 import "./admin.css";
 
 function CISadmin() {
   const history = useHistory();
-  const [showDropdown, setShowDropdown] = useState(false);
   const [showClassForm, setShowClassForm] = useState(false);
-  const [showElementForm, setShowElementForm] = useState(false);
-  const [classTypes, setClassTypes] = useState([]);
   const [domains, setDomains] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [classDetails, setClassDetails] = useState([]);
   const [elements, setElements] = useState([]);
-  const [nicknameCount, setNicknameCount] = useState(0);
-  const [buildingCount, setBuildingCount] = useState(0);
-  const [itemCount, setItemCount] = useState(0);
   const [expandedClasses, setExpandedClasses] = useState([]);
 
   useEffect(() => {
-    console.log("fetching domain...");
-    const fetchDomains = async () => {
-      const response = await fetchAllDomain();
-      setDomains(response.payload);
-    };
-    fetchDomains(); // Call the function to fetch class types when the component mounts
-  }, []);
-
-  // Fetch classes when the component mounts
-  useEffect(() => {
-    console.log("fetching classes...");
-    const fetchClasses = async () => {
-      try {
-        const response = await fetchAllClass();
-        if (response.errorCode === 0) {
-          setClasses(response.payload);
-        } else {
-          throw new Error("Error fetching classes");
-        }
-      } catch (error) {
-        console.error("Error fetching class types:", error.message);
-      }
-    };
-
-    fetchClasses(); // Call the function to fetch class types when the component mounts
-  }, []);
-
-  // Fetch elements when the component mounts
-  useEffect(() => {
-    const fetchElements = async () => {
-      try {
-        const response = await fetchAllElements(20);
-        if (response.errorCode === 0) {
-          setElements(response.payload);
-        } else {
-          throw new Error("Error fetching classes");
-        }
-      } catch (error) {
-        console.error("Error fetching class types:", error.message);
-      }
-    };
-
-    fetchElements(); // Call the function to fetch class types when the component mounts
-  }, []);
-
-  // Log class details when classDetails state changes
-  // useEffect(() => {
-  //   console.log("Class Details:", classDetails);
-  // }, [classDetails]);
-
-  // Fetch data for testing purposes
-  useEffect(() => {
     const fetchData = async () => {
       try {
-        const allClass = await fetchAllClass();
-        // console.log("ALL CLASSES: " + JSON.stringify(allClass));
+        const responseDomain = await fetchAllDomain();
+        const responseClass = await fetchAllClass();
+        const responseElements = await fetchAllElements(20);
 
+        setDomains(responseDomain.payload);
+        setClasses(responseClass.payload);
+        setElements(responseElements.payload);
       } catch (error) {
-        console.error("Error fetching class types:", error.message);
+        console.error("Error fetching data:", error.message);
       }
     };
 
-    fetchData(); // Call the function to fetch class types when the component mounts
+    fetchData();
   }, []);
 
   // Handle row click to navigate to detail page
   const handleRowClick = (classId) => {
     history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
-  };
-
-  const handleTabChange = (tab) => {
-    history.push(`/${tab.toLowerCase()}`);
-  };
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-    if (!showDropdown) {
-      // Redirect to the admin page when the dropdown is toggled to show
-      history.push('/admin');
-    }
-  };
-
-  const handleItemClick = (formType) => {
-    // Handle item click here (e.g., navigate to a specific form or perform an action)
-    console.log(`Clicked ${formType}`);
   };
 
   // Render class hierarchy
