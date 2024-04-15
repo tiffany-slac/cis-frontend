@@ -129,16 +129,14 @@ function ElementForm({ showElementForm, setShowElementForm }) {
                 {attribute.description}
               </div>
             ) : attribute.name === "parent" ? (
+              // In the parent dropdown's onChange handler, update parentId directly
               <select
-                id={attribute.name}
-                name={attribute.name}
-                value={selectedParent}
+                id="parent"
+                name="parent"
+                value={parentId}
                 onChange={(event) => {
-                  setSelectedParent(event.target.value);
-                  setItemData((prevData) => ({
-                    ...prevData,
-                    parentId: event.target.value,
-                  }));
+                  console.log("Selected parent ID:", event.target.value);
+                  setParentId(event.target.value);
                 }}
               >
                 <option value="">Select a parent</option>
@@ -148,6 +146,8 @@ function ElementForm({ showElementForm, setShowElementForm }) {
                   </option>
                 ))}
               </select>
+
+
             ) : (
               <input
                 type="text"
@@ -375,30 +375,6 @@ function ElementForm({ showElementForm, setShowElementForm }) {
               ))}
             </select>
             <br />
-
-            {showParentDropdown && (
-              <>
-                <label htmlFor="parentId">Parent:</label>
-                <select
-                  id="parentId"
-                  name="parentId"
-                  value={selectedParent}
-                  onChange={(event) => {
-                    const selectedValue = event.target.value;
-                    console.log("Selected Parent:", selectedValue);
-                    setSelectedParent(selectedValue);
-                  }}
-                >
-                  <option value="">Select a parent</option>
-                  {parents.map((parent) => (
-                    <option key={parent.id} value={parent.id}>
-                      {parent.name}
-                    </option>
-                  ))}
-                </select>
-                <br />
-              </>
-            )}
 
             {dynamicForm}
             <input type="submit" value="Create Item" />

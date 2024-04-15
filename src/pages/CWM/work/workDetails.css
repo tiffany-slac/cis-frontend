@@ -4,87 +4,6 @@
     width: 100%;
 }
 
-.centered-container {
-    display: flex;
-    /* justify-content: space-between; */
-}
-
-.vertical-progress-bar {
-    /* background-color: #f5f5f5;  */
-    border-radius: 5px; /* Rounded borders */
-    /* display: flex; */
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.progress-item {
-    padding: 10px;
-    cursor: pointer;
-    position: relative; /* Required for positioning pseudo-elements */
-    transition: background-color 0.3s ease;
-    left: 30px;
-}
-
-.progress-circle {
-    content: ''; /* Required for pseudo-elements */
-    position: absolute; /* Position the circles */
-    left: -15px; /* Adjust distance from the progress item */
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%);
-    width: 10px; /* Circle width */
-    height: 10px; /* Circle height */
-    border-radius: 50%; /* Make it a circle */
-    background-color: #f5f5f5; /* Inactive color */
-    border: 1px solid #007bff; /* Circle border */
-}
-
-/* For filled circles */
-.progress-item.completed .progress-circle {
-    background-color: #007bff; /* Active color */
-}
-
-/* For active step */
-.progress-item.active .progress-circle {
-    background-color: #007bff; /* Active color */
-}
-
-/* For inactive circles */
-.progress-item.incomplete .progress-circle {
-    background-color: #f5f5f5; /* Inactive color */
-    border: 1px solid #007bff; /* Circle border */
-}
-
-.work-statusmenu {
-    background-color: white;
-    width: 10%;
-    /* width: 150px; */
-    /* Adjust the width as needed */
-    /* border: 1px solid #ccc; */
-    height: 100%;
-    /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); Adding shadow */
-    border-radius: 5px;
-    /* Rounded border */
-}
-
-.work-statusmenu ul {
-    list-style: none;
-    /* Remove bullet points */
-    padding: 0;
-}
-
-.work-statusmenu button {
-    border: none;
-    /* Remove button borders */
-    background: none;
-    /* Transparent background */
-    text-align: left;
-    /* Align text to the left */
-    padding: 10px 15px;
-    width: 100%;
-    /* Make buttons fill the menu */
-    cursor: pointer;
-}
-
 .work-details-container {
     margin-left: 20px;
     display: flex;
@@ -94,14 +13,14 @@
 
 .work-details-container.small-width {
     width: 40%;
-    margin-right: 100px;
+    margin-right: 0px;
 }
 
 .work-details-container2 {
     margin-left: 20px;
     margin-right: 20px;
     display: flex;
-    /* width: 30%;*/
+    width: 40%;
 }
 
 .work-card {
@@ -145,7 +64,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 50%;
+    width: 53%;
     background-color: #fff;
     border-left: 1px solid #ccc;
     padding: 20px;
@@ -160,8 +79,7 @@
     transform: translateX(0);
 }
 
-
-.container {
+.details-container {
     display: flex;
     align-items: stretch;
 }
@@ -181,21 +99,80 @@
 }
 
 .work-label {
+    vertical-align: top;
     font-size: 16px;
     font-weight: normal;
     color: grey;
     /* margin-bottom: 5px; */
 }
 
+.aligned-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.aligned-table td {
+    padding: 10px;
+    vertical-align: top;
+}
+
+.aligned-table tr {
+    padding: 10px;
+    vertical-align: top;
+}
+
+.aligned-table tr:last-child {
+    border-bottom: none;
+}
+
+.aligned-table-customdetails {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.aligned-table-customdetails td {
+    padding: 10px;
+    vertical-align: top;
+}
+
+.aligned-table-customdetails .left-column {
+    padding: 10px;
+    vertical-align: top;
+    color: grey;
+}
+
+.aligned-table-customdetails tr {
+    padding: 10px;
+    vertical-align: top;
+}
+
+.aligned-table-customdetails tr:last-child {
+    border-bottom: none;
+}
+
 .activity-card {
     border-radius: 8px;
     margin: 20px 0px 20px 0px;
     box-sizing: border-box;
-    padding: 10px 10px 20px 20px;
+    padding: 10px 10px 10px 20px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     width: 100%;
+}
+
+.task-button {
+    background-color: rgba(144, 21, 21, 1);
+    border: none;
+    color: white;
+    /* padding: 5px 20px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .line {
@@ -294,58 +271,12 @@
     /* Required for positioning */
 }
 
-/* Add this to your existing stylesheet or component styles */
-.expanded-details {
-    margin-top: 10px;
-}
-
-.expanded-details .spec-item {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-}
-
-.expanded-details .spec-label {
-    font-size: 12px;
-    font-weight: normal;
-}
-
-.expanded-details .spec-value {
-    font-size: 14px;
-    font-weight: normal;
-}
-
-.card::before {
-    content: "";
-    /* To create a pseudo-element for the border */
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 100%;
-    border-top: 1px solid #ccc;
-    /* Border between header and body */
-    z-index: -1;
-}
-
-
 .notes-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
     font-size: 12px;
     font-weight: lighter;
-}
-
-
-.description-section {
-    margin-top: 20px;
-}
-
-.description-textarea {
-    padding: 10px;
-    margin-top: 10px;
-    resize: vertical;
-    width: 96%;
 }
 
 .file-upload-container {
@@ -414,47 +345,6 @@ label {
 .tab:hover {
     background-color: #f0f0f0;
     /* Greyed hover effect */
-}
-
-.collapse-button {
-    position: absolute;
-    bottom: 100px;
-    right: -20px;
-    width: 40px;
-    height: 40px;
-    background-color: #fff;
-    /* Adjust color as needed */
-    border-radius: 0 0 50% 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 5;
-}
-
-.arrow-icon {
-    position: absolute;
-    bottom: 50%;
-    right: 50%;
-    width: 20px;
-    height: 20px;
-    border: solid #000;
-    border-width: 0 2px 2px 0;
-    transform: translate(50%, 50%) rotate(-45deg);
-    transition: transform 0.3s ease;
-    z-index: 5;
-}
-
-.collapsed .arrow-icon {
-    transform: translate(50%, 50%) rotate(135deg);
-    z-index: 5;
-}
-
-.collapsed {
-    width: 0;
-}
-
-.collapsed .collapse-button {
-    right: 0;
-    border-radius: 50% 0 0 50%;
 }
 
 /* Styles for medium-sized screens */

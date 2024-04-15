@@ -1,28 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { fetchActivityType, fetchActivitySubtype, fetchAActivity, updateActivity } from '../../../services/api';
+import { fetchActivityType, fetchActivitySubtype, fetchAActivity, updateActivity, fetchLovValuesForField } from '../../../services/api';
 import { useParams } from 'react-router-dom';
 import './activityForm.css';
 
 function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
     // State to manage form input values
     const { workId, activityId } = useParams();
-    const [activityData, setactivityData] = useState({
+    const [activityData, setActivityData] = useState({
         title: '',
         description: '',
         activityTypeId: '',
         activityTypeSubtype: '',
     });
     const [activityTypes, setActivityTypes] = useState([]);
+    const [activityType, setActivityType] = useState(null);
     const [activitySubtypes, setActivitySubtypes] = useState([]);
+    const [customFields, setCustomFields] = useState([]);
+    const [renderedComponents, setRenderedComponents] = useState({});
 
     // prefills form with current data
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const workResponse = await fetchAActivity(workId, activityId);
-                const { title, description, activityType, activityTypeSubtype } = workResponse.payload;
-                const activityTypeId = activityType ? activityType.title : ''; // Grab activityType title
-                setactivityData({ title, description, activityTypeId, activityTypeSubtype });
+                console.log(workResponse.payload);
+                const { title, description, activityType, activityTypeSubtype, customFields } = workResponse.payload;
+                const activityTypeId = activityType ? activityType.id : ''; // Grab activityType title
+                setActivityData({ title, description, activityTypeId, activityTypeSubtype });
+
+                const customFieldsData = {};
+                customFields.forEach(field => {
+                    customFieldsData[field.name] = field.value.value;
+                });
+                setActivityData(prevActivityData => ({ ...prevActivityData, ...customFieldsData }));
+                setActivityType(activityType);
+
+                // Check if activityType and customFields exist, and if so, extract isLov values
+                const isLovValues = activityType?.customFields.map(field => field.isLov) || [];
+                console.log("isLov values:", isLovValues);
+
+                setCustomFields(customFields);
+                // Fetch activity types and subtypes
+                const typeResponse = await fetchActivityType();
+                setActivityTypes(typeResponse || []);
+
+                const subtypeResponse = await fetchActivitySubtype();
+                setActivitySubtypes(subtypeResponse || []);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -31,28 +54,134 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
         fetchData();
     }, [workId, activityId]);
 
-    // gets data to populate dropdown menus
-    useEffect(() => {
-        const fetchActivityData = async () => {
-            try {
-                const typeResponse = await fetchActivityType();
-                setActivityTypes(typeResponse || []);
-
-                const subtypeResponse = await fetchActivitySubtype();
-                setActivitySubtypes(subtypeResponse || []);
-            } catch (error) {
-                console.error('Error fetching activity data:', error);
+    const getLovValues = async (fieldName) => {
+        try {
+            const lovValuesResponse = await fetchLovValuesForField("Activity", activityData.activityTypeId, fieldName);
+            if (lovValuesResponse.errorCode === 0) {
+                console.log(lovValuesResponse.payload);
+                return lovValuesResponse.payload.map(value => ({ id: value.id, value: value.value }));
+            } else {
+                console.error('Error fetching LOV values for field:', fieldName, lovValuesResponse.errorMessage);
+                return [];
             }
-        };
+        } catch (error) {
+            console.error('Error fetching LOV values for field:', fieldName, error);
+            return [];
+        }
+    };
 
-        fetchActivityData();
-    }, []);
+    // Function to fetch LOV values for the current field
+    const fetchLovValuesAndRender = async (fieldName, isLov, isBoolean) => {
+        try {
+            if (isLov) {
+                const lovValues = await getLovValues(fieldName);
+                // Render the component based on LOV values
+                return lovValues.length > 0 ? (
+                    <select
+                        id={fieldName}
+                        name={fieldName}
+                        value={activityData[fieldName] || ''}
+                        onChange={(e) => handleCustomFieldChange(fieldName, e.target.value)}
+                        className="form-select"
+                    >
+
+                        {/* Render select options based on LOV values */}
+                        {lovValues.map((lovItem, index) => (
+                            <option key={index} value={lovItem.id}>
+                                {lovItem.value}
+                            </option>
+                        ))}
+                    </select>
+                ) : (
+                    <input
+                        type="text"
+                        id={fieldName}
+                        name={fieldName}
+                        value={activityData[fieldName] || ''}
+                        onChange={(e) => handleCustomFieldChange(fieldName, e.target.value)} // Pass fieldName to the handler
+                        className="form-input"
+                    />
+                );
+            } else if (isBoolean) {
+                // Render a select input for boolean fields
+                return (
+                    <select
+                        id={fieldName}
+                        name={fieldName}
+                        value={activityData[fieldName] || ''}
+                        onChange={(e) => handleCustomFieldChange(fieldName, e.target.value)} // Pass fieldName to the handler
+                        className="form-select"
+                    >
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                );
+            } else {
+                // If isLov is false and it's not a boolean field, render a simple text input
+                return (
+                    <input
+                        type="text"
+                        id={fieldName}
+                        name={fieldName}
+                        value={activityData[fieldName] || ''}
+                        onChange={handleInputChange} // Use handleInputChange for non-LOV fields
+                        className="form-input"
+                    />
+                );
+            }
+        } catch (error) {
+            console.error('Error fetching LOV values for field:', fieldName, error);
+            // Handle the error if necessary
+            return null;
+        }
+    };
+
+    // Asynchronously render components for custom fields
+    const renderCustomFields = async () => {
+        const components = {};
+        const isLovValues = activityType?.customFields.map(field => field.isLov) || [];
+        const valueTypes = activityType?.customFields.map(field => field.valueType) || [];
+
+        for (let i = 0; i < customFields.length; i++) {
+            const field = customFields[i];
+            const isLov = isLovValues[i] || false; // Default to false if isLov is not defined
+            const isBoolean = valueTypes[i] === 'Boolean'; // Check if the valueType is boolean
+            const component = await fetchLovValuesAndRender(field.name, isLov, isBoolean);
+            components[field.name] = component;
+        }
+        setRenderedComponents(components);
+    };
+
+    useEffect(() => {
+        renderCustomFields();
+    }, [customFields]); // Run the effect whenever customFields change
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await updateActivity(workId, activityId, activityData);
-            console.log(activityData);
+            const updatedActivityData = {
+                title: activityData.title,
+                description: activityData.description,
+                activityType: {
+                    id: activityData.activityTypeId, // Assuming you have activityType data elsewhere
+                    // Other activityType properties as needed
+                },
+                activityTypeSubtype: activityData.activityTypeSubtype,
+                assignedTo: activityData.assignedTo,
+                locationId: activityData.locationId,
+                shopGroupId: activityData.shopGroupId,
+                // Add customAttributeValues with custom fields
+                customAttributeValues: customFields.map(field => ({
+                    id: field.id,
+                    value: {
+                        type: 'String',
+                        value: activityData[field.name] || ''
+                    }
+                }))
+            };
+
+            await updateActivity(workId, activityId, updatedActivityData);
+            console.log(updatedActivityData);
             alert("Activity updated successfully!");
             setShowEditActivityForm(false); // Close the form
             window.location.reload(); // Reload the page
@@ -62,14 +191,48 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
         }
     };
 
-    // Function to handle input changes
+    // const handleInputChange = (e) => {
+    //     const { name, value, type } = e.target;
+
+    //     // Handle select inputs separately
+    //     if (type === 'select-one') {
+    //         setActivityData({ ...activityData, [name]: value });
+    //     } else {
+    //         // For other input types, update the value in the state
+    //         setActivityData((prevActivityData) => ({
+    //             ...prevActivityData,
+    //             [name]: value,
+    //         }));
+    //     }
+    // };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setactivityData
-            ({
-                ...activityData
-                , [name]: value
-            });
+        
+        // Update the value in the state
+        setActivityData((prevActivityData) => ({
+            ...prevActivityData,
+            [name]: value,
+        }));
+    };
+    
+
+    const handleCustomFieldChange = (fieldName, selectedValue) => {
+        console.log("Field Name:", fieldName);
+        console.log("Selected Value:", selectedValue);
+
+        setActivityData((prevActivityData) => ({
+            ...prevActivityData,
+            [fieldName]: selectedValue,
+        }));
+    };
+
+    // Utility function to convert camelCase to normal casing
+    const camelToNormalCase = (camelCase) => {
+        // Split camelCase string into words
+        const words = camelCase.split(/(?=[A-Z])/);
+        // Capitalize the first letter of each word and join them
+        return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     };
 
     return (
@@ -140,6 +303,15 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
                             ))}
                         </select>
                     </div>
+
+                    {/* Mapping over customFields to render fields */}
+                    {customFields.map((field) => (
+                        <div key={field.id} className="form-group">
+                            <label htmlFor={field.name} className="form-label">{camelToNormalCase(field.name)}</label>
+                            {/* Render the component stored in renderedComponents */}
+                            {renderedComponents[field.name]}
+                        </div>
+                    ))}
 
                     <button type="submit" className="form-button">Update Activity</button>
                 </form>

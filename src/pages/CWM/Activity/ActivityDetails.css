@@ -36,14 +36,15 @@
 
 .container {
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
 .column {
     padding: 10px;
+    box-sizing: border-box; 
 }
 
-.left-column {
+/* .left-column {
     flex: 1;
     width: 20%;
 }
@@ -51,7 +52,7 @@
 .right-column {
     flex: 4;
     width: 80%;
-}
+} */
 
 .work-label {
     font-size: 16px;

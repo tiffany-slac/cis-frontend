@@ -33,7 +33,7 @@ function ItemForm({ showItemForm, setShowItemForm }) {
             id: element.id,
             name: element.name,
           }));
-          setParentId(elementDetails);
+          setParents(elementDetails);
         } else {
           throw new Error("Error fetching elements");
         }
@@ -46,15 +46,37 @@ function ItemForm({ showItemForm, setShowItemForm }) {
   }, []);
   
   console.log(parents);
+  
 
   const handleRowClick = (classId) => {
     history.push(`/admin/${classId}`); // Navigate to detail page with the class_id
   };
 
   const handleParentChange = (event) => {
-    setParentId(event.target.value);
-    console
+    const value = event.target.value.trim(); // Trim any leading or trailing whitespace
+    setParentId(value !== "" ? value : null); // Convert empty string to null
   };
+
+  const handleInputChange = (e) => {
+    const { name, value, type } = e.target;
+  
+    // For other input fields, update the state normally
+    switch (type) {
+      case "select-multiple":
+        const selectedValues = Array.from(e.target.selectedOptions).map(
+          (option) => option.value
+        );
+        setactivityData({ ...activityData, [name]: selectedValues });
+        break;
+      default:
+        // Only update state for non-select fields
+        if (name !== "parents") {
+          setactivityData({ ...activityData, [name]: value });
+        }
+    }
+  };
+  
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -105,13 +127,12 @@ function ItemForm({ showItemForm, setShowItemForm }) {
               id="parents"
               name="parents"
               value={parentId} 
-              onChange={(event) => setParentId(event.target.value)}
+              onChange={handleInputChange}
+              className="form-select"
             >
               <option value="">Select a parent</option>
               {parents.map((parent, index) => (
-                <option key={index} value={parent.id}>
-                  {parent.name}
-                </option>
+                <option key={index} value={parent.id}>{parent.name}</option>
               ))}
             </select><br />
 

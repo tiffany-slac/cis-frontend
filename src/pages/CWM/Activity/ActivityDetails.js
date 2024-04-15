@@ -83,97 +83,108 @@ const ActivityDetails = () => {
                         <div>
                             <p>Work Summary </p>
                             <hr className="line" />
-                            <div>
-                                <div className="container">
-                                    <div className="column left-column">
-                                        <p className="work-label">Status</p>
-                                        <p className="work-label">Assigned To</p>
-                                        <p className="work-label">Work Type</p>
-                                        <p className="work-label">Scheduling Priority</p>
-                                    </div>
-                                    <div className="column right-column">
-                                        <p>{work.title}</p>
-                                        <p>{work.workType.title}</p>
-                                        <p>{work.location.name}</p>
-                                        <p>{work.shopGroup.name}</p>
-                                    </div>
-                                </div>
+                            <div className="container">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td className="work-label">Status</td>
+                                            <td>{work.title}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="work-label">Assigned To</td>
+                                            <td>{work.workType.title}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="work-label">Work Type</td>
+                                            <td>{work.location.name}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="work-label">Scheduling Priority</td>
+                                            <td>{work.shopGroup.name}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
+
                         </div>
+
                     )}
-                </div>
+            </div>
 
-                <div className='work-card'>
-                    {/* Asset Details */}
-                    {work && (
+            {/* Other similar sections follow */}
+
+
+            <div className='work-card'>
+                {/* Asset Details */}
+                {work && (
+                    <div>
+                        <p>Activity Summary </p>
+                        <hr className="line" />
                         <div>
-                            <p>Activity Summary </p>
-                            <hr className="line" />
-                            <div>
-                                <div className="container">
-                                    <div className="column left-column">
-                                        <p className="work-label">Status</p>
-                                        <p className="work-label">Assigned To</p>
-                                        <p className="work-label">Work Type</p>
-                                        <p className="work-label">Scheduling Priority</p>
-                                    </div>
-                                    <div className="column right-column">
-                                        <p>{work.title}</p>
-                                        <p>{work.workType.title}</p>
-                                        <p>{work.location.name}</p>
-                                        <p>{work.shopGroup.name}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                <div className='work-card'>
-                    {/* Asset Details */}
-                    {work && (
-                        <div>
-                            <p>Work Release Conditions </p>
-                            <hr className="line" />
-
                             <div className="container">
                                 <div className="column left-column">
-                                    <p className="work-label">Title</p>
-                                    <p className="work-label">Description</p>
+                                    <p className="work-label">Status</p>
+                                    <p className="work-label">Assigned To</p>
+                                    <p className="work-label">Work Type</p>
+                                    <p className="work-label">Scheduling Priority</p>
                                 </div>
                                 <div className="column right-column">
                                     <p>{work.title}</p>
-                                    <p>{work.description}</p>
+                                    <p>{work.workType.title}</p>
+                                    <p>{work.location.name}</p>
+                                    <p>{work.shopGroup.name}</p>
                                 </div>
                             </div>
-                            
-                            <div>
-                                <hr className="line" />
-                                <div className="container">
-                                    <div className="column left-column">
-                                        <p className="work-label">Type</p>
-                                        <p className="work-label">Subtype</p>
-                                        <p className="work-label">Area</p>
-                                        <p className="work-label">Area Manager</p>
-                                        <p className="work-label">Shop</p>
-                                    </div>
-                                    <div className="column right-column">
-                                        <p>{work.title}</p>
-                                        <p>{work.workType.title}</p>
-                                        <p>{work.location.name}</p>
-                                        <p>User1, User1 </p>
-                                        <p>{work.shopGroup.name}</p>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
-                    )}
-                    <hr className="line" />
-                </div>
+                    </div>
+                )}
             </div>
 
+            <div className='work-card'>
+                {/* Asset Details */}
+                {work && (
+                    <div>
+                        <p>Work Release Conditions </p>
+                        <hr className="line" />
+
+                        <div className="container">
+                            <div className="column left-column">
+                                <p className="work-label">Title</p>
+                                <p className="work-label">Description</p>
+                            </div>
+                            <div className="column right-column">
+                                <p>{work.title}</p>
+                                <p>{work.description}</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <hr className="line" />
+                            <div className="container">
+                                <div className="column left-column">
+                                    <p className="work-label">Type</p>
+                                    <p className="work-label">Subtype</p>
+                                    <p className="work-label">Area</p>
+                                    <p className="work-label">Area Manager</p>
+                                    <p className="work-label">Shop</p>
+                                </div>
+                                <div className="column right-column">
+                                    <p>{work.title}</p>
+                                    <p>{work.workType.title}</p>
+                                    <p>{work.location.name}</p>
+                                    <p>User1, User1 </p>
+                                    <p>{work.shopGroup.name}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                )}
+                <hr className="line" />
+            </div>
         </div>
+
+        </div >
     );
 };
 

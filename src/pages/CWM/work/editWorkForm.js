@@ -13,18 +13,39 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
         locationId: '',
         shopGroupId: '',
         assignedTo: [],
+        customFieldValues: {},
     });
     const [workTypes, setWorkTypes] = useState([]);
     const [locations, setLocations] = useState([]);
     const [shopGroups, setShopGroups] = useState([]);
+    const [customFields, setCustomFields] = useState([]);
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const workResponse = await fetchAWork(workId);
-                const { title, description, workTypeId, locationId, shopGroupId, assignedTo } = workResponse.payload;
-                setWorkData({ title, description, workTypeId, locationId, shopGroupId, assignedTo });
+                const { title, description, location, shopGroup, workType, assignedTo } = workResponse.payload;
+
+                // Extract custom fields from work type
+                const customFieldsFromWorkType = workType.customFields || [];
+
+                // Create an object to store all the custom field values
+                const customFieldValues = {};
+                customFieldsFromWorkType.forEach(field => {
+                    // Initialize each custom field value to an empty string
+                    customFieldValues[field.name] = '';
+                });
+                // Set the IDs in workData
+                setWorkData({
+                    title,
+                    description,
+                    workTypeId: workType.id, // Set workType ID
+                    locationId: location.id, // Set location ID
+                    shopGroupId: shopGroup.id, // Set shopGroup ID
+                    assignedTo,
+                    ...customFieldValues // Include custom fields in workData
+                });
 
                 const typesResponse = await fetchWorkType();
                 setWorkTypes(typesResponse || []);
@@ -37,8 +58,6 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
 
                 const usersResponse = await fetchUsers();
                 setUsers(usersResponse.payload || []);
-
-                console.log(workData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -46,17 +65,54 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
         fetchData();
     }, [workId]);
 
+    useEffect(() => {
+        const selectedType = workTypes.find(type => type.id === workData.workTypeId);
+        if (selectedType) {
+            setCustomFields(selectedType.customFields || []);
+        }
+    }, [workData.workTypeId, workTypes]);
+
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            console.log(workData);
-            await updateWork(workId, workData);
+            // Construct customFieldValues array with correct format
+            const customFieldValues = customFields.map(field => {
+                let fieldType = field.valueType || 'String';
+                let fieldValue = workData[field.name] || '';
+
+                // Check if fieldValue is an empty string or not
+                if (fieldValue === '') {
+                    fieldValue = null; // Set fieldValue to null if it's empty
+                }
+
+                return {
+                    id: field.id,
+                    value: {
+                        type: fieldType,
+                        value: fieldValue
+                    }
+                };
+            });
+
+            // Create updatedWorkData object with only the necessary fields
+            const updatedWorkData = {
+                title: workData.title,
+                description: workData.description,
+                assignedTo: workData.assignedTo,
+                locationId: workData.locationId,
+                shopGroupId: workData.shopGroupId,
+                customFieldValues: customFieldValues
+            };
+
+            console.log(updatedWorkData);
+            await updateWork(workId, updatedWorkData);
             alert("Work updated successfully!");
             setshowEditWorkForm(false); // Close the form
             window.location.reload(); // Reload the page
         } catch (error) {
-            console.error('Error creating shop group:', error);
-            alert("Error creating shop group. Please try again.");
+            console.error('Error updating work:', error);
+            alert("Error updating work. Please try again.");
         }
     };
 
@@ -74,7 +130,6 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
             setWorkData({ ...workData, [name]: value });
         }
     };
-
 
     return (
         <div className={`modal ${showEditWorkForm ? "show" : "hide"}`}>
@@ -122,13 +177,11 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
                             className="form-select"
 
                         >
-                            {/* Render the default option */}
-
                             {workTypes.map(type => (
                                 <option
                                     key={type.id}
                                     value={type.id}
-                                    selected={type.title === workData.workTypeTitle} // Set selected attribute based on condition
+                                // selected={type.title === workData.workTypeTitle} // Set selected attribute based on condition
                                 >
                                     {type.title}
                                 </option>
@@ -196,6 +249,13 @@ function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {
                             ))}
                         </select>
                     </div>
+
+                    {customFields.map(field => (
+                        <div key={field.id} className="form-group">
+                            <label htmlFor={field.id} className="form-label">{field.label}</label>
+                            <input type="text" id={field.id} name={field.name} value={workData[field.name] || ''} onChange={handleInputChange} className="form-input" />
+                        </div>
+                    ))}
 
                     <button type="submit" className="form-button">Update Work</button>
                 </form>

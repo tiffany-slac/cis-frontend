@@ -36,7 +36,6 @@ const WorkDetails = () => {
             try {
                 const response = await fetchAWork(workId);
                 setWorkDetails(response.payload);
-                console.log("WorkDetails", workDetails);
             } catch (error) {
                 console.error("Error fetching work details:", error);
             } finally {
@@ -51,7 +50,6 @@ const WorkDetails = () => {
             try {
                 const response = await fetchActivity(workId);
                 setActivities(response.payload);
-                console.log("Activities", activities);
             } catch (error) {
                 console.error("Error fetching activities:", error);
             } finally {
@@ -134,42 +132,102 @@ const WorkDetails = () => {
                             <span className="tag">{workDetails.workType.title}</span>
                             <hr className="line" />
 
-                            <div className="container">
-                                <div className="column left-column">
-                                    <p className="work-label">Title</p>
-                                    <p className="work-label">Description</p>
-                                </div>
-                                <div className="column right-column">
-                                    <p>{workDetails.title}</p>
-                                    <p>{workDetails.description}</p>
-                                </div>
+                            <div className="details-container">
+                                <table className="aligned-table">
+                                    <tbody>
+                                        <tr>
+                                            <td className="work-label">Title</td>
+                                            <td>{workDetails.title}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="work-label">Description</td>
+                                            <td>{workDetails.description}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
+
                         </div>
                     ) : (
                         <p>Loading...</p>
                     )}
                     <hr className="line" />
-                    {/* Table to display activities */}
-                    <table className="activity-table">
-                        <thead>
-                            <tr>
-                                <th>Job</th>
-                                <th>Description</th>
-                                <th>Type</th>
-                                <th>Subtype</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {activities.map(activity => (
-                                <tr key={activity.id} onClick={() => handleActivityClick(activity)}>
-                                    <td>{activity.title}</td>
-                                    <td>{activity.description}</td>
-                                    <td>{activity.activityType.title}</td>
-                                    <td>{activity.activityTypeSubtype}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table><br />
+
+                    {workDetails && (
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            {/* First column with dark grey text */}
+                            <div style={{ color: 'darkgrey', marginRight: '10px' }}>
+                                <p id="attachments">
+                                    <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faBell} style={{ color: 'maroon' }} /></span>
+                                    <span>Status</span>
+                                </p>
+                                <p id="location">
+                                    <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faMapMarkerAlt} style={{ color: 'gold' }} /></span>
+                                    <span>Area</span>
+                                </p>
+                                {workDetails.assignedTo && workDetails.assignedTo.length > 0 ? (
+                                    <p id="assigned-to">
+                                        <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faUser} /></span>
+                                        <span>Assigned To</span>
+                                    </p>
+                                ) : (
+                                    <p id="assigned-to">
+                                        <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faUser} /></span>
+                                        <span>Assigned To</span>
+                                    </p>
+                                )}
+                            </div>
+                            {/* Second column */}
+                            <div>
+                                <p id="attachments">{workDetails.currentStatus.status}</p>
+                                {workDetails.location && (
+                                    <p id="location">{workDetails.location.name} - {workDetails.location.locationManagerUserId}</p>
+                                )}
+                                {workDetails.assignedTo && workDetails.assignedTo.length > 0 ? (
+                                    <p id="assigned-to">{workDetails.assignedTo[0]}</p>
+                                ) : (
+                                    <p id="assigned-to">Unassigned</p>
+                                )}
+                            </div>
+                        </div>
+
+                    )}
+                    {workDetails && (
+                        <div>
+                            <hr className="line" />
+                            <div className="container">
+                                <div className="column left-column">
+                                    {workDetails.customFields && workDetails.customFields.map(field => (
+                                        <p key={field.id} className="work-label">{convertCamelCaseToNormalCase(field.name)}</p>
+                                    ))}
+                                </div>
+                                <div className="column right-column">
+                                    {workDetails.customFields && workDetails.customFields.map(field => (
+                                        <p key={field.id}>
+                                            {field.value && field.value.value}
+                                        </p>
+                                    ))}
+                                </div>
+                            </div>
+                            <hr className="line" />
+                        </div>
+                    )}
+
+                    <p id="attachments">Attachments</p>
+                    <div className="file-upload-container">
+                        <input type="file" id="file-input" multiple />
+                        <label htmlFor="file-input">Drag and drop files here or click to upload</label>
+                        <div className="uploaded-files">
+                            {/* Display uploaded files here */}
+                        </div>
+                    </div><br></br>
+
+                    <hr className="line" />
+                    <p id="attachments">Emails Sent</p>
+                    <p>Title:</p>
+                    <p>Description: </p>
+
+                    <hr className="line" />
 
                     {showJobDetails && (
                         // 
@@ -194,34 +252,40 @@ const WorkDetails = () => {
                                             <hr className="line" />
 
                                             <div className="container">
-                                                <div className="column left-column">
-                                                    <p className="work-label">Status</p>
-                                                    <p className="work-label">Title</p>
-                                                    <p className="work-label">Description</p>
-                                                </div>
-                                                <div className="column right-column">
-                                                    <p>{selectedActivity.currentStatus.status}</p>
-                                                    <p>{selectedActivity.title}</p>
-                                                    <p>{selectedActivity.description}</p>
-                                                </div>
+                                                <table className="aligned-table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td className="work-label">Status</td>
+                                                            <td>{selectedActivity.currentStatus.status}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className="work-label">Title</td>
+                                                            <td>{selectedActivity.title}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className="work-label">Description</td>
+                                                            <td>{selectedActivity.description}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
+
                                             <div>
                                                 <hr className="line" />
                                                 <div className="container">
-                                                    <div className="column left-column">
-                                                        {selectedActivity.customFields && selectedActivity.customFields.map(field => (
-                                                            <p key={field.id} className="work-label">{convertCamelCaseToNormalCase(field.name)}</p>
-                                                        ))}
-                                                    </div>
-                                                    <div className="column right-column">
-                                                        {selectedActivity.customFields && selectedActivity.customFields.map(field => (
-                                                            <p key={field.id}>
-                                                                {field.value && field.value.value}
-                                                            </p>
-                                                        ))}
-                                                    </div>
-
+                                                    <table className="aligned-table-customdetails">
+                                                        <tbody>
+                                                            {selectedActivity.customFields && selectedActivity.customFields.map(field => (
+                                                                <tr key={field.id}>
+                                                                    <td className="left-column">{convertCamelCaseToNormalCase(field.name)}</td>
+                                                                    <td className="right-column">{field.value && field.value.value}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
                                                 </div>
+
+
                                             </div>
                                         </div>
 
@@ -233,19 +297,6 @@ const WorkDetails = () => {
                         </div>
                     )}
 
-
-                    <div className="new-class-button">
-                        <button className="dropbtn" onClick={() => setShowActivityForm(!showActivityForm)}>
-                            {showActivityForm ? "Close Activity Form" : "+ Activity"}
-                        </button>
-                        {showActivityForm && (
-                            <ActivityForm
-                                showActivityForm={showActivityForm}
-                                setShowActivityForm={setShowActivityForm}
-                            />
-                        )}
-                    </div>
-                    <hr className="line" />
                     {workDetails && (
                         <div className="notes-container">
                             <div className="column">
@@ -262,73 +313,45 @@ const WorkDetails = () => {
             </div>
 
             <div className="work-details-container2">
-                {/* Attachments and Activity section */}
+                {/* Status and Tasks section */}
                 <div className="attachments-activity-container">
 
 
                     <div className='work-card'>
-                        <div className="attachments-section">
-                            {workDetails && (
-                                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    {/* First column with dark grey text */}
-                                    <div style={{ color: 'darkgrey', marginRight: '10px' }}>
-                                        <p id="attachments">
-                                            <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faBell} style={{ color: 'maroon' }} /></span>
-                                            <span>Status</span>
-                                        </p>
-                                        <p id="location">
-                                            <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faMapMarkerAlt} style={{ color: 'gold' }} /></span>
-                                            <span>Area</span>
-                                        </p>
-                                        {workDetails.assignedTo && workDetails.assignedTo.length > 0 ? (
-                                            <p id="assigned-to">
-                                                <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faUser} /></span>
-                                                <span>Assigned To</span>
-                                            </p>
-                                        ) : (
-                                            <p id="assigned-to">
-                                                <span style={{ marginRight: '10px' }}><FontAwesomeIcon icon={faUser} /></span>
-                                                <span>Assigned To</span>
-                                            </p>
+                        {/* <div className="attachments-section"> */}
+                        <table className='work-table'>
+                            <colgroup>
+                                <col style={{ borderLeft: '1px solid black' }} />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <h3 id="attachments" style={{marginLeft: "10px"}}>Tasks<span className="new-class-button" style={{ margin: '0' }}>
+                                        <button onClick={() => setShowActivityForm(!showActivityForm)} className="task-button">
+                                            {showActivityForm ? "Close Activity Form" : "+"}
+                                        </button>
+                                        {showActivityForm && (
+                                            <ActivityForm
+                                                showActivityForm={showActivityForm}
+                                                setShowActivityForm={setShowActivityForm}
+                                            />
                                         )}
-                                    </div>
-                                    {/* Second column */}
-                                    <div>
-                                        <p id="attachments">{workDetails.currentStatus.status}</p>
-                                        {workDetails.location && (
-                                            <p id="location">{workDetails.location.name} - {workDetails.location.locationManagerUserId}</p>
-                                        )}
-                                        {workDetails.assignedTo && workDetails.assignedTo.length > 0 ? (
-                                            <p id="assigned-to">{workDetails.assignedTo[0]}</p>
-                                        ) : (
-                                            <p id="assigned-to">Unassigned</p>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className='work-card'>
-                        <div className="attachments-section">
-                            <p id="attachments">Attachments</p>
-                            <div className="file-upload-container">
-                                <input type="file" id="file-input" multiple />
-                                <label htmlFor="file-input">Drag and drop files here or click to upload</label>
-                                <div className="uploaded-files">
-                                    {/* Display uploaded files here */}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className='work-card'>
-                        <div className="attachments-section">
-                            <p id="attachments">Emails Sent</p>
-                            <hr className="line" />
-                            <p>Title:</p>
-                            <p>Description: </p>
-                        </div>
+                                    </span></h3>
+                                </tr>
+                                {activities.map(activity => (
+                                    <tr key={activity.id} onClick={() => handleActivityClick(activity)}>
+                                        <td className="activity-card" style={{ borderLeft: '3px solid rgba(144, 21, 21, 1)' }}>
+                                            <div>
+                                                <h4>{activity.activityType.title}</h4>
+                                                {/* <p>Job: {activity.workNumber}</p> */}
+                                                <p>Subtype: {activity.activityTypeSubtype}</p>
+                                                <p>Description: {activity.description}</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {/* </div> */}
                     </div>
 
                 </div>

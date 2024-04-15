@@ -11,6 +11,7 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
         locationId: '',
         shopGroupId: '',
         assignedTo: [],
+        customFields: [],
     });
     const [workTypes, setWorkTypes] = useState([]);
     const [locations, setLocations] = useState([]);

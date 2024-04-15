@@ -12,6 +12,8 @@
 
 .form-content {
   position: relative;
+  height: 90%;
+  overflow-y: auto;
 }
 
 .close {

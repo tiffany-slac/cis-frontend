@@ -54,6 +54,7 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
 
         fetchWorkAndActivityData();
     }, [activityTypesFetched, workId]);
+    
     const fetchCustomFieldsData = async (typeId, customFields) => {
         try {
             const customFieldsData = await Promise.all(
