@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/CardWidget.css';
+import './CardWidget.css';
 
 function CardWidget() {
   // State to hold the assets data

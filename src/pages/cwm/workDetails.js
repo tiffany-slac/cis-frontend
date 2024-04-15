@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useHistory } from 'react-router-dom'; // Import Link from react-router-dom
-import { fetchAWork, fetchActivity, fetchAActivity } from "../../../services/api";
+import { fetchAWork, fetchActivity, fetchAActivity } from "../../services/api";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faUser, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-import ActivityForm from '../Activity/activityForm';
+import ActivityForm from './activityForm';
 import EditWorkForm from './editWorkForm';
-import Breadcrumb from '../../../components/Breadcrumb';
-import EditActivityForm from '../Activity/editActivityForm';
-import '../Activity/activityForm.css';
+import Breadcrumb from '../../components/Breadcrumb';
+import EditActivityForm from './editActivityForm';
+import './activityForm.css';
 import './workDetails.css';
 
 const WorkDetails = () => {

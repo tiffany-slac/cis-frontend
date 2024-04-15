@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchAWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers, updateWork } from '../../../services/api';
+import { fetchAWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers, updateWork } from '../../services/api';
 import './workForm.css';
 
 function EditWorkForm({ showEditWorkForm, setshowEditWorkForm }) {

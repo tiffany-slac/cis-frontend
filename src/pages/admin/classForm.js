@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createInventoryClass, fetchAllClass, fetchClass } from "../../../services/api";
+import { createInventoryClass, fetchAllClass, fetchClass } from "../../services/api";
 import './classForm.css';
 
 function ClassForm({ showClassForm, setShowClassForm, classTypes }) {

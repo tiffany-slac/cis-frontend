@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createActivity, fetchActivityType, fetchAWork, fetchLovValuesForField } from '../../../services/api';
+import { createActivity, fetchActivityType, fetchAWork, fetchLovValuesForField } from '../../services/api';
 import { useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker'; // Importing React Datepicker
 import 'react-datepicker/dist/react-datepicker.css';

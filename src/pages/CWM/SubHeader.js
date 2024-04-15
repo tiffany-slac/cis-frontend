@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 // import LocationForm from './locationForm.js';
-import WorkForm from './work/workForm.js';
+import WorkForm from './workForm.js';
 import "./cwm.css";
 
 const SubHeader = ({ showLocationForm, setShowLocationForm, showWorkForm, setShowWorkForm, searchInput, setSearchInput, handleSearch }) => {

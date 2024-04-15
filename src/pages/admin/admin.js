@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useLocation, Redirect } from "react-router-dom";
-import { useHistory } from 'react-router-dom';
-import { fetchUsers } from '../../services/api'
 import './admin.css';
-import CISadmin from "./cisAdmin/cisAdmin.js";
-import CWMadmin from "./cwmAdmin/cwmAdmin.js";
-import ELOGadmin from "./ELOGadmin.js";
+import CISadmin from "./cisAdmin.js";
+import CWMadmin from "./cwmAdmin.js";
+import ELOGadmin from "./elogAdmin.js";
 import GeneralAdmin from "./generalAdmin.js";
-import { GridRowModes, GridRowEditStopReasons } from '@mui/x-data-grid';
 
 function Admin() {
   const location = useLocation();

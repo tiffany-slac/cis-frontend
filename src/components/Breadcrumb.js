@@ -1,4 +1,3 @@
-// Breadcrumb.js
 import React from 'react';
 
 // Breadcrumb component receives an 'items' prop

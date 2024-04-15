@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../../services/api";
+import { fetchAllClass, fetchAllDomain, fetchAllElements } from "../../services/api";
 import { faAngleDown, faBox, faObjectGroup, faSquarePollVertical } from "@fortawesome/free-solid-svg-icons";
 import ClassForm from "./classForm";
-import ItemForm from "../ItemForm";
-import ElementForm from "../../cis/elementForm";
-import "../admin.css";
+import ElementForm from "../cis/elementForm";
+import "./admin.css";
 
 function CISadmin() {
   const history = useHistory();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showItemForm, setShowItemForm] = useState(false);
   const [showClassForm, setShowClassForm] = useState(false);
   const [showElementForm, setShowElementForm] = useState(false);
   const [classTypes, setClassTypes] = useState([]);

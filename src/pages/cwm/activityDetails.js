@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
-import { fetchAWork, fetchAActivity } from "../../../services/api";
+import { fetchAWork, fetchAActivity } from "../../services/api";
 import EditActivityForm from './editActivityForm';
-import Breadcrumb from '../../../components/Breadcrumb';
+import Breadcrumb from '../../components/Breadcrumb';
 import './activityDetails.css';
 
 const ActivityDetails = () => {

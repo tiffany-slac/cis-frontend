@@ -1,6 +1,6 @@
 // Inventory.js
 import React, { useState, useEffect } from "react";
-import { fetchAllElements } from "../../services/api";
+import { fetchAllElements } from "../../services/api.js";
 import { useHistory } from "react-router-dom";
 import ElementForm from "./elementForm.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

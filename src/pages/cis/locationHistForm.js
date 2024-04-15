@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createImplementation } from "../../../services/api";
+import { createImplementation } from "../../services/api";
 import "./itemDetails.css";
 
 function LocationHistForm({ showLocationHistForm, setShowLocationHistForm, itemId }) {

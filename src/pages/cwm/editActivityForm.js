@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchActivityType, fetchActivitySubtype, fetchAActivity, updateActivity, fetchLovValuesForField } from '../../../services/api';
+import { fetchActivityType, fetchActivitySubtype, fetchAActivity, updateActivity, fetchLovValuesForField } from '../../services/api';
 import { useParams } from 'react-router-dom';
 import './activityForm.css';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers } from '../../../services/api';
+import { createWork, fetchWorkType, fetchLocations, fetchShopGroups, fetchUsers } from '../../services/api';
 import './workForm.css';
 
 function WorkForm({ showWorkForm, setShowWorkForm }) {
