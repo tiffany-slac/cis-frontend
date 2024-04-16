@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useHistory } from 'react-router-dom'; // Import Link from react-router-dom
+import { useParams, useHistory } from 'react-router-dom'; // Import Link from react-router-dom
 import { fetchAWork, fetchActivity, fetchAActivity } from "../../services/api";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faUser, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,6 @@ const WorkDetails = () => {
     const { workId, activityId } = useParams(); // Get the asset ID from the URL params
     const [workDetails, setWorkDetails] = useState(null); // State to hold the asset details
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('Jobs');
     const [showActivityForm, setShowActivityForm] = useState(false); // State to control the visibility of the activity form
     const [showEditForm, setShowEditForm] = useState(false);
     const [activities, setActivities] = useState([]);
@@ -30,7 +29,6 @@ const WorkDetails = () => {
         { label: 'Issue Details', link: `/work/${workId}` },
     ];
 
-    // Fetch element path data on component mount
     useEffect(() => {
         const fetchWorkDetails = async () => {
             try {
@@ -42,10 +40,6 @@ const WorkDetails = () => {
                 setLoading(false);
             }
         };
-        fetchWorkDetails();
-    }, [workId]);
-
-    useEffect(() => {
         const fetchActivities = async () => {
             try {
                 const response = await fetchActivity(workId);
@@ -56,49 +50,30 @@ const WorkDetails = () => {
                 setLoading(false);
             }
         };
+        fetchWorkDetails();
         fetchActivities();
-    }, [workId]);
 
-    useEffect(() => {
         const handleClickOutside = (event) => {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-                setShowJobDetails(false); // Click occurred outside of the sidebar panel, close it
+                setShowJobDetails(false);
             }
         };
-        // Add event listener to listen for clicks on the document
         document.addEventListener('mousedown', handleClickOutside);
-        // Cleanup function to remove the event listener when the component unmounts
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [workId]);
 
-    const scrollToContent = (item) => {
-        const contentElement = document.getElementById(item.toLowerCase());
-        if (contentElement) {
-            contentElement.scrollIntoView({ behavior: 'smooth' });
-        }
-        setActiveTab(item);
-    };
-
-    const toggleEditForm = () => {
-        setShowEditForm(prevState => !prevState);
-    };
-
-    const toggleEditSidebarForm = () => {
-        setShowEditActivityForm(prevState => !prevState);
-    };
+    const toggleEditForm = () => setShowEditForm(prevState => !prevState);
+    const toggleEditSidebarForm = () => setShowEditActivityForm(prevState => !prevState);
 
     const handleActivityClick = async (activity) => {
         try {
             // Fetch details of the selected activity
             const response = await fetchAActivity(workId, activity.id);
-            // Set the details of the selected activity
-            setSelectedActivity(response.payload);
-            // Show the job details sidebar
-            setShowJobDetails(true);
-            // Push the activity ID to the URL
-            history.push(`/work/${workId}/${activity.id}`);
+            setSelectedActivity(response.payload); // Set the details of the selected activity
+            setShowJobDetails(true); // Show the job details sidebar
+            history.push(`/work/${workId}/${activity.id}`); // Push the activity ID to the URL
         } catch (error) {
             console.error("Error fetching activity:", error);
         }
@@ -106,9 +81,7 @@ const WorkDetails = () => {
 
     // Utility function to convert camelCase to Capitalized words
     const convertCamelCaseToNormalCase = (camelCaseString) => {
-        // Replace capital letters with space followed by the letter
-        const normalizedString = camelCaseString.replace(/([A-Z])/g, ' $1');
-        // Capitalize the first letter and return
+        const normalizedString = camelCaseString.replace(/([A-Z])/g, ' $1'); // Replace capital letters with space followed by the letter
         return normalizedString.charAt(0).toUpperCase() + normalizedString.slice(1);
     };
 

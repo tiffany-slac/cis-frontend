@@ -9,28 +9,9 @@ function LocationHistForm({ showLocationHistForm, setShowLocationHistForm, itemI
   const [location, setLocation] = useState("");
   const [parentSlot, setParentSlot] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
-  const [classId, setClassId] = useState("659d97d8436dda6f355adc94");
-  const [parentId, setParentId] = useState("");
   
   const handleSubmit = async ( event ) => {
     event.preventDefault();
-
-    // try {
-    //   const itemData = {
-    //     name: itemId + date,
-    //     description: 'DEPOT Item',
-    //     classId: classId,
-    //     parentId: null,
-    //     tags: [],
-    //     attributes: [
-    //       { name: "State", value: state },
-    //       { name: "Date", value: date },
-    //       { name: "Parent", value: parent },
-    //       { name: "Location", value: location },
-    //       { name: "Parent-Slot", value: parentSlot },
-    //       { name: "Assigned-To", value: assignedTo },
-    //     ],
-    //   }; 659f37718a79764e92f1d0d7
 
     try {
       const itemData = {

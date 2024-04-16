@@ -3,23 +3,11 @@
     height: 100%;
 }
 
-.centered-container {
-    display: flex;
-    /* justify-content: space-between; */
-}
-
 .activity-details-container {
     margin-left: 50px;
     margin-right: 50px;
     display: flex;
     flex-direction: column;
-    /* width: 70%; */
-}
-
-.activity-details-container2 {
-    margin-left: 20px;
-    display: flex;
-    width: 25%;
 }
 
 .work-card {
@@ -33,7 +21,6 @@
     width: 100%;
 }
 
-
 .container {
     display: flex;
     align-items: stretch;
@@ -41,18 +28,8 @@
 
 .column {
     padding: 10px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
-
-/* .left-column {
-    flex: 1;
-    width: 20%;
-}
-
-.right-column {
-    flex: 4;
-    width: 80%;
-} */
 
 .work-label {
     font-size: 16px;
@@ -65,9 +42,8 @@
     border: none;
     height: 1px;
     width: 100%;
-    background-color: #ccc; /* Adjust color as needed */
-    /* margin-top: 5px;  */
-    margin-bottom: 10px; /* Optional: Add some space between the line and the next paragraph */
+    background-color: #ccc;
+    margin-bottom: 10px;
 }
 
 .activity-table {
@@ -75,7 +51,8 @@
     border-collapse: collapse;
 }
 
-.activity-table th, .activity-table td {
+.activity-table th,
+.activity-table td {
     padding: 8px;
     text-align: left;
     border: 1px solid #ddd;
@@ -104,90 +81,6 @@
 .attachments-section,
 .activity-section {
     flex: 1;
-}
-
-.item-cards {
-    display: flex;
-    flex-direction: column;
-    margin: 5px auto;
-    justify-content: center;
-    align-items: center;
-    top: 220px;
-    left: 400px;
-    width: 50%;
-}
-
-.content-container {
-    display: flex;
-    justify-content: space-between;
-    /* Items placed at the start and end of the container */
-    margin: 0 auto;
-    /* Add other styles as needed */
-}
-
-.centered-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    /* Add other styles as needed */
-}
-
-.location-content {
-    background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    height: 70%;
-    border-radius: 5px;
-    position: relative;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    z-index: 102;
-}
-
-/* Add card styles for the sections */
-.item-card {
-    border-radius: 5px;
-    margin-bottom: 20px;
-    padding: 30px;
-    width: 150%;
-    top: 50px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    /* Required for positioning */
-}
-
-/* Add this to your existing stylesheet or component styles */
-.expanded-details {
-    margin-top: 10px;
-}
-
-.expanded-details .spec-item {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-}
-
-.expanded-details .spec-label {
-    font-size: 12px;
-    font-weight: normal;
-}
-
-.expanded-details .spec-value {
-    font-size: 14px;
-    font-weight: normal;
-}
-
-.card::before {
-    content: "";
-    /* To create a pseudo-element for the border */
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 100%;
-    border-top: 1px solid #ccc;
-    /* Border between header and body */
-    z-index: -1;
 }
 
 .description-section {
@@ -223,18 +116,15 @@ label {
     margin-top: 10px;
 }
 
-/* Style the uploaded files container */
 .uploaded-files ul {
     list-style: none;
     padding: 0;
 }
 
-/* Style the uploaded file items */
 .uploaded-files li {
     margin-bottom: 5px;
 }
 
-/* Style the uploaded file links */
 .uploaded-files li a {
     text-decoration: none;
     color: #007bff;
@@ -243,61 +133,18 @@ label {
 .activity-tabs {
     display: flex;
     border-bottom: 2px solid #ccc;
-    /* Shared bottom line */
 }
 
 .tab {
     padding: 10px 20px;
     cursor: pointer;
     border: none;
-    /* Remove borders */
     border-radius: 10px;
 }
 
 .tab:hover {
     background-color: #f0f0f0;
     /* Greyed hover effect */
-}
-
-.collapse-button {
-    position: absolute;
-    bottom: 100px;
-    right: -20px;
-    width: 40px;
-    height: 40px;
-    background-color: #fff;
-    /* Adjust color as needed */
-    border-radius: 0 0 50% 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 5;
-}
-
-.arrow-icon {
-    position: absolute;
-    bottom: 50%;
-    right: 50%;
-    width: 20px;
-    height: 20px;
-    border: solid #000;
-    border-width: 0 2px 2px 0;
-    transform: translate(50%, 50%) rotate(-45deg);
-    transition: transform 0.3s ease;
-    z-index: 5;
-}
-
-.collapsed .arrow-icon {
-    transform: translate(50%, 50%) rotate(135deg);
-    z-index: 5;
-}
-
-.collapsed {
-    width: 0;
-}
-
-.collapsed .collapse-button {
-    right: 0;
-    border-radius: 50% 0 0 50%;
 }
 
 /* Styles for medium-sized screens */

@@ -20,38 +20,36 @@ const ActivityDetails = () => {
     ];
 
     // Fetch element path data on component mount
-    useEffect(() => {
-        const fetchWorkDetails = async () => {
-            try {
-                const response = await fetchAWork(workId);
-                setWork(response.payload);
-                console.log("WORK", response.payload);
-            } catch (error) {
-                console.error("Error fetching work details:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchWorkDetails();
-    }, [workId]);
+    const fetchData = async () => {
+        try {
+            const workResponse = await fetchAWork(workId);
+            setWork(workResponse.payload);
+            const activityResponse = await fetchAActivity(workId, activityId);
+            setOneActivity(activityResponse.payload);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchOneActivity = async () => {
-            try {
-                const response = await fetchAActivity(workId, activityId);
-                setOneActivity(response.payload);
-                console.log(response.payload);
-            } catch (error) {
-                console.error("Error fetching activity:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchOneActivity();
+        fetchData();
     }, [workId, activityId]);
 
     const toggleEditForm = () => {
         setshowEditActivityForm(prevState => !prevState);
+    };
+
+    const renderWorkDetails = (work) => {
+        return (
+            <>
+                <tr><td className="work-label">Status</td><td>{work.title}</td></tr>
+                <tr><td className="work-label">Assigned To</td><td>{work.workType.title}</td></tr>
+                <tr><td className="work-label">Work Type</td><td>{work.location.name}</td></tr>
+                <tr><td className="work-label">Scheduling Priority</td><td>{work.shopGroup.name}</td></tr>
+            </>
+        );
     };
 
 
@@ -80,39 +78,19 @@ const ActivityDetails = () => {
                 <div className='work-card'>
                     {/* Asset Details */}
                     {work && (
-                        <div>
-                            <p>Work Summary </p>
-                            <hr className="line" />
-                            <div className="container">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td className="work-label">Status</td>
-                                            <td>{work.title}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="work-label">Assigned To</td>
-                                            <td>{work.workType.title}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="work-label">Work Type</td>
-                                            <td>{work.location.name}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="work-label">Scheduling Priority</td>
-                                            <td>{work.shopGroup.name}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
+                    <div className='work-card'>
+                        <p>Work Summary </p>
+                        <hr className="line" />
+                        <div className="container">
+                            <table>
+                                <tbody>
+                                    {renderWorkDetails(work)}
+                                </tbody>
+                            </table>
                         </div>
-
-                    )}
+                    </div>
+                )}
             </div>
-
-            {/* Other similar sections follow */}
-
 
             <div className='work-card'>
                 {/* Asset Details */}

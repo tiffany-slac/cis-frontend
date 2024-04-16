@@ -10,55 +10,30 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
         workTypeId: '',
         locationId: '',
         shopGroupId: '',
-        assignedTo: [],
         customFields: [],
     });
     const [workTypes, setWorkTypes] = useState([]);
     const [locations, setLocations] = useState([]);
     const [shopGroups, setShopGroups] = useState([]);
-    const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const fetchWorkTypes = async () => {
+        const fetchData = async () => {
             try {
-                const typesResponse = await fetchWorkType();
+                const [typesResponse, locationsResponse, shopGroupsResponse] = await Promise.all([
+                    fetchWorkType(),
+                    fetchLocations(),
+                    fetchShopGroups(),
+                ]);
+
                 setWorkTypes(typesResponse || []);
-            } catch (error) {
-                console.error('Error fetching work types:', error);
-            }
-        };
-
-        const fetchWorkLocations = async () => {
-            try {
-                const locationsResponse = await fetchLocations();
                 setLocations(locationsResponse.payload || []);
-            } catch (error) {
-                console.error('Error fetching locations:', error);
-            }
-        };
-
-        const fetchWorkShopGroups = async () => {
-            try {
-                const shopGroupsResponse = await fetchShopGroups();
                 setShopGroups(shopGroupsResponse || []);
             } catch (error) {
-                console.error('Error fetching shop groups:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
-        const fetchWorkUsers = async () => {
-            try {
-                const usersResponse = await fetchUsers();
-                setUsers(usersResponse.payload || []);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
-
-        fetchWorkTypes();
-        fetchWorkLocations();
-        fetchWorkShopGroups();
-        fetchWorkUsers();
+        fetchData();
     }, []);
 
     const handleSubmit = async (event) => {
@@ -89,8 +64,7 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
             setWorkData({ ...workData, [name]: value });
         }
     };
-
-
+    
     return (
         <div className={`modal ${showWorkForm ? "show" : "hide"}`}>
             <div className="form-content">
@@ -179,24 +153,6 @@ function WorkForm({ showWorkForm, setShowWorkForm }) {
                             ))}
                         </select>
                     </div>
-
-                    {/* <div className="form-group">
-                        <label htmlFor="assignedTo" className="form-label">Assign To</label>
-                        <select
-                            id="assignedTo"
-                            name="assignedTo"
-                            value={workData.assignedTo}
-                            onChange={handleInputChange}
-                            className="form-select"
-                            multiple={true}
-                        >
-                            {users.map(user => (
-                                <option key={user.uid} value={user.mail}>
-                                    {`${user.commonName} ${user.surname}`}
-                                </option>
-                            ))}
-                        </select>
-                    </div> */}
 
                     <button type="submit" className="form-button">Create Work</button>
                 </form>

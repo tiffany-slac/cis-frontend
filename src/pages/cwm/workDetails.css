@@ -69,7 +69,6 @@
     border-left: 1px solid #ccc;
     padding: 20px;
     overflow-y: auto;
-    /* box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2); */
     z-index: 999;
     transition: transform 0.3s ease;
     transform: translateX(100%);
@@ -103,20 +102,13 @@
     font-size: 16px;
     font-weight: normal;
     color: grey;
-    /* margin-bottom: 5px; */
 }
 
-.aligned-table {
+.aligned-table,
+.aligned-table td,
+.aligned-table tr,
+.aligned-table tr:last-child {
     border-collapse: collapse;
-    width: 100%;
-}
-
-.aligned-table td {
-    padding: 10px;
-    vertical-align: top;
-}
-
-.aligned-table tr {
     padding: 10px;
     vertical-align: top;
 }
@@ -125,25 +117,15 @@
     border-bottom: none;
 }
 
-.aligned-table-customdetails {
+.aligned-table-customdetails,
+.aligned-table-customdetails td,
+.aligned-table-customdetails .left-column,
+.aligned-table-customdetails tr,
+.aligned-table-customdetails tr:last-child {
     border-collapse: collapse;
-    width: 100%;
-}
-
-.aligned-table-customdetails td {
-    padding: 10px;
-    vertical-align: top;
-}
-
-.aligned-table-customdetails .left-column {
     padding: 10px;
     vertical-align: top;
     color: grey;
-}
-
-.aligned-table-customdetails tr {
-    padding: 10px;
-    vertical-align: top;
 }
 
 .aligned-table-customdetails tr:last-child {
@@ -165,7 +147,6 @@
     background-color: rgba(144, 21, 21, 1);
     border: none;
     color: white;
-    /* padding: 5px 20px; */
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -179,9 +160,8 @@
     border: none;
     height: 1px;
     width: 100%;
-    background-color: #ccc; /* Adjust color as needed */
-    /* margin-top: 5px;  */
-    margin-bottom: 10px; /* Optional: Add some space between the line and the next paragraph */
+    background-color: #ccc;
+    margin-bottom: 10px;
 }
 
 .activity-table {

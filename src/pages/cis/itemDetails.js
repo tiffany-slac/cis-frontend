@@ -6,170 +6,16 @@ import { fetchElement, fetchPath, updateElement, fetchClass } from "../../servic
 import "./itemDetails.css";
 
 const ItemDetails = () => {
-  // Destructuring values from React Router
   const { id } = useParams(); // Get the asset ID from the URL params
-
-  // State variables to manage component state
   const [elementDetails, setElementDetails] = useState(null);
   const [manufacturerDetails, setManufacturerDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("Jobs");
   const [elementPath, setElementPath] = useState(null);
-  const [expandedRows, setExpandedRows] = useState([]);
   const [showLocationHistForm, setShowLocationHistForm] = useState(false);
   const [isCardExpanded, setIsCardExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedAttributes, setEditedAttributes] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
-
-  // TreeView component for rendering nested items in a table
-  const TreeView = ({ items, parentId = null, level = 0 }) => {
-    // Get the current item id from the URL using React Router's useLocation
-    const location = useLocation();
-    const currentItemId = location.pathname.split("/").pop(); // Get the current item id from the URL
-
-    // Return early if items is false
-    if (!items) {
-      return null;
-    }
-
-    // Filter child items based on parentId
-    const childItems = items.filter((item) =>
-      parentId === null
-        ? item.parentId === undefined
-        : item.parentId === parentId
-    );
-
-    if (childItems.length === 0) {
-      return null;
-    }
-
-    return (
-      <>
-        {/* Map through childItems and render nested table rows */}
-        {childItems.map((item, index) => (
-          <React.Fragment key={item.id}>
-            <tr>
-              <td colSpan="3">
-                {/* Link to the detail page for each item */}
-                <Link
-                  to={`/inventory/${item.id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  {/* Styling for nested items */}
-                  <div
-                    style={{
-                      position: "relative",
-                      padding: "10px",
-                      marginLeft: `${level * 20 + 10}px`,
-                      borderRadius: "5px",
-                      background: item.id === currentItemId ? "#ddd" : "none",
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "-2px", // Updated to bottom
-                        left: "-10px",
-                        width: "10px",
-                        height: "100%",
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: "absolute",
-                          bottom: "0", // Updated to bottom
-                          left: "0",
-                          width: "100%",
-                          height: "10px",
-                          borderBottom: "1px solid #ddd",
-                        }}
-                      ></div>
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "0", // Updated to top
-                          left: "0",
-                          width: "10px",
-                          height: "100%",
-                          borderLeft: "1px solid #ddd",
-                        }}
-                      ></div>
-                    </div>
-                    <div style={{ fontSize: "14px", fontWeight: "normal" }}>
-                      {item.name}
-                    </div>
-                    {/* 
-                  <div style={{ fontSize: "14px", color: "#888" }}>
-                    ID: {item.id || ""}
-                  </div> */}
-                    <div style={{ fontSize: "14px", color: "#888" }}>
-                      {item.classDTO.name}
-                    </div>
-                    {/* <div style={{ fontSize: "14px", color: "#888" }}>
-                      Serial:{" "}
-                      {item.attributes && item.attributes.serial
-                        ? item.attributes.serial.join(", ")
-                        : ""}
-                    </div> */}
-                  </div>
-                </Link>
-              </td>
-            </tr>
-            <TreeView
-              items={items}
-              parentId={item.id}
-              level={level + 1}
-              key={index}
-            />
-          </React.Fragment>
-        ))}
-      </>
-    );
-  };
-
-  // Function to toggle the card's expanded state
-  const toggleCard = () => {
-    setIsCardExpanded((prevIsCardExpanded) => !prevIsCardExpanded);
-  };
-
-  // Function to handle button click for showing location history form
-  const handleButtonClick = () => {
-    setShowLocationHistForm(true); // Show the form when the button is clicked
-  };
-
-  // Function to toggle expanded state of a row
-  const toggleRow = (id) => {
-    const newExpandedRows = expandedRows.includes(id)
-      ? expandedRows.filter((rowId) => rowId !== id)
-      : [...expandedRows, id];
-    setExpandedRows(newExpandedRows);
-  };
-
-  // Fetch element path data on component mount
-  useEffect(() => {
-    const fetchPathData = async () => {
-      try {
-        const pathData = await fetchPath(id, "Full");
-        setElementPath(pathData.payload);
-        // console.log(pathData);
-      } catch (error) {
-        console.error("Error fetching element path:", error);
-      }
-    };
-
-    fetchPathData();
-  }, [id]);
-
-  // Breadcrumb items for navigation
-  const breadcrumbItems = [
-    { label: "Home", link: "/home" },
-    { label: "Inventory", link: "/inventory" },
-    { label: "Item Details", link: "/inventory/asset-details" },
-  ];
-
-  // Menu items for different tabs
-  const menuItems = ["Details", "Description", "Attachments", "Activity"];
 
   // Make an API request to fetch asset details by ID
   useEffect(() => {
@@ -178,12 +24,10 @@ const ItemDetails = () => {
         // Fetch element details
         const elementData = await fetchElement(id);
         setElementDetails(elementData);
-
         // Check if classDTO exists in elementData
         const classId = elementData.classDTO?.id;
 
         if (classId) {
-          // Fetch details of the class using the classId
           const classDetails = await fetchClass(classId);
           setManufacturerDetails(classDetails);
           console.log("manufacturer details: " + manufacturerDetails);
@@ -199,52 +43,43 @@ const ItemDetails = () => {
     fetchData();
   }, [id]);
 
-  // Scroll to content when a tab is clicked
-  const scrollToContent = (item) => {
-    const contentElement = document.getElementById(item.toLowerCase());
-    if (contentElement) {
-      contentElement.scrollIntoView({ behavior: "smooth" });
-    }
-    setActiveTab(item);
+  // Fetch element path data on component mount
+  useEffect(() => {
+    const fetchPathData = async () => {
+      try {
+        const pathData = await fetchPath(id, "Full");
+        setElementPath(pathData.payload);
+      } catch (error) {
+        console.error("Error fetching element path:", error);
+      }
+    };
+
+    fetchPathData();
+  }, [id]);
+
+  // Function to toggle the card's expanded state
+  const toggleCard = () => {
+    setIsCardExpanded((prevIsCardExpanded) => !prevIsCardExpanded);
   };
 
-  // Format name function
-  function formatName(name) {
-    if (!name) return "";
-    const capitalizedFirstLetter = name.charAt(0).toUpperCase();
-    const formattedName = name.slice(1).replace(/-/g, " ");
-    return capitalizedFirstLetter + formattedName;
-  }
+  // Handle cancel click function
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setEditedAttributes({});
+  };
 
-  // Truncate text function
-  const truncateText = (text, minLines, maxLines) => {
-    const splitText = text.split("\n");
-    const truncatedLines = splitText.slice(0, 2, 3); // Keep the first two lines
-    const remainingLines = splitText.slice(2, maxLines);
-    const isTruncated = splitText.length > maxLines;
+  // Handle attribute change function
+  const handleAttributeChange = (attribute, value) => {
+    setEditedAttributes((prevEditedAttributes) => ({
+      ...prevEditedAttributes,
+      [attribute]: value,
+    }));
+  };
 
-    return (
-      <div>
-        {truncatedLines.map((line, index) => (
-          <p key={index}>{line}</p>
-        ))}
-        {isTruncated && (
-          <p
-            style={{ margin: 0, color: "blue", cursor: "pointer" }}
-            onClick={toggleCard}
-          >
-            {isCardExpanded ? "Read more..." : "Show less"}
-          </p>
-        )}
-        {isCardExpanded && isTruncated && (
-          <div>
-            {remainingLines.map((line, index) => (
-              <p key={index}>{line}</p>
-            ))}
-          </div>
-        )}
-      </div>
-    );
+  // Handle dropdown click function
+  const handleDropdownClick = () => {
+    setShowDropdown(!showDropdown);
+    setIsEditing(false);
   };
 
   // handle editing
@@ -279,25 +114,74 @@ const ItemDetails = () => {
     }
   };
 
-  // Handle cancel click function
-  const handleCancelClick = () => {
-    setIsEditing(false);
-    setEditedAttributes({});
+  // Breadcrumb items for navigation
+  const breadcrumbItems = [
+    { label: "Home", link: "/home" },
+    { label: "Inventory", link: "/inventory" },
+    { label: "Item Details", link: "/inventory/asset-details" },
+  ];
+
+  // TreeView component for rendering nested items in a table
+  const TreeView = ({ items, parentId = null, level = 0 }) => {
+    // Get the current item id from the URL using React Router's useLocation
+    const location = useLocation();
+    const currentItemId = location.pathname.split("/").pop(); // Get the current item id from the URL
+
+    // Return early if items is false
+    if (!items) {
+      return null;
+    }
+
+    // Filter child items based on parentId
+    const childItems = items.filter((item) =>
+      parentId === null
+        ? item.parentId === undefined
+        : item.parentId === parentId
+    );
+
+    if (childItems.length === 0) {
+      return null;
+    }
+
+    return (
+      <>
+        {/* Map through childItems and render nested table rows */}
+        {childItems.map((item, index) => (
+          <React.Fragment key={item.id}>
+            <tr>
+              <td colSpan="3">
+                {/* Link to the detail page for each item */}
+                <Link to={`/inventory/${item.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <div style={{ position: "relative", padding: "10px", marginLeft: `${level * 20 + 10}px`, borderRadius: "5px", background: item.id === location.pathname.split("/").pop() ? "#ddd" : "none" }}>
+                    <div style={{ position: "absolute", bottom: "-2px", left: "-10px", width: "10px", height: "100%" }}>
+                      <div style={{ position: "absolute", bottom: "0", left: "0", width: "100%", height: "10px", borderBottom: "1px solid #ddd" }}></div>
+                      <div style={{ position: "absolute", top: "0", left: "0", width: "10px", height: "100%", borderLeft: "1px solid #ddd" }}></div>
+                    </div>
+                    <div style={{ fontSize: "14px", fontWeight: "normal" }}>{item.name}</div>
+                    <div style={{ fontSize: "14px", color: "#888" }}>{item.classDTO.name}</div>
+                  </div>
+                </Link>
+              </td>
+            </tr>
+            <TreeView
+              items={items}
+              parentId={item.id}
+              level={level + 1}
+              key={index}
+            />
+          </React.Fragment>
+        ))}
+      </>
+    );
   };
 
-  // Handle attribute change function
-  const handleAttributeChange = (attribute, value) => {
-    setEditedAttributes((prevEditedAttributes) => ({
-      ...prevEditedAttributes,
-      [attribute]: value,
-    }));
-  };
-
-  // Handle dropdown click function
-  const handleDropdownClick = () => {
-    setShowDropdown(!showDropdown);
-    setIsEditing(false); 
-  };
+  // Format name function
+  function formatName(name) {
+    if (!name) return "";
+    const capitalizedFirstLetter = name.charAt(0).toUpperCase();
+    const formattedName = name.slice(1).replace(/-/g, " ");
+    return capitalizedFirstLetter + formattedName;
+  }
 
   // Toggle sidebar function
   function toggleSidebar() {
@@ -305,9 +189,10 @@ const ItemDetails = () => {
     sidebar.classList.toggle("collapsed");
   }
 
+
   return (
     <div className="item-details-container">
-      
+
       {/* Sidebar component for displaying item hierarchy */}
       <div className="sidebar">
         <div className="collapse-button" onClick={toggleSidebar}>
@@ -321,7 +206,7 @@ const ItemDetails = () => {
           </table>
         </div>
       </div>
-      
+
       {/* Main content container for displaying item details */}
       <div className="item-details-content">
         {/* Item details header section */}
@@ -375,8 +260,8 @@ const ItemDetails = () => {
           </div>
           <h1 style={{ textAlign: "left", marginLeft: "50px" }}>
             {elementDetails &&
-            elementDetails.payload &&
-            elementDetails.payload.name
+              elementDetails.payload &&
+              elementDetails.payload.name
               ? formatName(elementDetails.payload.name)
               : ""}
           </h1>
@@ -507,7 +392,7 @@ const ItemDetails = () => {
                               attribute.name.toLowerCase()
                             ) &&
                             index ===
-                              self.findIndex((a) => a.name === attribute.name)
+                            self.findIndex((a) => a.name === attribute.name)
                           );
                         })
                         .map((attribute, index) => {
@@ -617,8 +502,8 @@ const ItemDetails = () => {
                             );
                           const value = attribute
                             ? elementDetails.payload.attributes.find(
-                                (attr) => attr.name === attribute.name
-                              )?.value || attribute.description
+                              (attr) => attr.name === attribute.name
+                            )?.value || attribute.description
                             : "N/A";
 
                           return (
@@ -661,6 +546,7 @@ const ItemDetails = () => {
                   )}
                 </div>
               </div>
+
               {showLocationHistForm && (
                 <div className="form-popup">
                   <LocationHistForm

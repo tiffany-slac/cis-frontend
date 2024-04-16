@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createActivity, fetchActivityType, fetchAWork, fetchLovValuesForField } from '../../services/api';
 import { useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker'; // Importing React Datepicker
 import 'react-datepicker/dist/react-datepicker.css';
+import { createActivity, fetchActivityType, fetchAWork, fetchLovValuesForField } from '../../services/api';
 import './activityForm.css';
 
 function ActivityForm({ showActivityForm, setShowActivityForm }) {
@@ -12,7 +12,6 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
         description: '',
         activityTypeId: '',
         activityTypeSubtype: "BugFix",
-        // schedulingProperty: "Immediate",
         customFields: [],
         customFieldValues: {},
     });
@@ -62,10 +61,7 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                     try {
                         if (!field.isLov) {
                             return {
-                                id: field.id,
-                                name: field.name,
-                                label: field.label,
-                                group: field.group,
+                                ...field,
                                 isLov: false,
                                 valueType: field.valueType
                             };
@@ -73,10 +69,7 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
                             const lovValuesResponse = await fetchLovValuesForField("Activity", typeId, field.name);
                             if (lovValuesResponse.errorCode === 0) {
                                 return {
-                                    id: field.id,
-                                    name: field.name,
-                                    label: field.label,
-                                    group: field.group,
+                                    ...field,
                                     isLov: true,
                                     valueType: lovValuesResponse.payload.map(value => ({ id: value.id, value: value.value }))
                                 };
@@ -170,20 +163,6 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
         }
     };
 
-    const renderNewFields = () => {
-        const fields = [{ id: 'title', label: 'Title', type: 'text', section: 'General Information' }, { id: 'description', label: 'Description', type: 'textarea', section: 'General Information' }];
-        return fields.map(field => (
-            <div key={field.id} className="form-group">
-                <label htmlFor={field.id} className="form-label">{field.label}<span className="required">*</span></label>
-                {field.type === 'textarea' ? (
-                    <textarea id={field.id} name={field.id} value={activityData[field.id] || ''} onChange={handleInputChange} className="form-input" required={field.required}></textarea>
-                ) : (
-                    <input id={field.id} name={field.id} type={field.type} value={activityData[field.id] || ''} onChange={handleInputChange} className="form-input" required={field.required} />
-                )}
-            </div>
-        ));
-    };
-
     const renderCustomFieldInput = (field) => {
         if (field.isLov) {
             return (
@@ -237,6 +216,20 @@ function ActivityForm({ showActivityForm, setShowActivityForm }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setActivityData({ ...activityData, [name]: value });
+    };
+
+    const renderNewFields = () => {
+        const fields = [{ id: 'title', label: 'Title', type: 'text', section: 'General Information' }, { id: 'description', label: 'Description', type: 'textarea', section: 'General Information' }];
+        return fields.map(field => (
+            <div key={field.id} className="form-group">
+                <label htmlFor={field.id} className="form-label">{field.label}<span className="required">*</span></label>
+                {field.type === 'textarea' ? (
+                    <textarea id={field.id} name={field.id} value={activityData[field.id] || ''} onChange={handleInputChange} className="form-input" required={field.required}></textarea>
+                ) : (
+                    <input id={field.id} name={field.id} type={field.type} value={activityData[field.id] || ''} onChange={handleInputChange} className="form-input" required={field.required} />
+                )}
+            </div>
+        ));
     };
 
     return (

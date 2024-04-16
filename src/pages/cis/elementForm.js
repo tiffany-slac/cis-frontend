@@ -3,13 +3,10 @@ import { fetchAllElements, createInventoryElement, fetchClass, fetchAllClass } f
 import "../admin/admin.css";
 
 function ElementForm({ showElementForm, setShowElementForm }) {
-  // State to manage form input values
   const [parents, setParents] = useState([]);
   const [parentId, setParentId] = useState("");
   const [classId, setClassId] = useState("");
   const [classesName, setClassesName] = useState([]);
-  const [selectedParent, setSelectedParent] = useState("");
-  const [showParentDropdown, setShowParentDropdown] = useState(false);
   const [selectedClassName, setSelectedClassName] = useState("");
   const [dynamicForm, setDynamicForm] = useState([]);
   const [extendsClassId, setExtendsClassId] = useState("");

@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import './activityForm.css';
 
 function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
-    // State to manage form input values
     const { workId, activityId } = useParams();
     const [activityData, setActivityData] = useState({
         title: '',
@@ -23,7 +22,6 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
         const fetchData = async () => {
             try {
                 const workResponse = await fetchAActivity(workId, activityId);
-                console.log(workResponse.payload);
                 const { title, description, activityType, activityTypeSubtype, customFields } = workResponse.payload;
                 const activityTypeId = activityType ? activityType.id : ''; // Grab activityType title
                 setActivityData({ title, description, activityTypeId, activityTypeSubtype });
@@ -40,7 +38,6 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
                 console.log("isLov values:", isLovValues);
 
                 setCustomFields(customFields);
-                // Fetch activity types and subtypes
                 const typeResponse = await fetchActivityType();
                 setActivityTypes(typeResponse || []);
 
@@ -164,13 +161,11 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
                 description: activityData.description,
                 activityType: {
                     id: activityData.activityTypeId, // Assuming you have activityType data elsewhere
-                    // Other activityType properties as needed
                 },
                 activityTypeSubtype: activityData.activityTypeSubtype,
                 assignedTo: activityData.assignedTo,
                 locationId: activityData.locationId,
                 shopGroupId: activityData.shopGroupId,
-                // Add customAttributeValues with custom fields
                 customAttributeValues: customFields.map(field => ({
                     id: field.id,
                     value: {
@@ -191,24 +186,8 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
         }
     };
 
-    // const handleInputChange = (e) => {
-    //     const { name, value, type } = e.target;
-
-    //     // Handle select inputs separately
-    //     if (type === 'select-one') {
-    //         setActivityData({ ...activityData, [name]: value });
-    //     } else {
-    //         // For other input types, update the value in the state
-    //         setActivityData((prevActivityData) => ({
-    //             ...prevActivityData,
-    //             [name]: value,
-    //         }));
-    //     }
-    // };
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        
         // Update the value in the state
         setActivityData((prevActivityData) => ({
             ...prevActivityData,
@@ -216,11 +195,7 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
         }));
     };
     
-
     const handleCustomFieldChange = (fieldName, selectedValue) => {
-        console.log("Field Name:", fieldName);
-        console.log("Selected Value:", selectedValue);
-
         setActivityData((prevActivityData) => ({
             ...prevActivityData,
             [fieldName]: selectedValue,
@@ -229,9 +204,7 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
 
     // Utility function to convert camelCase to normal casing
     const camelToNormalCase = (camelCase) => {
-        // Split camelCase string into words
-        const words = camelCase.split(/(?=[A-Z])/);
-        // Capitalize the first letter of each word and join them
+        const words = camelCase.split(/(?=[A-Z])/); // Split camelCase string into words
         return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     };
 
@@ -245,6 +218,7 @@ function EditActivityForm({ showEditActivityForm, setShowEditActivityForm }) {
                 <h1 className="form-title">UPDATE ACTIVITY</h1>
 
                 <form onSubmit={handleSubmit} className="work-form">
+                    
                     <div className="form-group">
                         <label htmlFor="title" className="form-label">Title</label>
                         <input

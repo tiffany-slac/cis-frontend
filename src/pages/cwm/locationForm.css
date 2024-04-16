@@ -5,9 +5,7 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  /* Add padding to create space around the form */
   background-color: #fff;
-  /* Set background color */
 }
 
 .form-content {
@@ -31,9 +29,7 @@
   display: block;
   font-weight: normal;
   font-size: 14px;
-  /* Increase font size for better readability */
   color: #333;
-  /* Darken label color */
   margin-bottom: 5px;
 }
 
@@ -55,14 +51,10 @@
 .form-button {
   display: block;
   width: 50%;
-  /* Button takes full width */
   height: 40px;
   margin-top: 20px;
-  /* Separate from form fields */
   margin-left: auto;
-  /* Center the button horizontally */
   margin-right: auto;
-  /* Center the button horizontally */
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -75,14 +67,11 @@
   background-color: #0056b3;
 }
 
-
 /* Title styling */
 .form-title {
   font-size: 14px;
   font-weight: normal;
 }
-
-/* LocationForm.css */
 
 /* Define a class to style the form inputs */
 .form-input {
@@ -97,7 +86,6 @@
 /* Style the select element */
 .select-input {
   position: relative;
-  /* Ensure relative positioning for the arrow */
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
