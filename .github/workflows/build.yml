@@ -1,0 +1,9 @@
+name: Build and Publish Docker Image
+on:
+  push:
+    branches:
+      - main
+jobs:
+  create-image:
+    uses: eed-web-application/core-suite-frontend-deployment/.github/workflows/create-image.yml@main
+    secrets: inherit
