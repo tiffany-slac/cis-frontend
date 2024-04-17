@@ -1,10 +1,9 @@
 services:
-  frontend:
-    image: your-frontend-image-name:latest
+  app:
+    build:
+      context: .
+      args:
+        - API_ENDPOINT_CWM=/api/cwm/v1
+        - API_ENDPOINT_CIS=/api/cis/v1
     ports:
-      - "3000:3000"  # Adjust the port mappings as needed (Host:Container)
-    volumes:
-      - ./src:/app/src  # Mount your local source code directory into the container
-    environment:
-      - NODE_ENV=production  # Set the environment variables as needed for your frontend
-      
+      - "80:80"

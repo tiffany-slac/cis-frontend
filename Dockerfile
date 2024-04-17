@@ -1,20 +1,28 @@
-# Use an official Node.js image as the base
-FROM node:latest
+FROM node:16-alpine as builder
 
-# Set the working directory in the container
+ARG MODE=production
+ENV MODE $MODE
+
+ARG API_ENDPOINT
+ENV API_ENDPOINT $API_ENDPOINT
+
+COPY . ./app
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
+RUN --mount=type=cache,id=npm,target=/npm/store npm install --frozen-lockfile
 
-# Install dependencies
-RUN npm install
+RUN npm build --mode $MODE
 
-# Copy the entire project directory to the container
-COPY . .
+FROM nginx:alpine
 
-# Expose the port the app runs on (if necessary)
-# EXPOSE 3000
+COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 
-# Command to start the application
-CMD ["npm", "start"]
+## Remove default nginx index page
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy from the stahg 1
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 3000 80
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
